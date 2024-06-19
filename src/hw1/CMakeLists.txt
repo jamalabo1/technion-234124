@@ -13,19 +13,16 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(headers
 
-        BlockChain.h
-        Transaction.h
-        Utilities.h
+        files/BlockChain.h
+        files/Transaction.h
+        files/Utilities.h
 )
 
 add_executable(hw1-main
-        main.cpp
-
-        Utilities.cpp
-
         ${headers}
-        BlockChain.cpp
-        Transaction.cpp
-)
 
-file(COPY tests DESTINATION .)
+        files/main.cpp
+        files/Utilities.cpp
+        files/BlockChain.cpp
+        files/Transaction.cpp
+)

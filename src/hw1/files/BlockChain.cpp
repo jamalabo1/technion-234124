@@ -41,9 +41,9 @@ BlockChainAppendTransaction(BlockChain &blockChain, unsigned int value, const st
                             const string &timestamp) {
 
     Transaction transaction = {
-            .value= value,
-            .sender= sender,
-            .receiver = receiver
+            value,
+            sender,
+            receiver
     };
 
     BlockChainAppendTransaction(blockChain, transaction, timestamp);
@@ -53,9 +53,9 @@ void BlockChainAppendTransaction(BlockChain &blockChain, const Transaction &tran
 
 
     BlockChainBlock *block = new BlockChainBlock{
-            .transaction = transaction,
-            .timestamp = timestamp,
-            .chain = blockChain.head
+            transaction,
+            timestamp,
+            blockChain.head
     };
 
     blockChain.head = block;
@@ -66,7 +66,8 @@ void BlockChainAppendTransaction(BlockChain &blockChain, const Transaction &tran
 BlockChain BlockChainLoad(ifstream &file) {
 
     BlockChain blockChain{
-            .head=nullptr
+            0,
+            nullptr
     };
 
     string line;
@@ -92,18 +93,18 @@ BlockChain BlockChainLoad(ifstream &file) {
         data[current_index] = temp_string;
 
         Transaction transaction = {
-                .value = (unsigned int) atoi(data[2].c_str()),
-                .sender = data[0],
-                .receiver = data[1],
+                /*.value =*/    (unsigned int) atoi(data[2].c_str()),
+                /*.sender =*/   data[0],
+                /*.receiver =*/ data[1],
         };
 
 
         string timestamp = data[3];
 
         BlockChainBlock *x = new BlockChainBlock{
-                .transaction = transaction,
-                .timestamp = timestamp,
-                .chain = nullptr
+                /*     .transaction =*/ transaction,
+                /*    .timestamp = */timestamp,
+                /*    .chain = */nullptr
         };
         if (current_block == nullptr) {
             current_block = x;
