@@ -66,4 +66,5 @@ jobs:
       - name: Valgrind Test
         run: |
           ls
+          chmod a+x ./bin/hw1-main
           valgrind --leak-check=full bin/hw1-main
