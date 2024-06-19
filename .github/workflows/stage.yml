@@ -53,7 +53,7 @@ jobs:
 #          name: binaries
 #          path: /home/project/build
   valgrind:
-    name: Valgrind 3.19.0
+    name: Valgrind
     needs: build
     runs-on: ubuntu-latest
     container:
@@ -63,6 +63,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: binaries
-          path: ${{github.workspace}}
       - name: Valgrind Test
-        run: valgrind --leak-check=full ${{github.workspace}}/bin/hw1-main
+        run: |
+          ls
+          valgrind --leak-check=full bin/hw1-main
