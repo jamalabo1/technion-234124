@@ -158,41 +158,31 @@ void BlockChainDumpHashed(const BlockChain &blockChain, ofstream &file) {
 
 
 // private function implementation, to preserve original function signature.
-bool _blockChainVerifyFile(const BlockChain &blockChain, ifstream &file, bool printMessage) {
+bool BlockChainVerifyFile(const BlockChain &blockChain, ifstream &file) {
     BlockChainBlock *current_block = blockChain.head;
 
     int size = BlockChainGetSize(blockChain);
     string line;
 
     for (int i = 1; i <= size; i++) {
-        if (current_block->chain == nullptr) return false;
+        if (current_block == nullptr) return false;
 
         if (file.eof()) return false;
 
         getline(file, line);
 
-        if (line != TransactionHashedMessage(current_block->transaction)) {
-            if (printMessage) {
-                printf("Verification failed");
-            }
+        string hash = TransactionHashedMessage(current_block->transaction);
+
+        if (line != hash) {
+
             return false;
         }
-        if (printMessage) {
-            printf("Verification passed");
-        }
+
 
         MoveNextBlock(current_block);
     }
 
     return true;
-}
-
-bool BlockChainVerifyFile(const BlockChain &blockChain, ifstream &file) {
-    return _blockChainVerifyFile(blockChain, file, false);
-}
-
-bool BlockChainVerifyFileDetailed(const BlockChain &blockChain, ifstream &file) {
-    return _blockChainVerifyFile(blockChain, file, true);
 }
 
 

@@ -6,6 +6,8 @@
 #include "Utilities.h"
 #include "BlockChain.h"
 
+using std::cout;
+using std::endl;
 
 void printErrorMessage() {
     std::cout << getErrorMessage() << std::endl;
@@ -43,7 +45,11 @@ int main(int argc, char **argv) {
 
     } else if (op == "verify") {
         ifstream verify_file(target);
-        BlockChainVerifyFile(blockchain, verify_file);
+        if (BlockChainVerifyFile(blockchain, verify_file)) {
+            cout << "Verification passed" << endl;
+        } else {
+            cout << "Verification failed" << endl;
+        }
 
 
     } else {
