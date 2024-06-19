@@ -55,7 +55,7 @@ jobs:
   valgrind:
     name: Valgrind 3.19.0
     needs: build
-    runs-on: docker
+    runs-on: ubuntu-latest
     container:
       image: jamalabo1/valgrind:latest
     steps:
