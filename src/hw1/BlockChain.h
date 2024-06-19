@@ -19,9 +19,20 @@ typedef unsigned int (*updateFunction)(unsigned int);
  * BlockChain - Defining the new BlockChain Type
  *
 */
+struct BlockChainBlock {
+    Transaction transaction;
+    string timestamp;
+
+    BlockChainBlock* chain;
+};
+
 struct BlockChain {
     // You may add any fields you believe are necessary
+
+    int size;
+    BlockChainBlock* head;
 };
+
 
 
 /**
@@ -139,6 +150,7 @@ void BlockChainDumpHashed(const BlockChain& blockChain, ofstream& file);
  * @return true if the file is valid, false otherwise
 */
 bool BlockChainVerifyFile(const BlockChain& blockChain, std::ifstream& file);
+bool BlockChainVerifyFileDetailed(const BlockChain& blockChain, std::ifstream& file);
 
 
 /**

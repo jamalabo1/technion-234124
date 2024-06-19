@@ -27,3 +27,5 @@ add_executable(hw1-main
         BlockChain.cpp
         Transaction.cpp
 )
+
+file(COPY tests DESTINATION .)
