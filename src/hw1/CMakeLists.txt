@@ -26,3 +26,5 @@ add_executable(hw1-main
         files/BlockChain.cpp
         files/Transaction.cpp
 )
+
+install_project_binaries(hw1-main)
