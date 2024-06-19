@@ -57,7 +57,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     container:
-      image: jamalabo1/valgrind:latest
+      image: jamalabo1/general_images:valgrind
     steps:
       - name: Download binaries
         uses: actions/download-artifact@v4
