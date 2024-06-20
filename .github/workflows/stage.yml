@@ -61,4 +61,6 @@ jobs:
           name: binaries
       - name: Run tests
         working-directory: bin
-        run: python3 engine.py
+        run: |
+          chmod 755 ./mtm_blockchain 
+          python3 engine.py
