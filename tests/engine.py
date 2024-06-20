@@ -18,11 +18,11 @@ def run_blocks(blocks: List[TestBlock]):
 
         for command in block.commands:
             print(f"running command: {command}")
-            try:
-                subprocess.call(command, shell=True)
-            except subprocess.CalledProcessError as e:
-                print(f"***failed command***: {command}")
-                print(e.output)
+            subprocess.call(command, shell=True)
+            # try:
+            # except subprocess.CalledProcessError as e:
+            #     print(f"***failed command***: {command}")
+            #     print(e.output)
 
         print(f"----- {block.key} -----")
 
