@@ -59,4 +59,5 @@ jobs:
         with:
           name: binaries
       - name: Run tests
-        run: python3 bin/engine.py
+        working-directory: bin
+        run: python3 engine.py
