@@ -18,7 +18,7 @@ set(headers
         files/Utilities.h
 )
 
-add_executable(hw1-main
+add_executable(mtm_blockchain
         ${headers}
 
         files/main.cpp
@@ -27,4 +27,4 @@ add_executable(hw1-main
         files/Transaction.cpp
 )
 
-install_project_binaries(hw1-main)
+install_project_binaries(mtm_blockchain )

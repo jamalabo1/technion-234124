@@ -35,23 +35,6 @@ jobs:
         with:
           name: binaries
           path: ${{github.workspace}}/project
-#      - name: Test
-#        working-directory: ${{github.workspace}}/build
-#        # Execute tests defined by the CMake configuration.
-#        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-#        run: ctest -C ${{env.BUILD_TYPE}}
-#  build:
-#    container:
-#      image: danger89/cmake:latest
-#    runs-on: docker
-#    steps:
-#      - name: Build
-#        run:  mkdir /home/project && cmake -G Ninja -B /home/project/build
-#      - name: Store binaries
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: binaries
-#          path: /home/project/build
   valgrind:
     name: Valgrind
     needs: build
@@ -66,5 +49,14 @@ jobs:
       - name: Valgrind Test
         run: |
           ls
-          chmod 755 ./bin/hw1-main
-          valgrind --leak-check=full bin/hw1-main
+          python3 bin/valgrind.py
+  tests:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: binaries
+      - name: Run tests
+        run: python3 bin/engine.py

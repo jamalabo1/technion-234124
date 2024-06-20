@@ -172,10 +172,7 @@ bool BlockChainVerifyFile(const BlockChain &blockChain, ifstream &file) {
 
         getline(file, line);
 
-        string hash = TransactionHashedMessage(current_block->transaction);
-
-        if (line != hash) {
-
+        if (!TransactionVerifyHashedMessage(current_block->transaction, line)) {
             return false;
         }
 
