@@ -67,4 +67,4 @@ jobs:
         run: |
           ls
           chmod 755 ./bin/hw1-main
-          sudo valgrind --leak-check=full bin/hw1-main
+          valgrind --leak-check=full bin/hw1-main
