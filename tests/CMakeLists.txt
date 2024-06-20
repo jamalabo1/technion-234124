@@ -14,6 +14,7 @@ add_custom_command(
 )
 
 install(FILES
+        settings.json
         engine.py
         valgrind.py
         DESTINATION bin
