@@ -64,3 +64,8 @@ jobs:
         run: |
           chmod 755 ./mtm_blockchain 
           python3 engine.py
+      - name: Archive Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests
+          path: */*.out
