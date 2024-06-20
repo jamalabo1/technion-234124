@@ -47,9 +47,10 @@ jobs:
         with:
           name: binaries
       - name: Valgrind Test
+        working-directory: bin
         run: |
           ls
-          python3 bin/valgrind.py
+          python3 engine.py
   tests:
     needs: build
     runs-on: ubuntu-latest

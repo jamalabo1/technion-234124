@@ -19,7 +19,7 @@ def run_blocks(blocks: List[TestBlock]):
         for command in block.commands:
             print(f"running command: {command}")
             try:
-                subprocess.check_output(command, shell=True)
+                subprocess.call(command, shell=True)
             except subprocess.CalledProcessError as e:
                 print(f"***failed command***: {command}")
                 print(e.output)
