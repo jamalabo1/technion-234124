@@ -13,6 +13,16 @@ void printErrorMessage() {
     std::cout << getErrorMessage() << std::endl;
 }
 
+void freeBlockchain(BlockChain &blockChain) {
+    BlockChainBlock *c = blockChain.head;
+    for (int i = 0; i < blockChain.size; ++i) {
+        if (c == nullptr)return;
+        BlockChainBlock *next = c->chain;
+        free(c);
+        c = next;
+    }
+}
+
 int main(int argc, char **argv) {
 
     if (argc != 4) {
@@ -50,13 +60,12 @@ int main(int argc, char **argv) {
         } else {
             cout << "Verification failed" << endl;
         }
-
-
     } else {
         printErrorMessage();
         return 1;
     }
 
+    freeBlockchain(blockchain);
 
     return 0;
 }
