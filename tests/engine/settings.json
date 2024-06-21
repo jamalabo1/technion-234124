@@ -17,6 +17,7 @@
         "target": "hw1-tests/compress.target.out"
       },
       {
+        "key": "verify",
         "command": "verify hw1-tests/verify.source hw1-tests/verify.target > hw1-tests/verify.out",
         "include": false,
         "source": "hw1-tests/verify.source",
