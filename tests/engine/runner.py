@@ -15,8 +15,12 @@ class TestBlock:
 def gen_exec_command(target, op):
     args = ""
     include = not ("include" in op and (op["include"] is False))
+    prefix = op["prefix"]
+    source = f"{prefix}.source"
+    out_dist = f"{prefix}.target.out"
+
     if include:
-        args = f" {op['source']} {op['target']}"
+        args = f" {source} {out_dist}"
 
     return f"./{target} {op['command']}{args}"
 
@@ -58,7 +62,11 @@ def run_tests(target: str, options):
         for op in options["explict"]:
             exec_command = gen_exec_command(target, op)
 
-            verify_command = f"diff --strip-trailing-cr -B -Z {op['source']} {op['target']}"
+            prefix = op['prefix']
+            out_dist = f"{prefix}.target.out"
+            expected = op["expected"] if "expected" in op else f"{prefix}.target.expected"
+
+            verify_command = f"diff --strip-trailing-cr -B -Z {expected} {out_dist}"
 
             key = op["key"] if "key" in op else op["command"]
 

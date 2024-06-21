@@ -3,25 +3,22 @@
     "explict": [
       {
         "command": "hash",
-        "source": "hw1-tests/hash.source",
-        "target": "hw1-tests/hash.target.out"
+        "prefix": "hw1-tests/hash"
       },
       {
         "command": "format",
-        "source": "hw1-tests/format.source",
-        "target": "hw1-tests/format.target.out"
+        "prefix": "hw1-tests/format"
       },
       {
         "command": "compress",
-        "source": "hw1-tests/compress.source",
-        "target": "hw1-tests/compress.target.out"
+        "prefix": "hw1-tests/compress"
       },
       {
         "key": "verify",
         "command": "verify hw1-tests/verify.source hw1-tests/verify.target > hw1-tests/verify.out",
         "include": false,
-        "source": "hw1-tests/verify.source",
-        "target": "hw1-tests/verify.out"
+        "prefix": "hw1-tests/verify.source",
+        "expected": "hw1-tests/verify.out"
       }
     ]
   }
