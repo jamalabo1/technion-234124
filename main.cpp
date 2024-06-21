@@ -16,11 +16,12 @@ void printErrorMessage() {
 void freeBlockchain(BlockChain &blockChain) {
     BlockChainBlock *c = blockChain.head;
     for (int i = 0; i < blockChain.size; ++i) {
-        if (c == nullptr)return;
+        if (c == nullptr) return;
         BlockChainBlock *next = c->chain;
         free(c);
         c = next;
     }
+    free(c);
 }
 
 int main(int argc, char **argv) {
