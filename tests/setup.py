@@ -1,10 +1,8 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
     name='engine',
     version='0.0.1',
-    py_modules=['engine'],
-    include_package_data=True,
     install_requires=[
         'Click',
     ],

@@ -51,7 +51,8 @@ jobs:
         working-directory: bin
         run: |
           ls
-          ./test_engine --valgrind
+          chmod 755 ./mtm_blockchain 
+          python3 engine/main.py --valgrind
   tests:
     needs: build
     runs-on: ubuntu-latest
@@ -64,7 +65,7 @@ jobs:
         working-directory: bin
         run: |
           chmod 755 ./mtm_blockchain 
-          python3 engine.py
+          python3 engine/main.py
       - name: Archive Results
         uses: actions/upload-artifact@v4
         with:

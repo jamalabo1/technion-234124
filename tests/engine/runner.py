@@ -1,7 +1,7 @@
 from typing import List
 import click
 
-import engine.utils
+from engine import utils
 
 
 class TestBlock:
@@ -28,7 +28,7 @@ def run_blocks(blocks: List[TestBlock]):
 
         for command in block.commands:
             click.echo(f"running command: {command}")
-            engine.utils.run_command(command)
+            utils.run_command(command)
 
 
 def run_valgrind(target: str, options):
