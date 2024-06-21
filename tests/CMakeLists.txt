@@ -3,27 +3,15 @@ project(technion-234124)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_custom_target(test)
-
+#add_custom_target(test)
+add_library(test temp_dummy.cpp)
 
 add_custom_command(
         TARGET test POST_BUILD
         WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-        COMMAND pip install click --target ${PROJECT_BINARY_DIR}/engine
-        COMMENT "Copying engine.py file"
+        COMMAND pip install click --target ${PROJECT_BINARY_DIR}/engine --upgrade
+        COMMENT "installing required modules"
 )
-
-#
-#add_custom_command(
-#        TARGET test POST_BUILD
-#        COMMAND ${CMAKE_COMMAND} -E copy
-#        ${CMAKE_CURRENT_LIST_DIR}/engine.py
-#        ${PROJECT_BINARY_DIR}/engine.py
-#        COMMENT "Copying engine.py file"
-#)
-#
-
-
 
 install(
         DIRECTORY
