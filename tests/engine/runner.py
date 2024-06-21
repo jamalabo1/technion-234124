@@ -63,7 +63,7 @@ def run_tests(target: str, options):
             exec_command = gen_exec_command(target, op)
 
             prefix = op['prefix']
-            out_dist = f"{prefix}.target.out"
+            out_dist = op["out"] if "out" in op else f"{prefix}.target.out"
             expected = op["expected"] if "expected" in op else f"{prefix}.target.expected"
 
             verify_command = f"diff --strip-trailing-cr -B -Z {expected} {out_dist}"

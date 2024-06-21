@@ -18,10 +18,11 @@ void freeBlockchain(BlockChain &blockChain) {
     for (int i = 0; i < blockChain.size; ++i) {
         if (c == nullptr) return;
         BlockChainBlock *next = c->chain;
-        free(c);
+        delete c;
         c = next;
     }
-    free(c);
+
+    delete c;
 }
 
 int main(int argc, char **argv) {
