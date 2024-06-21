@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
     } else if (op == "verify") {
         ifstream verify_file(target);
         if (BlockChainVerifyFile(blockchain, verify_file)) {
-            cout << "Verification !~passed" << endl;
+            cout << "Verification passed" << endl;
         } else {
             cout << "Verification failed" << endl;
         }
