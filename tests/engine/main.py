@@ -8,6 +8,7 @@ from runner import run_tests, run_valgrind
 def cli(valgrind):
     settings = utils.load_settings()
     for target in settings:
+        utils.change_permission(target)
         if valgrind:
             run_valgrind(target, settings[target])
         else:

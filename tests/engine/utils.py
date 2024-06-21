@@ -1,5 +1,6 @@
 import json
 import subprocess
+import os
 
 
 def run_command(command: str):
@@ -11,3 +12,5 @@ def load_settings():
     return json.load(settings_file)
 
 
+def change_permission(file):
+    os.chmod(file, 0o755)
