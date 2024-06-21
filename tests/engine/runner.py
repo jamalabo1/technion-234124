@@ -1,7 +1,6 @@
 from typing import List
 import click
-
-from engine import utils
+import utils
 
 
 class TestBlock:
