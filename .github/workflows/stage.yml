@@ -26,10 +26,6 @@ jobs:
       - name: Build
         # Build your program with the given configuration
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
-      - name: Build Tests
-        working-directory: ${{github.workspace}}/tests
-        run: |
-          pip install --target ${{github.workspace}} . 
 
       - name: Install
         run: cmake --install ${{github.workspace}}/build
@@ -39,7 +35,6 @@ jobs:
         with:
           name: binaries
           path: |
-            ${{github.workspace}}/bin
             ${{github.workspace}}/project
   valgrind:
     name: Valgrind
