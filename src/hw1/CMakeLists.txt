@@ -33,5 +33,7 @@ add_executable(
         files/main.cpp
 )
 
+target_link_libraries(mtm_blockchain mtm_blockchain_lib)
+
 
 install_project_binaries(mtm_blockchain)
