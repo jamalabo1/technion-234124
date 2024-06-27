@@ -11,13 +11,27 @@ set(headers
         files/Utilities.h
 )
 
-add_executable(mtm_blockchain
+add_library(mtm_blockchain_lib
         ${headers}
 
-        files/main.cpp
         files/Utilities.cpp
         files/BlockChain.cpp
         files/Transaction.cpp
 )
 
-install_project_binaries(mtm_blockchain )
+target_include_directories(
+        mtm_blockchain_lib
+
+        PUBLIC
+
+        files
+)
+
+add_executable(
+        mtm_blockchain
+
+        files/main.cpp
+)
+
+
+install_project_binaries(mtm_blockchain)
