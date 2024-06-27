@@ -40,11 +40,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: binaries
-
       - name: Unit Tests
         working-directory: bin
         run: ./technion-234124_tests_exec
-
 
       - name: Case tests
         working-directory: bin
@@ -62,5 +60,3 @@ jobs:
         run: |
           ls
           python3 engine/main.py --valgrind
-          
-
