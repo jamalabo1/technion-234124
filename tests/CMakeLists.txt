@@ -12,6 +12,9 @@ add_subdirectory(hw1-unit-tests)
 
 enable_global_testing_target() # enable this target by linking the global target to an executable (order is important, for the global test target to populate it's self)
 
+install_project_binaries(technion-234124_tests_exc)
+
+
 # python testing
 add_custom_command(
         TARGET technion-234124_tests POST_BUILD
