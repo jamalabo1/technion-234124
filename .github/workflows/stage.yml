@@ -2,8 +2,8 @@ name: Stage
 on:
   push:
     branches: [ "main" ]
-  pull_request_target:
-    branches: [ "staging" ]
+  pull_request:
+    branches: [ "develop" ]
 env:
   BUILD_TYPE: Release
 
