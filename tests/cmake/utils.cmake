@@ -33,7 +33,7 @@ endmacro()
 
 macro(create_global_testing_target global_test_target_name source_files)
     enable_testing()
-    find_package(GTest REQUIRED)
+    find_package(GTest )
     include(GoogleTest)
 
 
