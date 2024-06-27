@@ -1,9 +1,10 @@
 name: Stage
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "staging" ]
+    branches: [ "develop", "staging" ]
 env:
   BUILD_TYPE: Release
 
@@ -28,8 +29,8 @@ jobs:
           name: binaries
           path: |
             ${{github.workspace}}/project
-  valgrind:
-    name: Valgrind
+  tests:
+    name: App tests
     needs: build
     runs-on: ubuntu-latest
     container:
@@ -39,22 +40,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: binaries
-
-      - name: Valgrind Test
+      - name: Unit Tests
         working-directory: bin
-        run: |
-          ls
-          python3 engine/main.py --valgrind
-  tests:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download binaries
-        uses: actions/download-artifact@v4
-        with:
-          name: binaries
+        run: ./technion-234124_tests_exec
 
-      - name: Run tests
+      - name: Case tests
         working-directory: bin
         run: |
           python3 engine/main.py
@@ -64,3 +54,9 @@ jobs:
         with:
           name: tests
           path: ./bin/*test*/*.out
+
+      - name: Valgrind Test
+        working-directory: bin
+        run: |
+          ls
+          python3 engine/main.py --valgrind

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.16)
 project(project-hw1)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -11,13 +11,29 @@ set(headers
         files/Utilities.h
 )
 
-add_executable(mtm_blockchain
+add_library(mtm_blockchain_lib
         ${headers}
-
-        files/main.cpp
+        
         files/Utilities.cpp
         files/BlockChain.cpp
         files/Transaction.cpp
 )
 
-install_project_binaries(mtm_blockchain )
+target_include_directories(
+        mtm_blockchain_lib
+
+        PUBLIC
+
+        files
+)
+
+add_executable(
+        mtm_blockchain
+
+        files/main.cpp
+)
+
+target_link_libraries(mtm_blockchain mtm_blockchain_lib)
+
+
+install_project_binaries(mtm_blockchain)
