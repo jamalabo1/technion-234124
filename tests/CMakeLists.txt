@@ -40,6 +40,10 @@ install(FILES
         conftest.py
         DESTINATION bin
 )
+install(FILES
+            requirements.txt
+        DESTINATION .
+)
 #install(
 #        DIRECTORY
 #        hw1/tests
