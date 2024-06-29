@@ -88,6 +88,9 @@ jobs:
         with:
           name: binaries
 
+      - name: Setup git
+        run: sudo apt install git-all
+
       - name: Pull tests
         run: |
           git clone --branch tests https://gitlab.com/jamalabo1/technion-utils bin/hw1
