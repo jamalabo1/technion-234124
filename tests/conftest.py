@@ -16,7 +16,7 @@ def pytest_addoption(parser):
 
 def pytest_generate_tests(metafunc):
     test_target_data = []
-    idslist=[]
+    idslist = []
     settings = utils.load_settings()
     valgrind = metafunc.config.getoption("valgrind")
 

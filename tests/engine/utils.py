@@ -5,8 +5,12 @@ import os
 
 def run_command(command: str, return_output: bool = False):
     if return_output:
-        return subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read()
-    return subprocess.run(command, shell=True)
+        result = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read()
+        print(result)
+        return result
+    result = subprocess.run(command, shell=True)
+    print(result.returncode)
+    return result.returncode
 
 
 def load_settings():

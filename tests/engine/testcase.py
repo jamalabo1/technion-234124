@@ -1,4 +1,4 @@
-from typing import List,Callable
+from typing import List, Callable
 
 from engine.utils import run_command
 
@@ -17,8 +17,7 @@ class RunnerCase:
     def __init__(self, key, commands):
         self.key = key
         self.commands = commands
-    
-    
+
     def __str__(self):
         return self.key
 
@@ -37,4 +36,4 @@ def diff_command_runner(command) -> RunnerCommand:
 
 def diff_command_lambda(command):
     result = run_command(command, return_output=True)
-    return result == ""
+    return result == b''
