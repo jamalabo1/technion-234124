@@ -8,6 +8,8 @@ def pytest_generate_tests(metafunc):
     test_target_data = []
     settings = utils.load_settings()
     for target in settings:
+        utils.change_permission(target)
+        
         options = settings[target]
         if "generated" in options:
             for op in options["generated"]:
