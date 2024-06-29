@@ -62,8 +62,7 @@ jobs:
 
       - name: Pull tests
         run: |
-          git clone --branch tests https://gitlab.com/jamalabo1/technion-utils bin
-
+          git clone --branch tests https://gitlab.com/jamalabo1/technion-utils temp && cd temp && mv * ../
       - name: Case tests
         working-directory: bin
         continue-on-error: true
