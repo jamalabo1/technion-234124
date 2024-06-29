@@ -27,7 +27,7 @@ install(
         DIRECTORY
         engine
         hw1/tests
-        hw1/generators/out
+        hw1
         DESTINATION bin
 )
 
