@@ -21,7 +21,7 @@ def pytest_generate_tests(metafunc):
     valgrind = metafunc.config.getoption("valgrind")
 
     for target in settings:
-        # utils.change_permission(target)
+        utils.change_permission(target)
 
         options = settings[target]
         if "generated" in options:
