@@ -2,7 +2,7 @@ from pathlib import Path
 
 from engine import utils
 from engine import common
-from tests.engine.testcase import TestCommand, shell_command_runner, diff_command_runner, TestCase
+from engine.testcase import shell_command_runner, diff_command_runner, RunnerCase
 
 
 def pytest_addoption(parser):
@@ -16,11 +16,12 @@ def pytest_addoption(parser):
 
 def pytest_generate_tests(metafunc):
     test_target_data = []
+    idslist=[]
     settings = utils.load_settings()
     valgrind = metafunc.config.getoption("valgrind")
 
     for target in settings:
-        utils.change_permission(target)
+        # utils.change_permission(target)
 
         options = settings[target]
         if "generated" in options:
@@ -31,24 +32,23 @@ def pytest_generate_tests(metafunc):
 
                     gen_commands = common.get_generated_test_commands(target, op, variables, valgrind)
                     commands = [
-                        TestCommand(
-                            shell_command_runner(gen_commands["exec_command"])
-                        ),
+                        shell_command_runner(gen_commands["exec_command"])
                     ]
                     if not valgrind:
                         commands.append(
-                            TestCommand(
-                                diff_command_runner(gen_commands["verify_command"])
-                            )
+                            diff_command_runner(gen_commands["verify_command"])
                         )
 
-                    test_case = TestCase(
+                    runner_case = RunnerCase(
                         op["command"],
                         commands
                     )
 
                     test_target_data.append(
-                        (target, test_case)
+                        (target, runner_case)
+                    )
+                    idslist.append(
+                        f"{target}-{test_case}"
                     )
 
-    metafunc.parametrize("target,test_case", test_target_data)
+    metafunc.parametrize("target,test_case", test_target_data, ids=idslist)

@@ -89,7 +89,7 @@ jobs:
           name: binaries
 
       - name: Setup git
-        run: apt install -y git-all
+        run: apt install -y --assume-yes git-all 
 
       - name: Pull tests
         run: |
