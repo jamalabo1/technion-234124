@@ -61,7 +61,7 @@ jobs:
       - name: Pull tests
         uses: actions/checkout@v4
         with:
-          name: https://gitlab.com/jamalabo1/technion-utils
+          repository: https://gitlab.com/jamalabo1/technion-utils
           path: bin/hw1
           ref: tests
 
