@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
         if (BlockChainVerifyFile(blockchain, verify_file)) {
             cout << "Verification passed" << endl;
         } else {
-            cout << "Verification failed!" << endl;
+            cout << "Verification failed" << endl;
         }
     } else {
         printErrorMessage();
