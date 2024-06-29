@@ -7,4 +7,6 @@ add_library(mtm_blockchain_lib_tests
         blockchain_tests.cpp
 )
 
+# assuming mtm_blockchain target exists.
+
 create_testing_target(mtm_blockchain_lib)
