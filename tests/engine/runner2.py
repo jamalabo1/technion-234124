@@ -1,8 +1,9 @@
+import utils
 import subprocess
-import conftest
 
 
 def test_target(target, command, exec, verify):
     print("running")
-    subprocess.run(exec)
-    subprocess.run(verify)
+    utils.change_permission(target)
+    subprocess.run(exec, shell=True)
+    subprocess.run(verify, shell=True)
