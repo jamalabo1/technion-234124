@@ -62,7 +62,7 @@ jobs:
 
       - name: Pull tests
         run: |
-          git clone --branch tests https://gitlab.com/jamalabo1/technion-utils bin/hw1
+          git clone --branch tests https://gitlab.com/jamalabo1/technion-utils bin
 
       - name: Case tests
         working-directory: bin
@@ -99,7 +99,7 @@ jobs:
 
       - name: Pull tests
         run: |
-          git clone --branch tests https://gitlab.com/jamalabo1/technion-utils bin/hw1
+          git clone --branch tests https://gitlab.com/jamalabo1/technion-utils bin
 
       - name: Valgrind Test
         working-directory: bin
