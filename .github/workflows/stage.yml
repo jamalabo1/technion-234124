@@ -64,13 +64,10 @@ jobs:
         run: |
           git clone --branch tests https://gitlab.com/jamalabo1/technion-utils bin/hw1
 
-      - name: Install depends
-        run: pip install -U pytest
-
       - name: Case tests
         working-directory: bin
         run: |
-          pytest engine/runner2.py --verbose
+          pytest engine/runner2.py
 
       - name: Archive Results
         uses: actions/upload-artifact@v4
@@ -102,10 +99,6 @@ jobs:
       - name: Pull tests
         run: |
           git clone --branch tests https://gitlab.com/jamalabo1/technion-utils bin/hw1
-
-
-      - name: Install depends
-        run: pip install -U pytest
 
       - name: Valgrind Test
         working-directory: bin
