@@ -89,7 +89,7 @@ jobs:
           name: binaries
 
       - name: Setup git
-        run: sudo apt install git-all
+        run: apt install git-all
 
       - name: Pull tests
         run: |
