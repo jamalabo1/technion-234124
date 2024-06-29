@@ -68,7 +68,7 @@ jobs:
       - name: Case tests
         working-directory: bin
         run: |
-          pytest engine/runner2.py --verbose
+          pytest engine/runner2.py --verbose --capture=tee-sys
 
       - name: Archive Results
         uses: actions/upload-artifact@v4
@@ -89,7 +89,7 @@ jobs:
           name: binaries
 
       - name: Setup git
-        run: apt install git-all
+        run: apt install -y git-all
 
       - name: Pull tests
         run: |
@@ -103,4 +103,4 @@ jobs:
         working-directory: bin
         run: |
           ls
-          pytest --valgrind engine/runner2.py  --verbose
+          pytest --valgrind engine/runner2.py --verbose --capture=tee-sys

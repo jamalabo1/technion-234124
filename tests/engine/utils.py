@@ -3,8 +3,10 @@ import subprocess
 import os
 
 
-def run_command(command: str, working_dir=None):
-    return subprocess.run(command, cwd=working_dir, shell=True)
+def run_command(command: str, return_output: bool = False):
+    if return_output:
+        return subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read()
+    return subprocess.run(command, shell=True)
 
 
 def load_settings():
