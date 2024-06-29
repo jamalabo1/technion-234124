@@ -59,11 +59,8 @@ jobs:
           name: binaries
 
       - name: Pull tests
-        uses: actions/checkout@v4
-        with:
-          repository: https://gitlab.com/jamalabo1/technion-utils
-          path: bin/hw1
-          ref: tests
+        run: |
+          git clone --branch tests https://gitlab.com/jamalabo1/technion-utils bin/hw1
 
       - name: Install depends
         run: pip install -U pytest
