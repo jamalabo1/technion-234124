@@ -46,6 +46,7 @@ jobs:
           ./technion-234124_tests_exc
   case-tests:
     name: Case tests
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-python@v5
@@ -80,6 +81,7 @@ jobs:
 
   valgrind-tests:
     name: Valgrind tests
+    needs: build
     runs-on: ubuntu-latest
     container:
       image: jamalabo1/general_images:valgrind
