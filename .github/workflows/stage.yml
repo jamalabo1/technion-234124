@@ -53,6 +53,8 @@ jobs:
         with:
           python-version: '3.9'
           cache: 'pip' # caching pip dependencies
+          cache-dependency-path: tests/requirements.txt
+      - run: pip install -r requirements.txt
 
       - name: Download binaries
         uses: actions/download-artifact@v4
@@ -86,6 +88,8 @@ jobs:
         with:
           python-version: '3.9'
           cache: 'pip' # caching pip dependencies
+          cache-dependency-path: tests/requirements.txt
+      - run: pip install -r requirements.txt
 
       - name: Download binaries
         uses: actions/download-artifact@v4
