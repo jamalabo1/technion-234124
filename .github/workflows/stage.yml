@@ -61,6 +61,7 @@ jobs:
       - run: pip install -r requirements.txt
 
       - name: Pull tests
+        working-directory: bin
         run: |
           git clone --branch tests https://gitlab.com/jamalabo1/technion-utils temp && cd temp && mv * ../
       - name: Case tests
