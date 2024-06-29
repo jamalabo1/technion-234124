@@ -46,7 +46,6 @@ jobs:
           ./technion-234124_tests_exc
   case-tests:
     name: Case tests
-    needs: unit-tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-python@v5
@@ -58,7 +57,14 @@ jobs:
         with:
           name: binaries
 
-      - name: Install depends 
+      - name: Pull tests
+        uses: actions/checkout@v4
+        with:
+          name: https://gitlab.com/jamalabo1/technion-utils
+          path: bin/hw1
+          ref: tests
+
+      - name: Install depends
         run: pip install -U pytest
 
       - name: Case tests
@@ -72,21 +78,29 @@ jobs:
           name: tests
           path: ./bin/**/*.out
 
-#
-#  valgrind-tests:
-#    name: Valgrind tests
-#    needs: unit-tests
-#    runs-on: ubuntu-latest
-#    container:
-#      image: jamalabo1/general_images:valgrind
-#    steps:
-#      - name: Download binaries
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: binaries
-#
-#      - name: Valgrind Test
-#        working-directory: bin
-#        run: |
-#          ls
-#          python3 engine/main.py --valgrind
+  valgrind-tests:
+    name: Valgrind tests
+    runs-on: ubuntu-latest
+    container:
+      image: jamalabo1/general_images:valgrind
+    steps:
+      - name: Download binaries
+        uses: actions/download-artifact@v4
+        with:
+          name: binaries
+
+      - name: Pull tests
+        uses: actions/checkout@v4
+        with:
+          name: https://gitlab.com/jamalabo1/technion-utils
+          path: bin/hw1
+          ref: tests
+
+      - name: Install depends
+        run: pip install -U pytest
+
+      - name: Valgrind Test
+        working-directory: bin
+        run: |
+          ls
+          pytest --valgrind engine/runner2.py  --verbose
