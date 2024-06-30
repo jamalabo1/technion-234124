@@ -70,7 +70,7 @@ jobs:
       - name: Pull tests requirements
         working-directory: bin
         run: |
-          git clone https://gitlab.com/jamalabo1/technion-utils --single-branch --depth 1 --branch\
+          git clone https://gitlab.com/jamalabo1/technion-utils --single-branch --depth 1 --branch \
           ${{ github.event.inputs.tests-branch }} 
           temp && cd temp && mv * ../ && rm -rf temp
 
