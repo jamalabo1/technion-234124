@@ -43,7 +43,7 @@ jobs:
             ${{github.workspace}}/project
 
   unit-tests:
-    if: github.event.inputs.run-unit-tests==true
+    if: ${{github.event.inputs.run-unit-tests=='true'}}
     name: Unit tests
     needs: build
     runs-on: ubuntu-latest
@@ -94,7 +94,7 @@ jobs:
           path: ./bin/**/*.out
 
   valgrind-tests:
-    if: github.event.inputs.run-valgrind==true
+    if: ${{github.event.inputs.run-valgrind=='true'}}
     name: Valgrind tests
     needs: build
     runs-on: ubuntu-latest
