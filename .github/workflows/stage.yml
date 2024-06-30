@@ -133,4 +133,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: valgrind output
-          path: ./bin/valgrind-out.txt
+          path: ./bin/**/valgrind-out.txt
