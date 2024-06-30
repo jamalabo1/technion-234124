@@ -43,10 +43,10 @@ jobs:
             ${{github.workspace}}/project
 
   unit-tests:
+    if: github.event.inputs.run-unit-tests==true
     name: Unit tests
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.run-unit-tests }}
     steps:
       - name: Download binaries
         uses: actions/download-artifact@v4
@@ -94,10 +94,10 @@ jobs:
           path: ./bin/**/*.out
 
   valgrind-tests:
+    if: github.event.inputs.run-valgrind==true
     name: Valgrind tests
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.run-valgrind}}
     steps:
       - name: Download binaries
         uses: actions/download-artifact@v4
