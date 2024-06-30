@@ -26,16 +26,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Configure CMake
-        run: cmake -B ${{github.workspace}}/build \
-          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-          -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/project \
-          -DENABLE_UNIT_TESTS:BOOLEAN=${{ github.event.inputs.run-unit-tests }}
+        run: cmake  -B ${{github.workspace}}/build  \
+                    -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+                    -DCMAKE_INSTALL_PREFIX:PATH=${{github.workspace}}/project \
+                    -DENABLE_UNIT_TESTS:BOOL=${{ github.event.inputs.run-unit-tests }}
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
       - name: Install
-        run: cmake --install ${{github.workspace}}/build
+        run: cmake --install ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
       - name: Store binaries
         uses: actions/upload-artifact@v4
@@ -48,7 +48,7 @@ jobs:
     name: Unit tests
     needs: build
     runs-on: ubuntu-latest
-    if: github.event.inputs.run-unit-tests
+    if: ${{ github.event.inputs.run-unit-tests }}
     steps:
       - name: Download binaries
         uses: actions/download-artifact@v4
@@ -102,7 +102,7 @@ jobs:
     name: Valgrind tests
     needs: build
     runs-on: ubuntu-latest
-    if: github.event.inputs.run-valgrind
+    if: ${{ github.event.inputs.run-valgrind}}
     steps:
       - name: Download binaries
         uses: actions/download-artifact@v4
