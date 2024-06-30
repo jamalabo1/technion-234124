@@ -14,7 +14,8 @@ on:
         name: Tests branch name
         type: string
         default: "tests-bea2b1a8-a8c9-4b20-88a6-6655c7a62f0f"
-
+  push:
+    branches: [ "develop" ]
 env:
   #  TESTS_ID: ""
   BUILD_TYPE: Release
