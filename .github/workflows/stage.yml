@@ -71,7 +71,7 @@ jobs:
         working-directory: bin
         run: |
           git clone https://gitlab.com/jamalabo1/technion-utils --single-branch --depth 1 --branch \
-          ${{ github.event.inputs.tests-branch }} 
+          ${{ github.event.inputs.tests-branch }} temp
           temp && cd temp && mv * ../ && rm -rf temp
 
       - uses: actions/setup-python@v5
@@ -107,8 +107,8 @@ jobs:
       - name: Pull tests requirements
         working-directory: bin
         run: |
-          git clone https://gitlab.com/jamalabo1/technion-utils --branch --single-branch --depth 1 \
-          ${{ github.event.inputs.tests-branch }} 
+          git clone https://gitlab.com/jamalabo1/technion-utils --single-branch --depth 1 --branch \
+          ${{ github.event.inputs.tests-branch }} temp
           temp && cd temp && mv * ../ && rm -rf temp
 
 
