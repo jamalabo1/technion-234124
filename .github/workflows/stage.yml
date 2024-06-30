@@ -70,12 +70,9 @@ jobs:
       - name: Pull tests requirements
         working-directory: bin
         run: |
-          mkdir temp && cd temp
-          git init
-          git remote add origin https://gitlab.com/jamalabo1/technion-utils
-          git fetch origin <sha1>
-          git checkout <sha1>
-          mv * ../ && rm -rf temp
+          git clone https://gitlab.com/jamalabo1/technion-utils --branch --single-branch --depth 1 \
+          ${{ github.event.inputs.tests-branch }} 
+          temp && cd temp && mv * ../ && rm -rf temp
 
       - uses: actions/setup-python@v5
         with:
