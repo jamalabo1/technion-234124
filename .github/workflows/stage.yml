@@ -109,7 +109,7 @@ jobs:
         run: |
           git clone https://gitlab.com/jamalabo1/technion-utils --single-branch --depth 1 --branch \
           ${{ github.event.inputs.tests-branch }} temp
-          temp && cd temp && mv * ../ && rm -rf temp
+          cd temp && mv * ../ && rm -rf temp
 
 
       - uses: actions/setup-python@v5
