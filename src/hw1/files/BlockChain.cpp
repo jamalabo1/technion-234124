@@ -81,7 +81,7 @@ BlockChain BlockChainLoad(ifstream &file) {
 
         string temp_string = "";
         int current_index = 0;
-        for (int i = 0; i < line.length(); i++) {
+        for (int i = 0; i < (int)line.length(); i++) {
 
             if (line[i] == ' ') {
                 data[current_index++] = temp_string;
