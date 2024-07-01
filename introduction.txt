@@ -1,0 +1,9 @@
+1.  - First student's name: Farah Qub
+    - Favorite singer: Halsey
+    - Favorite song: without me
+    - Desirable grade in Matam: 99
+
+2.	- Second student's name: Jamal Abo Mokh
+	- Favorite singer: Gucci Mane
+	- Favorite song: Memories - Kid Cudi
+	- Desirable grade in Matam: 100
