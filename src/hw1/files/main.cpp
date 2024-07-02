@@ -10,7 +10,7 @@ using std::cout;
 using std::endl;
 
 void printErrorMessage() {
-    std::cout << getErrorMessage() << std::endl;
+    cout << getErrorMessage() << endl;
 }
 
 void freeBlockchain(BlockChain &blockChain) {

@@ -4,40 +4,35 @@
 #include "BlockChain.h"
 #include "Transaction.h"
 
-// although it ought not to occur, since the blockchain size
-// is determined by the available chains.
-
-#define CurrentBlockGuard(x) if (x == nullptr) break
-#define MoveNextBlock(x) x = x->chain
-
-
 using std::endl;
+using std::to_string;
 
 int BlockChainGetSize(const BlockChain &blockChain) {
     return blockChain.size;
 }
 
-int BlockChainPersonalBalance(const BlockChain &blockChain, const string &name) {
+int BlockChainPersonalBalance(const BlockChain &blockChain,
+                              const string &name) {
 
     int balance = 0;
     BlockChainBlock *current_block = blockChain.head;
 
     for (int i = 0; i < BlockChainGetSize(blockChain); i++) {
-        CurrentBlockGuard(current_block);
-
+        if (current_block == nullptr) break;
         if (current_block->transaction.receiver == name) {
             balance += current_block->transaction.value;
         }
         if (current_block->transaction.sender == name) {
             balance -= current_block->transaction.value;
         }
-        MoveNextBlock(current_block);
+        current_block = current_block->chain;
     }
     return balance;
 }
 
 void
-BlockChainAppendTransaction(BlockChain &blockChain, unsigned int value, const string &sender, const string &receiver,
+BlockChainAppendTransaction(BlockChain &blockChain, unsigned int value,
+                            const string &sender, const string &receiver,
                             const string &timestamp) {
 
     Transaction transaction = {
@@ -49,7 +44,9 @@ BlockChainAppendTransaction(BlockChain &blockChain, unsigned int value, const st
     BlockChainAppendTransaction(blockChain, transaction, timestamp);
 }
 
-void BlockChainAppendTransaction(BlockChain &blockChain, const Transaction &transaction, const string &timestamp) {
+void BlockChainAppendTransaction(BlockChain &blockChain,
+                                 const Transaction &transaction,
+                                 const string &timestamp) {
 
 
     BlockChainBlock *block = new BlockChainBlock{
@@ -63,46 +60,35 @@ void BlockChainAppendTransaction(BlockChain &blockChain, const Transaction &tran
 }
 
 
+void splitBlockchainLine(string line, string data[4]) {
+    string temp_string = "";
+    int current_index = 0;
+    for (int i = 0; i < (int) line.length(); i++) {
+
+        if (line[i] == ' ') {
+            data[current_index++] = temp_string;
+            temp_string = "";
+            continue;
+        };
+        temp_string += line[i];
+    }
+    data[current_index] = temp_string;
+}
+
 BlockChain BlockChainLoad(ifstream &file) {
-
-    BlockChain blockChain{
-            0,
-            nullptr
-    };
-
+    BlockChain blockChain{0, nullptr};
     string line;
-
     BlockChainBlock *current_block = nullptr;
-
     while (!file.eof()) {
         getline(file, line);
-
         string data[4] = {""};
-
-        string temp_string = "";
-        int current_index = 0;
-        for (int i = 0; i < (int)line.length(); i++) {
-
-            if (line[i] == ' ') {
-                data[current_index++] = temp_string;
-                temp_string = "";
-                continue;
-            };
-            temp_string += line[i];
-        }
-        data[current_index] = temp_string;
-
+        splitBlockchainLine(line, data);
         Transaction transaction = {
-                /*.value =*/    (unsigned int) atoi(data[2].c_str()),
-                /*.sender =*/   data[0],
+                /*.value =*/    (unsigned int) atoi(data[2].c_str()), data[0],
                 /*.receiver =*/ data[1],
         };
-
-
         string timestamp = data[3];
-
-        BlockChainBlock *x = new BlockChainBlock{
-                /*     .transaction =*/ transaction,
+        BlockChainBlock *x = new BlockChainBlock{transaction,
                 /*    .timestamp = */timestamp,
                 /*    .chain = */nullptr
         };
@@ -113,11 +99,8 @@ BlockChain BlockChainLoad(ifstream &file) {
             current_block->chain = x;
             current_block = x;
         }
-
         blockChain.size++;
-
     }
-
     return blockChain;
 }
 
@@ -128,16 +111,16 @@ void BlockChainDump(const BlockChain &blockChain, ofstream &file) {
 
     int size = BlockChainGetSize(blockChain);
     for (int i = 1; i <= size; i++) {
-        CurrentBlockGuard(current_block);
+        if (current_block == nullptr) break;
 
-        file << std::to_string(i) + "." << endl;
+        file << to_string(i) + "." << endl;
         TransactionDumpInfo(current_block->transaction, file);
 
         file << "Transaction timestamp: " + current_block->timestamp;
         if (i != size) {
             file << endl;
         }
-        MoveNextBlock(current_block);
+        current_block = current_block->chain;
     }
 }
 
@@ -146,14 +129,14 @@ void BlockChainDumpHashed(const BlockChain &blockChain, ofstream &file) {
 
     int size = BlockChainGetSize(blockChain);
     for (int i = 1; i <= size; i++) {
-        CurrentBlockGuard(current_block);
+        if (current_block == nullptr) break;
 
         file << TransactionHashedMessage(current_block->transaction);
         if (i != size) {
             file << endl;
         }
 
-        MoveNextBlock(current_block);
+        current_block = current_block->chain;
     }
 }
 
@@ -177,7 +160,7 @@ bool BlockChainVerifyFile(const BlockChain &blockChain, ifstream &file) {
         }
 
 
-        MoveNextBlock(current_block);
+        current_block = current_block->chain;
     }
 
     return true;
@@ -190,24 +173,25 @@ void BlockChainCompress(BlockChain &blockChain) {
     int size = BlockChainGetSize(blockChain);
     if (size == 1 || current_block == nullptr) return;
 
-    BlockChainBlock *previous_block = current_block;
+    // previous block
+    BlockChainBlock *p_block = current_block;
 
-    MoveNextBlock(current_block);
+    current_block = current_block->chain;
 
     for (int i = 2; i <= size; i++) {
-        CurrentBlockGuard(current_block);
+        if (current_block == nullptr) break;
 
         Transaction &current_transaction = current_block->transaction;
 
-        if (previous_block->transaction.sender == current_transaction.sender &&
-            previous_block->transaction.receiver == current_transaction.receiver) {
-            previous_block->transaction.value += current_transaction.value;
-            previous_block->chain = current_block->chain;
+        if (p_block->transaction.sender == current_transaction.sender &&
+            p_block->transaction.receiver == current_transaction.receiver) {
+            p_block->transaction.value += current_transaction.value;
+            p_block->chain = current_block->chain;
             delete current_block;
             blockChain.size--;
-            current_block = previous_block->chain;
+            current_block = p_block->chain;
         } else {
-            previous_block = current_block;
+            p_block = current_block;
             current_block = current_block->chain;
         }
     }
@@ -219,10 +203,11 @@ void BlockChainTransform(BlockChain &blockChain, updateFunction function) {
     int size = BlockChainGetSize(blockChain);
 
     for (int i = 1; i <= size; i++) {
-        CurrentBlockGuard(current_block);
+        if (current_block == nullptr) break;
 
-        current_block->transaction.value = function(current_block->transaction.value);
+        current_block->transaction.value =
+                function(current_block->transaction.value);
 
-        MoveNextBlock(current_block);
+        current_block = current_block->chain;
     }
 }

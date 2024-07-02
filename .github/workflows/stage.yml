@@ -3,20 +3,20 @@ on:
   workflow_dispatch:
     inputs:
       run-unit-tests:
-        name: Run unit tests
+        description: Run unit tests
         type: boolean
         default: false
       run-valgrind:
-        name: Run tests with valgrind
+        description: Run tests with valgrind
         type: boolean
         default: false
       tests-branch:
-        name: Tests branch name
+        description: Tests branch name
         type: string
+        required: true
         default: "tests-2d2a404c-0ee6-4148-aff4-97fffabce9aa"
 
 env:
-  #  TESTS_ID: ""
   BUILD_TYPE: Release
 
 jobs:
@@ -61,6 +61,7 @@ jobs:
     name: Case tests
     needs: build
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Download binaries
         uses: actions/download-artifact@v4
@@ -83,7 +84,6 @@ jobs:
 
       - name: Case tests
         working-directory: bin
-        continue-on-error: true
         run: |
           pytest --show-capture=no engine/runner2.py
 
@@ -98,6 +98,7 @@ jobs:
     name: Valgrind tests
     needs: build
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Download binaries
         uses: actions/download-artifact@v4
@@ -125,10 +126,9 @@ jobs:
 
       - name: Valgrind Test
         working-directory: bin
-        continue-on-error: true
         run: |
           ls
-          pytest --valgrind engine/runner2.py --verbose --capture=tee-sys
+          pytest --valgrind engine/runner2.py --verbose --capture=tee-sys --maxfail=10
 
       - name: Archive Results
         uses: actions/upload-artifact@v4
