@@ -2,12 +2,12 @@ name: Test Runner
 on:
   workflow_dispatch:
     inputs:
-      run-unit-tests:
-        description: Run unit tests
-        type: boolean
-        default: false
       run-valgrind:
         description: Run tests with valgrind
+        type: boolean
+        default: false
+      run-unit-tests:
+        description: Run unit tests (Advanced)
         type: boolean
         default: false
       tests-branch:
