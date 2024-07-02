@@ -16,10 +16,15 @@ on:
         type: boolean
         default: false
       case-max-fail:
-        description: Unit tests max failure (Advanced)
+        description: Case tests max failure (Advanced)
         type: number
         required: true
         default: 0
+      valgrind-max-fail:
+        description: Valgrind tests max failure (Advanced)
+        type: number
+        required: true
+        default: 10
 env:
   BUILD_TYPE: Release
 
@@ -114,7 +119,7 @@ jobs:
         working-directory: bin
         run: |
           ls
-          pytest --valgrind engine/runner2.py --verbose --capture=tee-sys --maxfail=10
+          pytest --valgrind engine/runner2.py --verbose --capture=tee-sys --maxfail=${{github.event.inputs.valgrind-max-fail}}
 
       - name: Archive Results
         if: always()
