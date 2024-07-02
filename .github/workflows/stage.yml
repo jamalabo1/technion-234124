@@ -67,7 +67,7 @@ jobs:
       - name: Case tests
         working-directory: bin
         run: |
-          pytest --show-capture=no engine/runner2.py --maxfail=-1
+          pytest --show-capture=no engine/runner2.py --maxfail=0
 
       - name: Archive Results
         if: always()
