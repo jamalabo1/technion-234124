@@ -2,6 +2,11 @@ name: Test Runner
 on:
   workflow_dispatch:
     inputs:
+      tests-branch:
+        description: Tests branch name
+        type: string
+        required: true
+        default: "tests-2d2a404c-0ee6-4148-aff4-97fffabce9aa"
       run-valgrind:
         description: Run tests with valgrind
         type: boolean
@@ -10,12 +15,11 @@ on:
         description: Run unit tests (Advanced, requires configurations)
         type: boolean
         default: false
-      tests-branch:
-        description: Tests branch name
-        type: string
+      case-max-fail:
+        description: Unit tests max failure (Advanced)
+        type: number
         required: true
-        default: "tests-2d2a404c-0ee6-4148-aff4-97fffabce9aa"
-
+        default: 0
 env:
   BUILD_TYPE: Release
 
@@ -67,7 +71,7 @@ jobs:
       - name: Case tests
         working-directory: bin
         run: |
-          pytest --show-capture=no engine/runner2.py --maxfail=0
+          pytest --show-capture=no engine/runner2.py --maxfail=${{github.event.inputs.case-max-fail}}
 
       - name: Archive Results
         if: always()
