@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-//    freeBlockchain(blockchain);
+    freeBlockchain(blockchain);
 
     return 0;
 }
