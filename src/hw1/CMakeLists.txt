@@ -35,5 +35,7 @@ add_executable(
 
 target_link_libraries(mtm_blockchain mtm_blockchain_lib)
 
-
-install_project_binaries(mtm_blockchain)
+install(TARGETS mtm_blockchain
+        DESTINATION bin
+        COMPONENT mtm_blockchain
+)
