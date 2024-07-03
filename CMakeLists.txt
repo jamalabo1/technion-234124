@@ -11,4 +11,3 @@ message (STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 
 
 add_subdirectory(src)
-#add_subdirectory(tests)
