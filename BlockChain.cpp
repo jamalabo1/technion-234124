@@ -33,7 +33,7 @@ int BlockChainPersonalBalance(const BlockChain &blockChain,
 }
 
 void
-blockChainAppendTransaction(BlockChain &blockChain, unsigned int value,
+BlockChainAppendTransaction(BlockChain &blockChain, unsigned int value,
                             const string &sender, const string &receiver,
                             const string &timestamp) {
 
@@ -43,10 +43,10 @@ blockChainAppendTransaction(BlockChain &blockChain, unsigned int value,
             receiver
     };
 
-    blockChainAppendTransaction(blockChain, transaction, timestamp);
+    BlockChainAppendTransaction(blockChain, transaction, timestamp);
 }
 
-void blockChainAppendTransaction(BlockChain &blockChain,
+void BlockChainAppendTransaction(BlockChain &blockChain,
                                  const Transaction &transaction,
                                  const string &timestamp) {
 
