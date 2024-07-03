@@ -153,7 +153,7 @@ jobs:
         run: cmake --install ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
       - name: Unit Tests
-        working-directory: bin
+        working-directory: install/bin
         run: |
           chmod 755 ./tests_exc
           ./tests_exc
