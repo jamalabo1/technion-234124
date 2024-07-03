@@ -14,10 +14,10 @@ void printErrorMessage() {
 }
 
 void freeBlockchain(BlockChain &blockChain) {
-    BlockChainBlock *c = blockChain.head;
+    blockChainBlock *c = blockChain.head;
     for (int i = 0; i < blockChain.size; ++i) {
         if (c == nullptr) return;
-        BlockChainBlock *next = c->chain;
+        blockChainBlock *next = c->chain;
         delete c;
         c = next;
     }
@@ -37,27 +37,27 @@ int main(int argc, char **argv) {
     string target = argv[3];
 
 
-    ifstream source_file(source);
+    ifstream sourceFile(source);
 
-    BlockChain blockchain = BlockChainLoad(source_file);
+    BlockChain blockchain = BlockChainLoad(sourceFile);
 
 
     if (op == "format") {
-        ofstream output_file(target);
-        BlockChainDump(blockchain, output_file);
+        ofstream outputFile(target);
+        BlockChainDump(blockchain, outputFile);
 
     } else if (op == "hash") {
-        ofstream output_file(target);
-        BlockChainDumpHashed(blockchain, output_file);
+        ofstream outputFile(target);
+        BlockChainDumpHashed(blockchain, outputFile);
 
     } else if (op == "compress") {
-        ofstream output_file(target);
+        ofstream outputFile(target);
         BlockChainCompress(blockchain);
-        BlockChainDump(blockchain, output_file);
+        BlockChainDump(blockchain, outputFile);
 
     } else if (op == "verify") {
-        ifstream verify_file(target);
-        if (BlockChainVerifyFile(blockchain, verify_file)) {
+        ifstream verifyFile(target);
+        if (BlockChainVerifyFile(blockchain, verifyFile)) {
             cout << "Verification passed" << endl;
         } else {
             cout << "Verification failed" << endl;
