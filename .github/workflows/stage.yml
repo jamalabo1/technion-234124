@@ -1,5 +1,5 @@
 name: Test Runner
-run-name: Test Runner v0.1.0
+run-name: Test Runner v0.2.0
 on:
   workflow_dispatch:
     inputs:
