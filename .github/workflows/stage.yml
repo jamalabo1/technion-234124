@@ -1,4 +1,4 @@
-name: Test Runner
+name: Test Runner v0.2.0
 on:
   workflow_dispatch:
     inputs:
@@ -6,7 +6,7 @@ on:
         description: Tests branch name
         type: string
         required: true
-        default: "tests-2d2a404c-0ee6-4148-aff4-97fffabce9aa"
+        default: "hw1/tests/fa5c9579-eb4c-43be-8043-8180554ec0ff"
       run-valgrind:
         description: Run tests with valgrind
         type: boolean
