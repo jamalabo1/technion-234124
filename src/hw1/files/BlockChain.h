@@ -57,7 +57,7 @@ int BlockChainPersonalBalance(const BlockChain& blockChain, const string& name);
 
 
 /**
- * blockChainAppendTransaction - creates and appends a new transaction to the BlockChain
+ * BlockChainAppendTransaction - creates and appends a new transaction to the BlockChain
  *
  * @param blockChain BlockChain to append the transaction to
  * @param value Value of the transaction
@@ -65,7 +65,7 @@ int BlockChainPersonalBalance(const BlockChain& blockChain, const string& name);
  * @param receiver Name of the receiver
  * @param timestamp String that holds the time the transaction was made
 */
-void blockChainAppendTransaction(
+void BlockChainAppendTransaction(
         BlockChain& blockChain,
         unsigned int value,
         const string& sender,
@@ -75,13 +75,13 @@ void blockChainAppendTransaction(
 
 
 /**
- * blockChainAppendTransaction - appends a copy of a given transaction to the BlockChain
+ * BlockChainAppendTransaction - appends a copy of a given transaction to the BlockChain
  *
  * @param blockChain BlockChain to append the transaction to
  * @param transaction Transaction we want to append
  * @param timestamp String that holds the time the transaction was made
 */
-void blockChainAppendTransaction(
+void BlockChainAppendTransaction(
         BlockChain& blockChain,
         const Transaction& transaction,
         const string& timestamp
