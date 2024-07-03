@@ -19,18 +19,18 @@ typedef unsigned int (*updateFunction)(unsigned int);
  * BlockChain - Defining the new BlockChain Type
  *
 */
-struct BlockChainBlock {
+struct blockChainBlock {
     Transaction transaction;
     string timestamp;
 
-    BlockChainBlock* chain;
+    blockChainBlock* chain;
 };
 
 struct BlockChain {
     // You may add any fields you believe are necessary
 
     int size;
-    BlockChainBlock* head;
+    blockChainBlock* head;
 };
 
 
@@ -57,7 +57,7 @@ int BlockChainPersonalBalance(const BlockChain& blockChain, const string& name);
 
 
 /**
- * BlockChainAppendTransaction - creates and appends a new transaction to the BlockChain
+ * blockChainAppendTransaction - creates and appends a new transaction to the BlockChain
  *
  * @param blockChain BlockChain to append the transaction to
  * @param value Value of the transaction
@@ -65,7 +65,7 @@ int BlockChainPersonalBalance(const BlockChain& blockChain, const string& name);
  * @param receiver Name of the receiver
  * @param timestamp String that holds the time the transaction was made
 */
-void BlockChainAppendTransaction(
+void blockChainAppendTransaction(
         BlockChain& blockChain,
         unsigned int value,
         const string& sender,
@@ -75,13 +75,13 @@ void BlockChainAppendTransaction(
 
 
 /**
- * BlockChainAppendTransaction - appends a copy of a given transaction to the BlockChain
+ * blockChainAppendTransaction - appends a copy of a given transaction to the BlockChain
  *
  * @param blockChain BlockChain to append the transaction to
  * @param transaction Transaction we want to append
  * @param timestamp String that holds the time the transaction was made
 */
-void BlockChainAppendTransaction(
+void blockChainAppendTransaction(
         BlockChain& blockChain,
         const Transaction& transaction,
         const string& timestamp
