@@ -140,7 +140,7 @@ jobs:
         run: |
           git clone https://gitlab.com/jamalabo1/technion-utils --single-branch --depth 1 --branch \
           ${{ github.event.inputs.tests-branch }} temp
-          cd temp && mv tests/unit-tests ../ && rm -rf temp    
+          cd temp && mv tests/unit-tests/* ../ && rm -rf temp    
 
       - name: Configure CMake
         run: |
