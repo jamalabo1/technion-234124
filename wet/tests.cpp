@@ -50,10 +50,10 @@ bool testMatrix(std::ostream& out) {
 
     Matrix m4 = m1 * m2;
     m4 *= 1;
-    ASSERT_TEST(m4(0,0) == 23);
-    ASSERT_TEST(m4(0,1) == 34);
-    ASSERT_TEST(m4(1,0) == 31);
-    ASSERT_TEST(m4(1,1) == 46);
+    ASSERT_TEST(m4(0,0) == 19);
+    ASSERT_TEST(m4(0,1) == 22);
+    ASSERT_TEST(m4(1,0) == 43);
+    ASSERT_TEST(m4(1,1) == 50);
 
     m1 += m2;
     m1 *= m2;
