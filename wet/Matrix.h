@@ -22,13 +22,37 @@ public:
     ~Matrix();
 
 
-    int &operator()(const int &i, const int &j) const;
+    Matrix rotateClockwise() const;
 
+    Matrix rotateCounterClockwise() const;
+
+    Matrix transpose() const;
+
+
+    int &operator()(const int &i, const int &j) const;
 
     friend std::ostream &operator<<(std::ostream &os, const Matrix &mat);
 
     friend Matrix operator+(Matrix left, Matrix &right);
-    friend Matrix& operator+=(Matrix& mat, Matrix& other);
+
+    friend Matrix operator-(Matrix left, Matrix &right);
+
+    friend Matrix operator*(Matrix left, Matrix &right);
+
+    friend Matrix &operator-=(Matrix &mat, Matrix &other);
+
+    friend Matrix &operator+=(Matrix &mat, Matrix &other);
+
+    friend Matrix &operator*=(Matrix &mat, Matrix &other);
+
+    friend Matrix operator*(int &left, Matrix right);
+
+    friend Matrix operator*(Matrix left, int &right);
+
+    friend bool operator!=(const Matrix &left, const Matrix &right);
+
+    friend bool operator==(const Matrix &left, const Matrix &right);
+
 
 };
 
