@@ -8,62 +8,72 @@
 #include <ostream>
 
 class Matrix {
-  private:
+private:
     int *data;
     int rows;
     int cols;
 
+    int &at(const int &i, const int &j) const;
 
-  public:
+    friend int *copy_array(const Matrix &);
+
+public:
     Matrix(int row, int col);
 
     Matrix();
 
+    Matrix(const Matrix &);
+
+    Matrix& operator=(const Matrix& other);     // copy assignment operator
+
     ~Matrix();
 
 
-    Matrix rotateClockwise() const;
+//    Matrix rotateClockwise() const;
+//
+//    Matrix rotateCounterClockwise() const;
+//
+//    Matrix transpose() const;
 
-    Matrix rotateCounterClockwise() const;
 
-    Matrix transpose() const;
+    int &operator()(const int &i, const int &j);
 
-
-    int &operator()(const int &i, const int &j) const;
+    const int &operator()(const int &i, const int &j) const;
 
     friend std::ostream &operator<<(std::ostream &os, const Matrix &mat);
 
-    friend Matrix operator+(Matrix left, Matrix &right);
+    friend Matrix operator+(Matrix left, const Matrix &right);
 
-    friend Matrix operator-(Matrix left, Matrix &right);
+    friend Matrix operator-(Matrix left, const Matrix &right);
 
-    friend Matrix operator*(Matrix left, Matrix &right);
+    friend Matrix operator*(Matrix left, const Matrix &right);
 
-    Matrix &operator-=(Matrix &other);
+    Matrix &operator-=(const Matrix &other);
 
-    Matrix &operator+=(Matrix &other);
+    Matrix &operator+=(const Matrix &other);
 
-    friend Matrix &operator*=(Matrix &mat, Matrix &other);
+    Matrix &operator*=(const Matrix &other);
 
-    friend Matrix operator-(Matrix mat);
+    friend Matrix operator-(const Matrix &mat);
 
-    friend Matrix operator*(int &left, Matrix right);
+    friend Matrix operator*(int left, Matrix right);
 
-    friend Matrix operator*(Matrix left, int &right);
+    friend Matrix operator*(Matrix left, int right);
 
-    friend Matrix &operator*=(int &left, Matrix &right);
+    friend Matrix &operator*=(int left, Matrix &right);
 
-    friend Matrix &operator*=(Matrix &left, int &right);
+    friend Matrix &operator*=(Matrix &left, int right);
+
 
     friend bool operator!=(const Matrix &left, const Matrix &right);
 
     friend bool operator==(const Matrix &left, const Matrix &right);
 
-    friend Matrix &rotateClockwise(Matrix &mat, Matrix &other);
+    Matrix rotateClockwise();
 
-    friend Matrix &rotateCounterClockwise(Matrix &mat, Matrix &other);
+    Matrix rotateCounterClockwise();
 
-    friend Matrix &transpose(Matrix &mat, Matrix &other);
+    Matrix transpose();
 };
 
 #endif //HW2_MATRIX_H
