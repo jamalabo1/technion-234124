@@ -44,7 +44,6 @@ const char* const devilFruitNames[] = {
 };
 
 std::ostream &operator<<(std::ostream &os, const Pirate &pirate){
-    os << pirate.name << " (Devil Fruit: " << devilFruitNames[pirate.devilFruit] << ")";
-    os << pirate.bounty;
+    os << pirate.name << " (Devil Fruit: " << devilFruitNames[pirate.devilFruit] << ") " << pirate.bounty ;
     return os;
 }
