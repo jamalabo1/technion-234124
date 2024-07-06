@@ -35,11 +35,8 @@ std::ostream &operator<<(std::ostream &os, const Matrix &mat) {
     return os;
 }
 
-Matrix Matrix::operator+(Matrix left, Matrix &right) {
+Matrix operator+(Matrix left, Matrix &right) {
     left += right;
     return left;
 }
 
-Matrix &operator+=(Matrix &mat, Matrix &other) {
-
-}
