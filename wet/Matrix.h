@@ -8,13 +8,13 @@
 #include <ostream>
 
 class Matrix {
-private:
+  private:
     int *data;
     int rows;
     int cols;
 
 
-public:
+  public:
     Matrix(int row, int col);
 
     Matrix();
@@ -39,21 +39,31 @@ public:
 
     friend Matrix operator*(Matrix left, Matrix &right);
 
-    friend Matrix &operator-=(Matrix &mat, Matrix &other);
+    Matrix &operator-=(Matrix &other);
 
-    friend Matrix &operator+=(Matrix &mat, Matrix &other);
+    Matrix &operator+=(Matrix &other);
 
     friend Matrix &operator*=(Matrix &mat, Matrix &other);
+
+    friend Matrix operator-(Matrix mat);
 
     friend Matrix operator*(int &left, Matrix right);
 
     friend Matrix operator*(Matrix left, int &right);
 
+    friend Matrix &operator*=(int &left, Matrix &right);
+
+    friend Matrix &operator*=(Matrix &left, int &right);
+
     friend bool operator!=(const Matrix &left, const Matrix &right);
 
     friend bool operator==(const Matrix &left, const Matrix &right);
 
+    friend Matrix &rotateClockwise(Matrix &mat, Matrix &other);
 
+    friend Matrix &rotateCounterClockwise(Matrix &mat, Matrix &other);
+
+    friend Matrix &transpose(Matrix &mat, Matrix &other);
 };
 
 #endif //HW2_MATRIX_H
