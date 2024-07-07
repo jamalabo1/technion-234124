@@ -7,7 +7,7 @@ using std::endl;
 using std::string;
 using std::to_string;
 
-Matrix *copy_array(Matrix *arr, int n) {
+Matrix *copyArray(Matrix *arr, int n) {
     Matrix *result = new Matrix[n];
     for (int i = 0; i < n; i++) {
         result[i] = arr[i];
@@ -18,11 +18,11 @@ Matrix *copy_array(Matrix *arr, int n) {
 MataMvidia::MataMvidia(string name, string creator, Matrix *frames, int length) :
         name(name), creator(creator), length(length) {
 
-    this->frames = copy_array(frames, length);
+    this->frames = copyArray(frames, length);
 }
 
 MataMvidia::MataMvidia() {
-
+    length = 0;
 }
 
 
@@ -40,13 +40,17 @@ MataMvidia &MataMvidia::operator=(const MataMvidia &other) {
     this->name = other.name;
     this->length = other.length;
     this->creator = other.creator;
+
+
     delete[] this->frames;
-    this->frames = copy_frames(other);
+
+    this->frames = copyFrames(other);
+
     return *this;
 }
 
 MataMvidia::MataMvidia(const MataMvidia &other) : name(other.name), creator(other.creator), length(other.length) {
-    this->frames = copy_frames(other);
+    this->frames = copyFrames(other);
 }
 
 Matrix *merge(Matrix a1[], int l1, Matrix a2[], int l2) {
@@ -58,6 +62,13 @@ Matrix *merge(Matrix a1[], int l1, Matrix a2[], int l2) {
         mat[i + l1] = a2[i];
     }
     return mat;
+}
+
+void MataMvidia::appendToFrames(Matrix *rframes, int rlength) {
+    Matrix *temp = this->frames;
+    this->frames = merge(temp, this->length, rframes, rlength);
+    this->length += rlength;
+    delete[] temp;
 }
 
 MataMvidia &MataMvidia::operator+=(const MataMvidia &right) {
@@ -76,12 +87,6 @@ MataMvidia &MataMvidia::operator+=(const Matrix &right) {
     return *this;
 }
 
-void MataMvidia::appendToFrames(Matrix rframes[], int rlength) {
-    Matrix *temp = this->frames;
-    this->frames = merge(temp, this->length, rframes, rlength);
-    this->length += rlength;
-    delete[] temp;
-}
 
 MataMvidia operator+(MataMvidia left, const MataMvidia &right) {
     left += right;
@@ -105,7 +110,7 @@ const Matrix &MataMvidia::operator[](int index) const {
 }
 
 
-Matrix *copy_frames(const MataMvidia &other) {
+Matrix *copyFrames(const MataMvidia &other) {
     Matrix *frames = new Matrix[other.length];
     for (int i = 0; i < other.length; i++) {
         frames[i] = other.frames[i];

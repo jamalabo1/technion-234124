@@ -5,26 +5,36 @@
 #include "Utilities.h"
 
 
-#define InsureSizeMatch(left, right) \
+#define INSURE_SIZE_MATCH(left, right) \
 if(left.rows != right.rows || left.cols != right.cols){ \
 exitWithError(MatamErrorType::UnmatchedSizes); \
 }
 
+#define EMPTY_DATA_GUARD1(other) \
+if(other.data == nullptr) return Matrix(0,0);
+
+#define EMPTY_DATA_GUARD2(other, rvalue) \
+if(other.data == nullptr) return rvalue;
+
+#define GET_MACRO(_1, _2, NAME, ...) NAME
+#define EMPTY_DATA_GUARD(...) GET_MACRO(__VA_ARGS__, EMPTY_DATA_GUARD2, EMPTY_DATA_GUARD1)(__VA_ARGS__)
+
+
 using std::endl;
 
-int *copy_array(const Matrix &A) {
-    int *mdata = new int[A.rows * A.cols]{0};
+//int *copyArray(const Matrix &A) {
+//    int *mdata = new int[A.rows * A.cols]{0};
+//
+//    for (int i = 0; i < A.rows; i++) {
+//        for (int j = 0; j < A.cols; j++) {
+//            mdata[i * A.rows + j] = A(i, j);
+//        }
+//    }
+//    return mdata;
+//}
 
-    for (int i = 0; i < A.rows; i++) {
-        for (int j = 0; j < A.cols; j++) {
-            mdata[i * A.rows + j] = A(i, j);
-        }
-    }
-    return mdata;
-}
-
-Matrix::Matrix(int row, int col) : rows(row), cols(col) {
-    if (row == 0 || col == 0) {
+Matrix::Matrix(int row, int col) : data(nullptr), rows(row), cols(col) {
+    if (row <= 0 || col <= 0) {
         this->data = nullptr;
     } else {
         this->data = new int[row * col];
@@ -41,101 +51,48 @@ Matrix::~Matrix() {
     delete[] data;
 }
 
+
+void Matrix::copyDataFrom(const Matrix &A) {
+//    delete[] this->data;
+//    this->data = copyArray(A);
+    if (A.data == nullptr) {
+        this->data = nullptr;
+        return;
+    }
+
+    delete[] data;
+    data = new int[A.rows * A.cols];
+    std::copy(A.data, A.data + (A.rows * A.cols), data);
+}
+
 // Copy Constructor
-Matrix::Matrix(const Matrix &A) : rows(A.rows), cols(A.cols) {
-    this->data = copy_array(A);
+Matrix::Matrix(const Matrix &A) : data(nullptr), rows(A.rows), cols(A.cols) {
+    this->copyDataFrom(A);
 }
 
 
 Matrix &Matrix::operator=(const Matrix &other) {
     if (this == &other) return *this;
-    delete[] this->data;
     this->rows = other.rows;
     this->cols = other.cols;
-    this->data = copy_array(other);
+    this->copyDataFrom(other);
     return *this;
 }
 
-//Matrix Matrix::operator=(Matrix other) {
-//    this->rows = other.rows;
-//    this->cols = other.cols;
-//    this->data = copy_array(other);
-//    return *this;
-//}
 
-
-int &Matrix::at(const int &i, const int &j) const {
-    return data[i * rows + j];
+int Matrix::at(const int &i, const int &j) const {
+    return data[i * cols + j];
 }
 
+
 int &Matrix::operator()(const int &i, const int &j) {
-    return at(i, j);
+    return data[i * cols + j];
 }
 
 const int &Matrix::operator()(const int &i, const int &j) const {
-    return at(i, j);
+    return data[i * cols + j];
 }
 
-std::ostream &operator<<(std::ostream &os, const Matrix &mat) {
-    for (int r = 0; r < mat.rows; r++) {
-        for (int c = 0; c < mat.cols; c++) {
-            os << mat(r, c);
-            if (c + 1 != mat.cols) {
-                os << "|";
-            }
-        }
-        os << endl;
-    }
-    return os;
-}
-
-///the summation of two matrixes
-Matrix operator+(Matrix left, const Matrix &right) {
-    InsureSizeMatch(left, right);
-
-    for (int r = 0; r < left.rows; r++) {
-        for (int c = 0; c < left.cols; c++) {
-            left(r, c) += right(r, c);
-        }
-    }
-    return left;
-}
-
-//subtraction for two matrixesS
-Matrix operator-(Matrix left, const Matrix &right) {
-    InsureSizeMatch(left, right);
-
-    for (int r = 0; r < left.rows; r++) {
-        for (int c = 0; c < left.cols; c++) {
-            left(r, c) -= right(r, c);
-        }
-    }
-    return left;
-}
-
-///multiplation for two matrixes
-Matrix operator*(Matrix left, const Matrix &right) {
-    InsureSizeMatch(left, right);
-
-    left *= right;
-    return left;
-}
-
-
-Matrix &Matrix::operator-=(const Matrix &other) {
-    Matrix inv = -other;
-    (*this) += inv;
-    return *this;
-}
-
-Matrix &Matrix::operator+=(const Matrix &other) {
-    for (int r = 0; r < this->rows; r++) {
-        for (int c = 0; c < this->cols; c++) {
-            at(r, c) += other(r, c);
-        }
-    }
-    return *this;
-}
 
 Matrix &Matrix::operator*=(const Matrix &other) {
     // TODO: insure multiply can be applied
@@ -150,53 +107,87 @@ Matrix &Matrix::operator*=(const Matrix &other) {
             result(i, j) = sum;
         }
     }
-    delete[] this->data;
-    this->data = copy_array(result);
+    this->copyDataFrom(result);
+
     return *this;
+}
+
+
+Matrix &Matrix::operator*=(int right) {
+
+    for (int r = 0; r < this->rows; r++) {
+        for (int c = 0; c < this->cols; c++) {
+            (*this)(r, c) *= right;
+        }
+    }
+    return *this;
+}
+
+
+Matrix &Matrix::operator+=(const Matrix &other) {
+    INSURE_SIZE_MATCH((*this), other);
+    EMPTY_DATA_GUARD(other, *this);
+
+    for (int r = 0; r < this->rows; r++) {
+        for (int c = 0; c < this->cols; c++) {
+            (*this)(r, c) += other(r, c);
+        }
+    }
+    return *this;
+}
+
+// TODO: check if required
+Matrix &operator*=(int left, Matrix &right) {
+    right *= left;
+    return right;
+}
+
+
+///the summation of two matrices
+Matrix operator+(Matrix left, const Matrix &right) {
+    INSURE_SIZE_MATCH(left, right);
+
+    left += right;
+    return left;
+}
+
+//subtraction for two matrixesS
+Matrix operator-(Matrix left, const Matrix &right) {
+    INSURE_SIZE_MATCH(left, right);
+
+    left -= right;
+    return left;
+}
+
+///multiplication for two matrices
+Matrix operator*(Matrix left, const Matrix &right) {
+    INSURE_SIZE_MATCH(left, right);
+
+    left *= right;
+    return left;
+}
+
+Matrix operator*(int left, Matrix right) {
+    right *= left;
+    return right;
+}
+
+Matrix operator*(Matrix left, int right) {
+    return right * left;
 }
 
 Matrix operator-(const Matrix &mat) {
     return -1 * mat;
 }
 
-Matrix operator*(int left, Matrix right) {
-    for (int r = 0; r < right.rows; r++) {
-        for (int c = 0; c < right.cols; c++) {
-            right(r, c) *= left;
-        }
-    }
-    return right;
+Matrix &Matrix::operator-=(const Matrix &other) {
+    (*this) += -other;
+    return *this;
 }
 
-Matrix operator*(Matrix left, int right) {
-    for (int r = 0; r < left.rows; r++) {
-        for (int c = 0; c < left.cols; c++) {
-            left(r, c) *= right;
-        }
-    }
-    return left;
-}
-
-Matrix &operator*=(int left, Matrix &right) {
-    for (int r = 0; r < right.rows; r++) {
-        for (int c = 0; c < right.cols; c++) {
-            right(r, c) *= left;
-        }
-    }
-    return right;
-}
-
-Matrix &operator*=(Matrix &left, int right) {
-    for (int r = 0; r < left.rows; r++) {
-        for (int c = 0; c < left.cols; c++) {
-            left(r, c) *= right;
-        }
-    }
-    return left;
-}
 
 bool operator==(const Matrix &left, const Matrix &right) {
-    InsureSizeMatch(left, right);
+    INSURE_SIZE_MATCH(left, right);
 
     for (int r = 0; r < left.rows; r++) {
         for (int c = 0; c < left.cols; c++) {
@@ -209,7 +200,7 @@ bool operator==(const Matrix &left, const Matrix &right) {
 }
 
 bool operator!=(const Matrix &left, const Matrix &right) {
-    InsureSizeMatch(left, right);
+    INSURE_SIZE_MATCH(left, right);
 
 
     return !(left == right);
@@ -217,36 +208,48 @@ bool operator!=(const Matrix &left, const Matrix &right) {
 
 
 Matrix Matrix::rotateClockwise() {
-    Matrix t(this->cols, this->rows);
+    Matrix rotated(this->cols, this->rows);
 
     for (int r = 0; r < this->rows; r++) {
         for (int c = 0; c < this->cols; c++) {
-            t(c, this->rows - 1 - r) = at(r, c);
+            rotated(c, this->rows - 1 - r) = at(r, c);
         }
     }
-    return t;
+    return rotated;
 }
 
 Matrix Matrix::rotateCounterClockwise() {
-    Matrix t(this->cols, this->rows);
+    Matrix rotated(this->cols, this->rows);
 
     for (int r = 0; r < this->rows; r++) {
         for (int c = 0; c < this->cols; c++) {
-            t(t.cols - 1 - c, r) = at(r, c);
+            rotated(rotated.cols - 1 - c, r) = at(r, c);
         }
     }
-    return t;
+    return rotated;
 }
+
 
 Matrix Matrix::transpose() {
-    Matrix t(this->cols, this->rows);
+    Matrix transposed(this->cols, this->rows);
 
     for (int r = 0; r < this->rows; r++) {
         for (int c = 0; c < this->cols; c++) {
-            t(c, r) = at(r, c);
+            transposed(c, r) = this->at(r, c);
         }
     }
-    return t;
+    return transposed;
 }
 
-
+std::ostream &operator<<(std::ostream &os, const Matrix &mat) {
+    for (int r = 0; r < mat.rows; r++) {
+        for (int c = 0; c < mat.cols; c++) {
+            os << mat(r, c);
+            if (c + 1 != mat.cols) {
+                os << "|";
+            }
+        }
+        os << endl;
+    }
+    return os;
+}

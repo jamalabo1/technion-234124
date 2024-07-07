@@ -13,9 +13,11 @@ private:
     int rows;
     int cols;
 
-    int &at(const int &i, const int &j) const;
+    int at(const int &i, const int &j) const;
 
-    friend int *copy_array(const Matrix &);
+    friend int *copyArray(const Matrix &A);
+
+    void copyDataFrom(const Matrix &A);
 
 public:
     Matrix(int row, int col);
@@ -24,7 +26,7 @@ public:
 
     Matrix(const Matrix &);
 
-    Matrix& operator=(const Matrix& other);     // copy assignment operator
+    Matrix &operator=(const Matrix &other);     // copy assignment operator
 
     ~Matrix();
 
@@ -42,32 +44,27 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const Matrix &mat);
 
-    friend Matrix operator+(Matrix left, const Matrix &right);
-
-    friend Matrix operator-(Matrix left, const Matrix &right);
-
-    friend Matrix operator*(Matrix left, const Matrix &right);
-
-    Matrix &operator-=(const Matrix &other);
-
-    Matrix &operator+=(const Matrix &other);
 
     Matrix &operator*=(const Matrix &other);
+    Matrix &operator+=(const Matrix &other);
+    Matrix &operator-=(const Matrix &other);
 
+    Matrix &operator*=(int right);
+
+
+    friend Matrix operator+(Matrix left, const Matrix &right);
+    friend Matrix operator-(Matrix left, const Matrix &right);
+    friend Matrix operator*(Matrix left, const Matrix &right);
     friend Matrix operator-(const Matrix &mat);
 
+
     friend Matrix operator*(int left, Matrix right);
-
     friend Matrix operator*(Matrix left, int right);
-
     friend Matrix &operator*=(int left, Matrix &right);
 
-    friend Matrix &operator*=(Matrix &left, int right);
-
-
-    friend bool operator!=(const Matrix &left, const Matrix &right);
 
     friend bool operator==(const Matrix &left, const Matrix &right);
+    friend bool operator!=(const Matrix &left, const Matrix &right);
 
     Matrix rotateClockwise();
 

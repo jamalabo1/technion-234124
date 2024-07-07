@@ -19,7 +19,7 @@ private:
 
     void appendToFrames(Matrix frames[], int length);
 
-    friend Matrix* copy_frames(const MataMvidia& other);
+    friend Matrix* copyFrames(const MataMvidia& other);
 
 public:
 
