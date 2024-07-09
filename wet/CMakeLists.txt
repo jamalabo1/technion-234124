@@ -3,7 +3,7 @@ project(hw2-wet)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_library(wet-lib
+add_library(wet_lib
 
         Matrix.cpp
         Matrix.h
@@ -14,10 +14,11 @@ add_library(wet-lib
         MataMvidia.cpp
 )
 
+target_include_directories(wet_lib PUBLIC .)
 
-add_executable(tests
+add_executable(mtests
 #        tests.cpp
         more_tests.cpp
 )
 
-target_link_libraries(tests wet-lib)
+target_link_libraries(mtests wet-lib)

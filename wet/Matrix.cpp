@@ -34,7 +34,10 @@ using std::endl;
 //}
 
 Matrix::Matrix(int row, int col) : data(nullptr), rows(row), cols(col) {
-    if (row <= 0 || col <= 0) {
+    if (row < 0 || col < 0) {
+        exitWithError(MatamErrorType::OutOfBounds);
+    }
+    if (row == 0 || col == 0) {
         this->data = nullptr;
     } else {
         this->data = new int[row * col];
@@ -96,17 +99,13 @@ const int &Matrix::operator()(const int &i, const int &j) const {
 
 Matrix &Matrix::operator*=(const Matrix &other) {
     // TODO: insure multiply can be applied
-    Matrix result(this->rows, other.cols);
+    // which can be done only if (A = AB) (dims)
+    // i.e. A.rows = B.rows & B.cols = A.cols
+    // (Am,n)*(Bn,k)
+    // M,k=n
+//    INSURE_SIZE_MATCH((*this), other);
 
-    for (int i = 0; i < result.rows; i++) {
-        for (int j = 0; j < result.cols; j++) {
-            int sum = 0;
-            for (int k = 0; k < this->cols; k++) {
-                sum += at(i, k) * other(k, j);
-            }
-            result(i, j) = sum;
-        }
-    }
+    Matrix result = (*this) * other;
     this->copyDataFrom(result);
 
     return *this;
@@ -126,7 +125,7 @@ Matrix &Matrix::operator*=(int right) {
 
 Matrix &Matrix::operator+=(const Matrix &other) {
     INSURE_SIZE_MATCH((*this), other);
-    EMPTY_DATA_GUARD(other, *this);
+    EMPTY_DATA_GUARD(other, (*this));
 
     for (int r = 0; r < this->rows; r++) {
         for (int c = 0; c < this->cols; c++) {
@@ -161,10 +160,20 @@ Matrix operator-(Matrix left, const Matrix &right) {
 
 ///multiplication for two matrices
 Matrix operator*(Matrix left, const Matrix &right) {
-    INSURE_SIZE_MATCH(left, right);
+    //TODO: correct size match left.COLS == right.ROWS
+    Matrix result(left.rows, right.cols);
 
-    left *= right;
-    return left;
+    for (int i = 0; i < result.rows; i++) {
+        for (int j = 0; j < result.cols; j++) {
+            int sum = 0;
+            for (int k = 0; k < left.cols; k++) {
+                sum += left(i, k) * right(k, j);
+            }
+            result(i, j) = sum;
+        }
+    }
+
+    return result;
 }
 
 Matrix operator*(int left, Matrix right) {

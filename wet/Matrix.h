@@ -42,28 +42,34 @@ public:
 
     const int &operator()(const int &i, const int &j) const;
 
-    friend std::ostream &operator<<(std::ostream &os, const Matrix &mat);
-
 
     Matrix &operator*=(const Matrix &other);
+
     Matrix &operator+=(const Matrix &other);
+
     Matrix &operator-=(const Matrix &other);
 
     Matrix &operator*=(int right);
 
 
     friend Matrix operator+(Matrix left, const Matrix &right);
+
     friend Matrix operator-(Matrix left, const Matrix &right);
+
     friend Matrix operator*(Matrix left, const Matrix &right);
+
     friend Matrix operator-(const Matrix &mat);
 
 
     friend Matrix operator*(int left, Matrix right);
+
     friend Matrix operator*(Matrix left, int right);
+
     friend Matrix &operator*=(int left, Matrix &right);
 
 
     friend bool operator==(const Matrix &left, const Matrix &right);
+
     friend bool operator!=(const Matrix &left, const Matrix &right);
 
     Matrix rotateClockwise();
@@ -71,6 +77,8 @@ public:
     Matrix rotateCounterClockwise();
 
     Matrix transpose();
+
+    friend std::ostream &operator<<(std::ostream &os, const Matrix &mat);
 };
 
 #endif //HW2_MATRIX_H
