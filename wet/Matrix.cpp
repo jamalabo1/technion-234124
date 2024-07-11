@@ -22,17 +22,6 @@ if(other.data == nullptr) return rvalue;
 
 using std::endl;
 
-//int *copyArray(const Matrix &A) {
-//    int *mdata = new int[A.rows * A.cols]{0};
-//
-//    for (int i = 0; i < A.rows; i++) {
-//        for (int j = 0; j < A.cols; j++) {
-//            mdata[i * A.rows + j] = A(i, j);
-//        }
-//    }
-//    return mdata;
-//}
-
 Matrix::Matrix(int row, int col) : data(nullptr), rows(row), cols(col) {
     if (row < 0 || col < 0) {
         exitWithError(MatamErrorType::OutOfBounds);
@@ -104,6 +93,9 @@ Matrix &Matrix::operator*=(const Matrix &other) {
     // (Am,n)*(Bn,k)
     // M,k=n
 //    INSURE_SIZE_MATCH((*this), other);
+    if (cols != other.cols) {
+        exitWithError(MatamErrorType::UnmatchedSizes);
+    }
 
     Matrix result = (*this) * other;
     this->copyDataFrom(result);
@@ -113,7 +105,6 @@ Matrix &Matrix::operator*=(const Matrix &other) {
 
 
 Matrix &Matrix::operator*=(int right) {
-
     for (int r = 0; r < this->rows; r++) {
         for (int c = 0; c < this->cols; c++) {
             (*this)(r, c) *= right;
@@ -124,11 +115,11 @@ Matrix &Matrix::operator*=(int right) {
 
 
 Matrix &Matrix::operator+=(const Matrix &other) {
-    INSURE_SIZE_MATCH((*this), other);
+    ensureMatchSize(other);
     EMPTY_DATA_GUARD(other, (*this));
 
-    for (int r = 0; r < this->rows; r++) {
-        for (int c = 0; c < this->cols; c++) {
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
             (*this)(r, c) += other(r, c);
         }
     }
@@ -144,22 +135,22 @@ Matrix &operator*=(int left, Matrix &right) {
 
 ///the summation of two matrices
 Matrix operator+(Matrix left, const Matrix &right) {
-    INSURE_SIZE_MATCH(left, right);
-
     left += right;
+
     return left;
 }
 
-//subtraction for two matrixesS
+//subtraction for two matrices
 Matrix operator-(Matrix left, const Matrix &right) {
-    INSURE_SIZE_MATCH(left, right);
-
     left -= right;
     return left;
 }
 
 ///multiplication for two matrices
 Matrix operator*(Matrix left, const Matrix &right) {
+    if(left.cols != right.rows) {
+        exitWithError(MatamErrorType::UnmatchedSizes);
+    }
     //TODO: correct size match left.COLS == right.ROWS
     Matrix result(left.rows, right.cols);
 
@@ -196,7 +187,7 @@ Matrix &Matrix::operator-=(const Matrix &other) {
 
 
 bool operator==(const Matrix &left, const Matrix &right) {
-    INSURE_SIZE_MATCH(left, right);
+    left.ensureMatchSize(right);
 
     for (int r = 0; r < left.rows; r++) {
         for (int c = 0; c < left.cols; c++) {
@@ -209,29 +200,28 @@ bool operator==(const Matrix &left, const Matrix &right) {
 }
 
 bool operator!=(const Matrix &left, const Matrix &right) {
-    INSURE_SIZE_MATCH(left, right);
-
+    left.ensureMatchSize(right);
 
     return !(left == right);
 }
 
 
 Matrix Matrix::rotateClockwise() {
-    Matrix rotated(this->cols, this->rows);
+    Matrix rotated(cols, rows);
 
-    for (int r = 0; r < this->rows; r++) {
-        for (int c = 0; c < this->cols; c++) {
-            rotated(c, this->rows - 1 - r) = at(r, c);
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+            rotated(c, rows - 1 - r) = at(r, c);
         }
     }
     return rotated;
 }
 
 Matrix Matrix::rotateCounterClockwise() {
-    Matrix rotated(this->cols, this->rows);
+    Matrix rotated(cols, rows);
 
-    for (int r = 0; r < this->rows; r++) {
-        for (int c = 0; c < this->cols; c++) {
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
             rotated(rotated.cols - 1 - c, r) = at(r, c);
         }
     }
@@ -240,11 +230,11 @@ Matrix Matrix::rotateCounterClockwise() {
 
 
 Matrix Matrix::transpose() {
-    Matrix transposed(this->cols, this->rows);
+    Matrix transposed(cols, rows);
 
-    for (int r = 0; r < this->rows; r++) {
-        for (int c = 0; c < this->cols; c++) {
-            transposed(c, r) = this->at(r, c);
+    for (int r = 0; r < rows; r++) {
+        for (int c = 0; c < cols; c++) {
+            transposed(c, r) = at(r, c);
         }
     }
     return transposed;
@@ -261,4 +251,10 @@ std::ostream &operator<<(std::ostream &os, const Matrix &mat) {
         os << endl;
     }
     return os;
+}
+
+void Matrix::ensureMatchSize(const Matrix &other) const {
+    if (other.rows != rows || other.cols != cols) {
+        exitWithError(MatamErrorType::UnmatchedSizes);
+    }
 }

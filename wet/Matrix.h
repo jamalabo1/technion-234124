@@ -15,9 +15,9 @@ private:
 
     int at(const int &i, const int &j) const;
 
-    friend int *copyArray(const Matrix &A);
-
     void copyDataFrom(const Matrix &A);
+
+    void ensureMatchSize(const Matrix& other) const;
 
 public:
     Matrix(int row, int col);
@@ -29,14 +29,6 @@ public:
     Matrix &operator=(const Matrix &other);     // copy assignment operator
 
     ~Matrix();
-
-
-//    Matrix rotateClockwise() const;
-//
-//    Matrix rotateCounterClockwise() const;
-//
-//    Matrix transpose() const;
-
 
     int &operator()(const int &i, const int &j);
 
@@ -52,20 +44,11 @@ public:
     Matrix &operator*=(int right);
 
 
-    friend Matrix operator+(Matrix left, const Matrix &right);
-
-    friend Matrix operator-(Matrix left, const Matrix &right);
-
+    // requires friend, so that size check can be insured, since A * B is more inclusive than A*=B.
     friend Matrix operator*(Matrix left, const Matrix &right);
 
+    // requires friend to distinguish between minus and unitary additive inverse.
     friend Matrix operator-(const Matrix &mat);
-
-
-    friend Matrix operator*(int left, Matrix right);
-
-    friend Matrix operator*(Matrix left, int right);
-
-    friend Matrix &operator*=(int left, Matrix &right);
 
 
     friend bool operator==(const Matrix &left, const Matrix &right);
@@ -80,5 +63,15 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const Matrix &mat);
 };
+
+Matrix operator+(Matrix left, const Matrix &right);
+
+Matrix operator-(Matrix left, const Matrix &right);
+
+Matrix operator*(int left, Matrix right);
+
+Matrix operator*(Matrix left, int right);
+
+Matrix &operator*=(int left, Matrix &right);
 
 #endif //HW2_MATRIX_H

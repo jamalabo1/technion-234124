@@ -103,6 +103,29 @@ namespace {
         EXPECT_EQ(mat, mat2);
     }
 
+    TEST_P(MatrixTestOperatorFixture, MatrixEqOperator_evaluates_false_on_ne) {
+        const auto [mat, rows, cols] = GetFParams();
+
+        Matrix mat2(rows, cols);
+
+        int randomIndex = generateRandomNumber(0, rows * cols - 1);
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (i == 0 && j == 0) {
+                    mat2(i, j) = mat(i, j) + 1;
+                    ASSERT_NE(mat2(i, j), mat(i, j));
+                } else {
+                    mat2(i, j) = mat(i, j);
+                    ASSERT_EQ(mat2(i, j), mat(i, j));
+                }
+            }
+        }
+
+        EXPECT_FALSE(mat == mat2);
+    }
+
+
     TEST_P(MatrixTestOperatorFixture, MatrixPlusOperator_adds_matricies) {
         const auto [mat, rows, cols] = GetFParams();
         const auto mat2 = generateHelperMatrix(rows, cols);
@@ -129,14 +152,15 @@ namespace {
 
     TEST_P(MatrixTestOperatorFixture, MatrixMultiplyOperator_multiplies_matricies) {
         auto [mat, rows, cols] = GetFParams();
-        const auto mat2 = generateHelperMatrix(cols, rows);
+        int randCol = generateRandomNumber(0, 10);
+        const auto mat2 = generateHelperMatrix(cols, randCol);
 
-        Matrix expectedResult(rows, rows);
+        Matrix expectedResult(rows, randCol);
 
         vector<vector<long>> results;
         for (int i = 0; i < rows; i++) {
             vector<long> row;
-            for (int j = 0; j < rows; j++) {
+            for (int j = 0; j < randCol; j++) {
                 int sum = 0;
                 for (int k = 0; k < cols; k++) {
                     sum += mat(i, k) * mat2(k, j);
@@ -146,7 +170,7 @@ namespace {
             results.emplace_back(row);
         }
         for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < rows; j++) {
+            for (int j = 0; j < randCol; j++) {
                 expectedResult(i, j) = results[i][j];
             }
         }
