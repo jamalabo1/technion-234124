@@ -69,10 +69,10 @@ Matrix *merge(Matrix a1[], int l1, Matrix a2[], int l2) {
     return mat;
 }
 
-void MataMvidia::appendToFrames(Matrix *rframes, int rlength) {
+void MataMvidia::appendToFrames(Matrix *rightFrames, int rightLength) {
     Matrix *temp = this->frames;
-    this->frames = merge(temp, this->length, rframes, rlength);
-    this->length += rlength;
+    this->frames = merge(temp, this->length, rightFrames, rightLength);
+    this->length += rightLength;
     delete[] temp;
 }
 
