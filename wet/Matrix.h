@@ -19,6 +19,8 @@ private:
 
     void ensureMatchSize(const Matrix& other) const;
 
+    void validateIndices(const int&i, const int&j)const;
+
 public:
     Matrix(int row, int col);
 
@@ -44,34 +46,43 @@ public:
     Matrix &operator*=(int right);
 
 
-    // requires friend, so that size check can be insured, since A * B is more inclusive than A*=B.
-    friend Matrix operator*(Matrix left, const Matrix &right);
-
     // requires friend to distinguish between minus and unitary additive inverse.
     friend Matrix operator-(const Matrix &mat);
 
 
     friend bool operator==(const Matrix &left, const Matrix &right);
 
-    friend bool operator!=(const Matrix &left, const Matrix &right);
 
-    Matrix rotateClockwise();
+    Matrix rotateClockwise() const;
 
-    Matrix rotateCounterClockwise();
+    Matrix rotateCounterClockwise() const;
 
-    Matrix transpose();
+    Matrix transpose() const;
 
-    friend std::ostream &operator<<(std::ostream &os, const Matrix &mat);
+    friend std::ostream &operator<<(std::ostream &os, const Matrix &mat) ;
 };
 
-Matrix operator+(Matrix left, const Matrix &right);
+//Matrix operator*(Matrix left, const Matrix &right);
+//
+bool operator!=(const Matrix &left, const Matrix &right);
+//
+//Matrix operator+(Matrix left, const Matrix &right);
+//
+//Matrix operator-(Matrix left, const Matrix &right);
+//
+//Matrix operator*(int left, Matrix right);
+//
+//Matrix operator*(Matrix left, int right);
 
-Matrix operator-(Matrix left, const Matrix &right);
 
-Matrix operator*(int left, Matrix right);
+Matrix operator*(const Matrix& left, const Matrix &right);
 
-Matrix operator*(Matrix left, int right);
+Matrix operator+(const Matrix& left, const Matrix &right);
 
-Matrix &operator*=(int left, Matrix &right);
+Matrix operator-(const Matrix& left, const Matrix &right);
+
+Matrix operator*(int left, const Matrix& right);
+
+Matrix operator*(const Matrix& left, int right);
 
 #endif //HW2_MATRIX_H

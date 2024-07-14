@@ -2,6 +2,7 @@
 // Created by Farah Qub on 06/07/2024.
 //
 #include "MataMvidia.h"
+#include <Utilities.h>
 
 using std::endl;
 using std::string;
@@ -31,6 +32,10 @@ MataMvidia::~MataMvidia() {
 }
 
 Matrix &MataMvidia::operator[](int index) {
+    if (index < 0 || index >= length) {
+        exitWithError(MatamErrorType::OutOfBounds);
+    }
+
     return frames[index];
 }
 

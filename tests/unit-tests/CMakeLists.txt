@@ -23,6 +23,8 @@ if (ENABLE_UNIT_TESTS)
             matrix/matrix_operators_tests.cpp
             matrix/MatrixTestBase.cpp
             matrix/MatrixTestBase.h
+            matrix/matrix_methods_tests.cpp
+            MataMvidia/matamvidia_constructor_tests.cpp
     )
 
     add_library(

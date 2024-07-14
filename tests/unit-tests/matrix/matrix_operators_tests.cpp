@@ -21,15 +21,15 @@ namespace {
         int val;
     };
 
-    class MatrixTestOperatorsBase : public MatrixTestBase {
-    };
+    class MatrixTestOperatorsBase : public MatrixTestBase {};
 
     class MatrixTestOperatorFixture : public MatrixTestOperatorsBase,
                                       public ::testing::TestWithParam<tuple<Matrix, vector<vector<int>>, Dim>> {
+
     public:
         using eqTestType = MatrixTestOperatorFixture::ParamType;
 
-        static vector<eqTestType> testValues() {
+         static vector<eqTestType> testValues() {
             vector<eqTestType> data;
             auto dims = generateRandomDims(10);
             data.reserve(dims.size());
@@ -43,6 +43,7 @@ namespace {
             }
             return data;
         }
+
 
     public:
         static tuple<Matrix, int, int> GetFParams() {
@@ -63,7 +64,7 @@ namespace {
             vector<eqTestType> data;
             auto dims = generateRandomDims(10);
             data.reserve(dims.size());
-            for (int i = 0; i < dims.size(); i++) {
+            for (size_t i = 0; i < dims.size(); i++) {
                 const auto [rows, cols] = dims[i];
                 auto [mat, _] = generateMatrix(rows, cols);
                 data.emplace_back(
@@ -108,7 +109,6 @@ namespace {
 
         Matrix mat2(rows, cols);
 
-        int randomIndex = generateRandomNumber(0, rows * cols - 1);
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -126,6 +126,46 @@ namespace {
     }
 
 
+    TEST_P(MatrixTestOperatorFixture, MatrixNeOperator_evaluates_truth_on_ne) {
+        const auto [mat, rows, cols] = GetFParams();
+
+        Matrix mat2(rows, cols);
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                mat2(i, j) = mat(i, j) + 1;
+                ASSERT_NE(mat2(i, j), mat(i, j));
+            }
+        }
+
+        ASSERT_TRUE(mat != mat2);
+        EXPECT_NE(mat, mat2);
+    }
+
+    TEST_P(MatrixTestOperatorFixture, MatrixNeOperator_evaluates_false_on_eq) {
+        const auto [mat, rows, cols] = GetFParams();
+
+        Matrix mat2(rows, cols);
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                mat2(i, j) = mat(i, j);
+            }
+        }
+
+        EXPECT_FALSE(mat != mat2);
+    }
+
+    TEST_P(MatrixTestOperatorFixture, MatrixPlusEqOperator_adds_to_matrix) {
+        auto [mat, rows, cols] = GetFParams();
+        const auto mat2 = generateHelperMatrix(rows, cols);
+
+        Matrix matCopy(mat);
+        mat += mat2;
+
+        EXPECT_EQ(mat, matCopy + mat2);
+    }
+
     TEST_P(MatrixTestOperatorFixture, MatrixPlusOperator_adds_matricies) {
         const auto [mat, rows, cols] = GetFParams();
         const auto mat2 = generateHelperMatrix(rows, cols);
@@ -139,20 +179,9 @@ namespace {
         }
     }
 
-    TEST_P(MatrixTestOperatorFixture, MatrixPlusEqOperator_adds_to_matrix) {
-        auto [mat, rows, cols] = GetFParams();
-        const auto mat2 = generateHelperMatrix(rows, cols);
-
-        Matrix matCopy(mat);
-        mat += mat2;
-
-        EXPECT_EQ(mat, matCopy + mat2);
-    }
-
-
     TEST_P(MatrixTestOperatorFixture, MatrixMultiplyOperator_multiplies_matricies) {
         auto [mat, rows, cols] = GetFParams();
-        int randCol = generateRandomNumber(0, 10);
+        int randCol = generateRandomNumber(1, 10);
         const auto mat2 = generateHelperMatrix(cols, randCol);
 
         Matrix expectedResult(rows, randCol);
@@ -228,7 +257,7 @@ namespace {
     }
 
 
-    TEST_P(MatrixTestScalarMultiplyOperatorFixture, MatrixMultiplyScalarOperator_multiplies_matrix_entiries) {
+    TEST_P(MatrixTestScalarMultiplyOperatorFixture, MatrixRightMultiplyScalarOperator_multiplies_matrix_entiries) {
         auto [mat, rows, cols, scalar] = GetParam();
 
         Matrix result = mat * scalar;
@@ -240,6 +269,14 @@ namespace {
         }
     }
 
+    TEST_P(MatrixTestScalarMultiplyOperatorFixture, MatrixLeftMultiplyScalarOperator_multiplies_matrix) {
+        auto [mat, _1, _2, scalar] = GetParam();
+
+        Matrix result = scalar * mat;
+
+        EXPECT_EQ(result, mat * scalar);
+    }
+
     TEST_P(MatrixTestScalarMultiplyOperatorFixture, MatrixMultiplyEqScalarOperator_multiplies_matrix) {
         auto [mat, _1, _2, scalar] = GetParam();
 
@@ -248,6 +285,28 @@ namespace {
 
         EXPECT_EQ(mat, matCopy * scalar);
     }
+
+    TEST_P(MatrixTestOperatorFixture, MatrixToStringOperator_outs_correct_form) {
+        auto [mat, rows, cols] = GetFParams();
+
+        std::stringstream   out;
+        std::stringstream   expectedOut;
+
+        out << mat;
+
+         for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                expectedOut << mat(r, c);
+                if (c + 1 != cols) {
+                    expectedOut << "|";
+                }
+            }
+             expectedOut << std::endl;
+
+        }
+        EXPECT_EQ(expectedOut.str(), out.str());
+    }
+
 
     INSTANTIATE_TEST_SUITE_P(Operators,
                              MatrixTestOperatorFixture,

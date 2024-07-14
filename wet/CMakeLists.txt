@@ -21,4 +21,4 @@ add_executable(mtests
         more_tests.cpp
 )
 
-target_link_libraries(mtests wet-lib)
+target_link_libraries(mtests wet_lib)

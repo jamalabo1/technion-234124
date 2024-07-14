@@ -55,6 +55,9 @@ void Matrix::copyDataFrom(const Matrix &A) {
     delete[] data;
     data = new int[A.rows * A.cols];
     std::copy(A.data, A.data + (A.rows * A.cols), data);
+
+    this->rows = A.rows;
+    this->cols = A.cols;
 }
 
 // Copy Constructor
@@ -71,36 +74,63 @@ Matrix &Matrix::operator=(const Matrix &other) {
     return *this;
 }
 
+void Matrix::validateIndices(const int &i, const int &j) const {
+    if ((0 > i || i >= rows) || (0 > j || j >= cols)) {
+        exitWithError(MatamErrorType::OutOfBounds);
+    }
+}
+
+void Matrix::ensureMatchSize(const Matrix &other) const {
+    if (other.rows != rows || other.cols != cols) {
+        exitWithError(MatamErrorType::UnmatchedSizes);
+    }
+}
+
 
 int Matrix::at(const int &i, const int &j) const {
+    this->validateIndices(i, j);
     return data[i * cols + j];
 }
 
 
 int &Matrix::operator()(const int &i, const int &j) {
+    this->validateIndices(i, j);
     return data[i * cols + j];
 }
 
 const int &Matrix::operator()(const int &i, const int &j) const {
+    this->validateIndices(i, j);
     return data[i * cols + j];
 }
 
 
+///multiplication for two matrices
 Matrix &Matrix::operator*=(const Matrix &other) {
-    // TODO: insure multiply can be applied
-    // which can be done only if (A = AB) (dims)
-    // i.e. A.rows = B.rows & B.cols = A.cols
-    // (Am,n)*(Bn,k)
-    // M,k=n
-//    INSURE_SIZE_MATCH((*this), other);
-    if (cols != other.cols) {
+    if (this->cols != other.rows) {
         exitWithError(MatamErrorType::UnmatchedSizes);
     }
+    //TODO: correct size match left.COLS == right.ROWS
+    Matrix result(this->rows, other.cols);
 
-    Matrix result = (*this) * other;
+    for (int i = 0; i < result.rows; i++) {
+        for (int j = 0; j < result.cols; j++) {
+            int sum = 0;
+            for (int k = 0; k < this->cols; k++) {
+                sum += this->at(i, k) * other(k, j);
+            }
+            result(i, j) = sum;
+        }
+    }
     this->copyDataFrom(result);
 
-    return *this;
+    return (*this);
+}
+
+///multiplication for two matrices
+Matrix operator*(const Matrix& left, const Matrix &right) {
+    Matrix copy(left);
+    copy *= right;
+    return copy;
 }
 
 
@@ -126,53 +156,30 @@ Matrix &Matrix::operator+=(const Matrix &other) {
     return *this;
 }
 
-// TODO: check if required
-Matrix &operator*=(int left, Matrix &right) {
-    right *= left;
-    return right;
-}
-
-
 ///the summation of two matrices
-Matrix operator+(Matrix left, const Matrix &right) {
-    left += right;
+Matrix operator+(const Matrix& left, const Matrix &right) {
+    Matrix copy(left);
 
-    return left;
+    copy += right;
+
+    return copy;
 }
 
 //subtraction for two matrices
-Matrix operator-(Matrix left, const Matrix &right) {
-    left -= right;
-    return left;
+Matrix operator-(const Matrix& left, const Matrix &right) {
+    Matrix copy(left);
+    copy -= right;
+    return copy;
 }
 
-///multiplication for two matrices
-Matrix operator*(Matrix left, const Matrix &right) {
-    if(left.cols != right.rows) {
-        exitWithError(MatamErrorType::UnmatchedSizes);
-    }
-    //TODO: correct size match left.COLS == right.ROWS
-    Matrix result(left.rows, right.cols);
 
-    for (int i = 0; i < result.rows; i++) {
-        for (int j = 0; j < result.cols; j++) {
-            int sum = 0;
-            for (int k = 0; k < left.cols; k++) {
-                sum += left(i, k) * right(k, j);
-            }
-            result(i, j) = sum;
-        }
-    }
-
-    return result;
+Matrix operator*(int left, const Matrix& right) {
+    Matrix copy(right);
+    copy *= left;
+    return copy;
 }
 
-Matrix operator*(int left, Matrix right) {
-    right *= left;
-    return right;
-}
-
-Matrix operator*(Matrix left, int right) {
+Matrix operator*(const Matrix& left, int right) {
     return right * left;
 }
 
@@ -200,13 +207,11 @@ bool operator==(const Matrix &left, const Matrix &right) {
 }
 
 bool operator!=(const Matrix &left, const Matrix &right) {
-    left.ensureMatchSize(right);
-
     return !(left == right);
 }
 
 
-Matrix Matrix::rotateClockwise() {
+Matrix Matrix::rotateClockwise() const {
     Matrix rotated(cols, rows);
 
     for (int r = 0; r < rows; r++) {
@@ -217,19 +222,19 @@ Matrix Matrix::rotateClockwise() {
     return rotated;
 }
 
-Matrix Matrix::rotateCounterClockwise() {
+Matrix Matrix::rotateCounterClockwise() const {
     Matrix rotated(cols, rows);
 
     for (int r = 0; r < rows; r++) {
         for (int c = 0; c < cols; c++) {
-            rotated(rotated.cols - 1 - c, r) = at(r, c);
+            rotated(cols - 1 - c, r) = at(r, c);
         }
     }
     return rotated;
 }
 
 
-Matrix Matrix::transpose() {
+Matrix Matrix::transpose() const {
     Matrix transposed(cols, rows);
 
     for (int r = 0; r < rows; r++) {
@@ -253,8 +258,31 @@ std::ostream &operator<<(std::ostream &os, const Matrix &mat) {
     return os;
 }
 
-void Matrix::ensureMatchSize(const Matrix &other) const {
-    if (other.rows != rows || other.cols != cols) {
-        exitWithError(MatamErrorType::UnmatchedSizes);
-    }
-}
+//Matrix operator*(const Matrix &left, const Matrix &right) {
+//    Matrix copy(left);
+//
+//    return copy * right;
+//}
+//
+//Matrix operator+(const Matrix &left, const Matrix &right) {
+//    Matrix copy(left);
+//
+//    return copy + right;
+//}
+//
+//Matrix operator-(const Matrix &left, const Matrix &right) {
+//    Matrix copy(left);
+//
+//    return copy - right;
+//}
+//
+//Matrix operator*(int left, const Matrix &right) {
+//    Matrix copy(left);
+//    return left * copy;
+//}
+//
+//Matrix operator*(const Matrix &left, int right) {
+//    Matrix copy(left);
+//
+//    return copy * right;
+//}

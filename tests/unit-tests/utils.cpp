@@ -17,7 +17,7 @@ namespace testUtils {
         dims.reserve(len);
 
         for (int i = 0; i < len; i++) {
-            dims.emplace_back(generateRandomNumber(0, 50), generateRandomNumber(0, 50));
+            dims.emplace_back(generateRandomNumber(1, 50), generateRandomNumber(1, 50));
         }
         return dims;
     }
