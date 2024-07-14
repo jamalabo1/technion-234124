@@ -224,6 +224,7 @@ Matrix Matrix::transpose() const {
 }
 
 std::ostream &operator<<(std::ostream &os, const Matrix &mat) {
+    os << "|";
     for (int r = 0; r < mat.rows; r++) {
         for (int c = 0; c < mat.cols; c++) {
             os << mat(r, c);
