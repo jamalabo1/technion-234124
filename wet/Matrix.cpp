@@ -228,9 +228,7 @@ std::ostream &operator<<(std::ostream &os, const Matrix &mat) {
     for (int r = 0; r < mat.rows; r++) {
         for (int c = 0; c < mat.cols; c++) {
             os << mat(r, c);
-            if (c + 1 != mat.cols) {
-                os << "|";
-            }
+            os << "|";
         }
         os << endl;
     }
