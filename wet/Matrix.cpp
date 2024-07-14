@@ -232,6 +232,8 @@ std::ostream &operator<<(std::ostream &os, const Matrix &mat) {
         }
         os << endl;
     }
+
+    os << "-----End of Movie-----";
     return os;
 }
 
