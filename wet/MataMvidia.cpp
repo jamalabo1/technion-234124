@@ -2,7 +2,7 @@
 // Created by Farah Qub on 06/07/2024.
 //
 #include "MataMvidia.h"
-#include <Utilities.h>
+#include "Utilities.h"
 
 using std::endl;
 using std::string;
@@ -69,10 +69,10 @@ Matrix *merge(Matrix a1[], int l1, Matrix a2[], int l2) {
     return mat;
 }
 
-void MataMvidia::appendToFrames(Matrix *rframes, int rlength) {
+void MataMvidia::appendToFrames(Matrix *rightFrames, int rightLength) {
     Matrix *temp = this->frames;
-    this->frames = merge(temp, this->length, rframes, rlength);
-    this->length += rlength;
+    this->frames = merge(temp, this->length, rightFrames, rightLength);
+    this->length += rightLength;
     delete[] temp;
 }
 
@@ -105,8 +105,9 @@ std::ostream &operator<<(std::ostream &os, const MataMvidia &movie) {
 
     for (int r = 0; r < movie.length; r++) {
         os << "Frame " + to_string(r) + ":" << endl;
-        os << movie[r];
+        os << movie[r] << endl;
     }
+    os << "-----End of Movie-----" << endl;
     return os;
 }
 

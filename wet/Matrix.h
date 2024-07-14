@@ -15,7 +15,7 @@ private:
 
     int at(const int &i, const int &j) const;
 
-    void copyDataFrom(const Matrix &A);
+    void copyDataFrom(const Matrix &other);
 
     void ensureMatchSize(const Matrix& other) const;
 
