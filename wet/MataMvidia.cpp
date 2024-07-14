@@ -107,6 +107,7 @@ std::ostream &operator<<(std::ostream &os, const MataMvidia &movie) {
         os << "Frame " + to_string(r) + ":" << endl;
         os << movie[r] << endl;
     }
+    os << "-----End of Movie-----" << endl;
     return os;
 }
 
