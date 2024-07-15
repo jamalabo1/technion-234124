@@ -7,6 +7,7 @@
 #include <random>
 
 
+
 namespace testUtils {
 
     using std::tuple;
@@ -28,5 +29,22 @@ namespace testUtils {
         std::uniform_real_distribution<double> dist(start, end);
 
         return dist(rng);
+    }
+
+    tuple<Matrix, vector<vector<int>>> generateMatrix(int rows, int cols) {
+        vector<vector<int>> matData;
+        matData.reserve(rows);
+        Matrix mat(rows, cols);
+
+        for (int i = 0; i < rows; i++) {
+            vector<int> row;
+            for (int j = 0; j < cols; j++) {
+                int n = generateRandomNumber(-50, 50);
+                mat(i, j) = n;
+                row.push_back(n);
+            }
+            matData.push_back(row);
+        }
+        return {mat, matData};
     }
 }

@@ -25,6 +25,7 @@ if (ENABLE_UNIT_TESTS)
             matrix/MatrixTestBase.h
             matrix/matrix_methods_tests.cpp
             MataMvidia/matamvidia_constructor_tests.cpp
+            MataMvidia/matamvidia_operators_tests.cpp
     )
 
     add_library(
@@ -32,6 +33,7 @@ if (ENABLE_UNIT_TESTS)
             utils.cpp
             utils.h
     )
+    target_link_libraries(test-utils PUBLIC ${TESTING_TARGET_LIBRARY})
     target_sources(test-utils PUBLIC utils.h)
     target_include_directories(test-utils PUBLIC .)
 

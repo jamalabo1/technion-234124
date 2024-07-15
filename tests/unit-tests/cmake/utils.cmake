@@ -28,7 +28,7 @@ macro(create_testing_executable test_target test_target_exc)
 
     target_link_libraries(${test_target_exc} ${test_target} GTest::gtest_main) # link with gtest_main for a main entrypoint provided by gtest.
 
-    gtest_discover_tests(${test_target_exc}) # integration with CTest
+    gtest_discover_tests(${test_target_exc} PROPERTIES TEST_DISCOVERY_TIMEOUT 6000) # integration with CTest
 endmacro()
 
 macro(create_global_testing_target global_test_target_name source_files)

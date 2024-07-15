@@ -21,7 +21,8 @@ namespace {
         int val;
     };
 
-    class MatrixTestOperatorsBase : public MatrixTestBase {};
+    class MatrixTestOperatorsBase : public MatrixTestBase {
+    };
 
     class MatrixTestOperatorFixture : public MatrixTestOperatorsBase,
                                       public ::testing::TestWithParam<tuple<Matrix, vector<vector<int>>, Dim>> {
@@ -29,7 +30,7 @@ namespace {
     public:
         using eqTestType = MatrixTestOperatorFixture::ParamType;
 
-         static vector<eqTestType> testValues() {
+        static vector<eqTestType> testValues() {
             vector<eqTestType> data;
             auto dims = generateRandomDims(10);
             data.reserve(dims.size());
@@ -289,19 +290,18 @@ namespace {
     TEST_P(MatrixTestOperatorFixture, MatrixToStringOperator_outs_correct_form) {
         auto [mat, rows, cols] = GetFParams();
 
-        std::stringstream   out;
-        std::stringstream   expectedOut;
+        std::stringstream out;
+        std::stringstream expectedOut;
 
         out << mat;
 
-         for (int r = 0; r < rows; r++) {
+        for (int r = 0; r < rows; r++) {
+            expectedOut << "|";
             for (int c = 0; c < cols; c++) {
                 expectedOut << mat(r, c);
-                if (c + 1 != cols) {
-                    expectedOut << "|";
-                }
+                expectedOut << "|";
             }
-             expectedOut << std::endl;
+            expectedOut << std::endl;
 
         }
         EXPECT_EQ(expectedOut.str(), out.str());

@@ -5,105 +5,85 @@
 #include <gtest/gtest.h>
 
 #include <MataMvidia.h>
+#include <tuple>
+#include "utils.h"
 
 namespace {
 
     using std::tuple;
+    using std::vector;
+    using std::string;
 
-    class MataMvidiaTestFixture :
-            public ::testing::TestWithParam<tuple<int, int>> {
+    class MataMvidiaFixture : public ::testing::TestWithParam<tuple<MataMvidia, vector<Matrix>>> {
+    public:
+        static vector<ParamType> testValues() {
+            vector<ParamType> result;
+            int len = testUtils::generateRandomNumber(1, 30);
+            for (int i = 0; i < len; i++) {
+                auto dims = testUtils::generateRandomDims(10);
+                vector<Matrix> matPack;
+                for (auto [rows, cols]: dims) {
+                    auto [mat, _] = testUtils::generateMatrix(rows, cols);
+                    matPack.emplace_back(
+                            mat
+                    );
+                }
+                MataMvidia mataMvidia("authName", "creator", matPack.data(), (int) matPack.size());
+                result.emplace_back(mataMvidia, matPack);
+            }
+            return result;
+        }
     };
 
-    class MataMvidiaTestInvalidDataFixture : public MataMvidiaTestFixture {
+    class MataMvidiaConstructorFixture : public testing::TestWithParam<tuple<string, string, vector<Matrix>, int>> {
     };
 
-    class MataMvidiaConstructorFixture : public MataMvidiaTestFixture {
+    class MataMvidiaCopyFixture : public MataMvidiaFixture {
     };
 
-//    TEST_P(MataMvidiaTestConstructorFixture, MataMvidiaConstuctor_initiates_sucessfully
-//    ) {
-//        const auto [rows, cols] = GetParam();
-//        EXPECT_NO_THROW({
-//                            MataMvidia MataMvidia(rows, cols);
-//                        });
-//    }
-//
-//    TEST_P(MataMvidiaTestConstructorFixture, MataMvidiaConstuctor_defaults_data_at_zero
-//    ) {
-//        const auto [rows, cols] = GetParam();
-//        MataMvidia MataMvidia(rows, cols);
-//
-//        for (
-//                int i = 0;
-//                i < rows;
-//                i++) {
-//            for (
-//                    int j = 0;
-//                    j < cols;
-//                    j++) {
-//                EXPECT_EQ(MataMvidia(i, j),
-//                          0);
-//            }
-//        }
-//    }
-//
-//    TEST_P(MataMvidiaTestConstructorFixture, MataMvidiaConstuctor_copies_MataMvidia
-//    ) {
-//        const auto [rows, cols] = GetParam();
-//        MataMvidia MataMvidia(rows, cols);
-//
-//        MataMvidia copy(MataMvidia);
-//
-//        EXPECT_NE(&copy, &MataMvidia
-//        );
-//
-//        EXPECT_EQ(MataMvidia, copy
-//        );
-//    }
-//
-//    TEST_P(MataMvidiaTestConstructorFixture, MataMvidiaConstuctor_copy_assignment
-//    ) {
-//        const auto [rows, cols] = GetParam();
-//        MataMvidia MataMvidia(rows, cols);
-//
-//        MataMvidia copy = MataMvidia;
-//
-//        EXPECT_NE(&copy, &MataMvidia
-//        );
-//
-//        EXPECT_EQ(MataMvidia, copy
-//        );
-//    }
-//
-//
-//    TEST_P(MataMvidiaTestInvalidDataFixture, MataMvidiaConstuctor_throws_expection_on_invalid_d
-//    ) {
-//        const auto [rows, cols] = GetParam();
-//
-//        EXPECT_DEATH({
-//                         MataMvidia MataMvidia(rows, cols);
-//                     }, "Out of bounds");
-//    }
-//
-//    INSTANTIATE_TEST_SUITE_P(Constructor,
-//                             MataMvidiaTestInvalidDimsFixture,
-//                             testing::Values(
-//                                     tuple(-1, 0),
-//                                     tuple(0, -1),
-//                                     tuple(-1, -1),
-//                                     tuple(1, -1),
-//                                     tuple(-1, 1)
-//                             )
-//    );
-//
-//    INSTANTIATE_TEST_SUITE_P(Constructor,
-//                             MataMvidiaTestConstructorFixture,
-//                             testing::Values(
-//                                     tuple(0, 0),
-//                                     tuple(1, 1),
-//                                     tuple(1, 10),
-//                                     tuple(10, 1),
-//                                     tuple(3, 3)
-//                             )
-//    );
+    TEST_P(MataMvidiaConstructorFixture, MataMvidiaConstuctor_initiates_sucessfully) {
+        auto [author, creator, frames, len] = GetParam();
+        EXPECT_NO_THROW({
+                            MataMvidia MataMvidia(author, creator, frames.data(), len);
+                        });
+    }
+
+    TEST_P(MataMvidiaCopyFixture, MataMvidiaConstuctor_copies_matamvidia) {
+        auto [matam, _] = GetParam();
+
+        MataMvidia copy(matam);
+
+        EXPECT_NE(&copy, &matam);
+
+        EXPECT_MATAM_EQ(copy, matam);
+    }
+
+    TEST_P(MataMvidiaCopyFixture, MataMvidiaConstuctor_copy_assignment) {
+        auto [matam, _] = GetParam();
+
+        MataMvidia copy = matam;
+
+        EXPECT_NE(&copy, &matam);
+
+
+
+        EXPECT_MATAM_EQ(copy, matam);
+    }
+
+    INSTANTIATE_TEST_SUITE_P(Constructor,
+                             MataMvidiaConstructorFixture,
+                             testing::Values(
+                                     tuple("author", "creator", vector<Matrix>(), 0),
+                                     tuple("author", "creator", vector<Matrix>{Matrix(0, 0), Matrix(1, 1)}, 2),
+                                     tuple("", "creator", vector<Matrix>(), 0),
+                                     tuple("author", "", vector<Matrix>(), 0)
+                             )
+    );
+
+    INSTANTIATE_TEST_SUITE_P(Constructor,
+                             MataMvidiaCopyFixture,
+                             testing::ValuesIn(
+                                     MataMvidiaCopyFixture::testValues()
+                             )
+    );
 }
