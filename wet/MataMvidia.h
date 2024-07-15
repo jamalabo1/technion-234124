@@ -19,23 +19,20 @@ private:
 
     void appendToFrames(Matrix rightFrames[], int rightLength);
 
-    friend Matrix* copyFrames(const MataMvidia& other);
+    friend Matrix *copyFrames(const MataMvidia &other);
 
 public:
 
-    MataMvidia(std::string name, std::string creator, Matrix* frames, int length);
-
+    MataMvidia(std::string name, std::string creator, Matrix *frames, int length);
 
     MataMvidia();
 
     MataMvidia(const MataMvidia &);
 
     MataMvidia &operator=(const MataMvidia &other);
-//    MataMvidia &operator=(const MataMvidia &other);
 
 
     ~MataMvidia();
-
 
     Matrix &operator[](int index);
 
@@ -45,11 +42,10 @@ public:
 
     MataMvidia &operator+=(const Matrix &right);
 
-    friend MataMvidia operator+(MataMvidia left, const MataMvidia &right);
 
     friend std::ostream &operator<<(std::ostream &os, const MataMvidia &movie);
-
 };
 
+MataMvidia operator+(const MataMvidia &left, const MataMvidia &right);
 
 #endif //HW2_MATAMVIDIA_H

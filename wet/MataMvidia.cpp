@@ -84,8 +84,8 @@ MataMvidia &MataMvidia::operator+=(const MataMvidia &right) {
 }
 
 MataMvidia &MataMvidia::operator+=(const Matrix &right) {
-
     Matrix *temp = new Matrix[1]{right};
+
     this->appendToFrames(temp, 1);
     delete[] temp;
 
@@ -93,9 +93,10 @@ MataMvidia &MataMvidia::operator+=(const Matrix &right) {
 }
 
 
-MataMvidia operator+(MataMvidia left, const MataMvidia &right) {
-    left += right;
-    return left;
+MataMvidia operator+(const MataMvidia &left, const MataMvidia &right) {
+    MataMvidia copy(left);
+    copy += right;
+    return copy;
 }
 
 
