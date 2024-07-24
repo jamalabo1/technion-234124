@@ -25,7 +25,7 @@ void Person::assignTask(const Task& task) {
 
 
 int Person::completeTask() {
-    if (m_tasks.length() == 0) {
+    if (m_tasks.size() == 0) {
         throw std::runtime_error("No tasks assigned to this person.");
     }
     int taskId = (*m_tasks.begin()).getId();
@@ -34,7 +34,7 @@ int Person::completeTask() {
 }
 
 const Task& Person::getHighestPriorityTask() const {
-    if (m_tasks.length() == 0) {
+    if (m_tasks.size() == 0) {
         throw std::runtime_error("No tasks assigned to this person.");
     }
     return (*m_tasks.begin());

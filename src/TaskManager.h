@@ -2,6 +2,8 @@
 #pragma once
 
 #include "Task.h"
+#include "SortedList.h"
+#include "Person.h"
 
 /**
  * @brief Class managing tasks assigned to multiple persons.
@@ -14,6 +16,72 @@ private:
     static const int MAX_PERSONS = 10;
 
     // Note - Additional private fields and methods can be added if needed.
+
+    long nextTaskId = 0;
+
+    class PersonList {
+    private:
+        Person *list;
+        int count;
+
+    public:
+
+        PersonList();
+
+        PersonList(const PersonList &other) = delete;
+
+        PersonList &operator=(const PersonList &other) = delete;
+
+        ~PersonList();
+
+        class Iterator {
+        private:
+            const PersonList *list;
+            int currentIndex;
+
+        public:
+
+            Iterator(const PersonList *list, int index);
+
+            Iterator &operator++();
+
+            bool operator!=(const Iterator &);
+
+            Person &operator*();
+
+            friend PersonList;
+        };;
+
+        Iterator begin() const;
+
+        Iterator end() const;
+
+
+        bool exists(const string &name);
+
+        /**
+         * @throws std::NotFound
+         **/
+        Person &findPersonByName(const string &name);
+
+        void insert(Person &person);
+
+        int size() const;
+
+    };
+
+    class PriorityBumpHandler {
+    private:
+        TaskType type;
+        int priority;
+    public:
+        PriorityBumpHandler(const TaskType&, const int&);
+
+        Task operator()(const Task &);
+    };
+
+    PersonList persons;
+
 
 public:
     /**
