@@ -158,25 +158,25 @@ bool testListBasic()
 {
     // Test default constructor
     SortedList<int> list;
-    if (list.length() != 0)
+    if (list.size() != 0)
         return false;
 
     // Test insert and length
     list.insert(5);
     list.insert(3);
     list.insert(8);
-    if (list.length() != 3)
+    if (list.size() != 3)
         return false;
 
     // Test copy constructor
     SortedList<int> copy(list);
-    if (copy.length() != 3)
+    if (copy.size() != 3)
         return false;
 
     // Check copied elements
     auto it_copy = copy.begin();
     auto it_list = list.begin();
-    for (int i = 0; i < list.length(); ++i)
+    for (int i = 0; i < list.size(); ++i)
     {
         if ((*it_copy != *it_list) || (&(*it_copy) == &(*it_list)))
             return false;
@@ -187,13 +187,13 @@ bool testListBasic()
     // Test assignment operator
     SortedList<int> another_list;
     another_list = list;
-    if (another_list.length() != 3)
+    if (another_list.size() != 3)
         return false;
 
     // Check assigned elements
     it_list = list.begin();
     auto it_another_list = another_list.begin();
-    for (int i = 0; i < list.length(); ++i)
+    for (int i = 0; i < list.size(); ++i)
     {
         if ((*it_another_list != *it_list) || (&(*it_another_list) == &(*it_list)))
             return false;
@@ -203,7 +203,7 @@ bool testListBasic()
 
     // Ensure deep copy
     list.insert(10);
-    if (another_list.length() != 3)
+    if (another_list.size() != 3)
         return false;
 
     return true;

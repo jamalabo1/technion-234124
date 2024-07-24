@@ -16,6 +16,7 @@ add_library(
 
         Person.cpp
         Task.cpp
+        TaskManager.cpp
 )
 
 target_include_directories(hw3_lib PUBLIC .)

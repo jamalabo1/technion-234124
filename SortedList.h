@@ -2,6 +2,10 @@
 
 #include <iostream>
 #include <stdexcept>
+#include <functional>
+
+#define FOREACH(statement) for(const T& current : iterable()) { \
+statement }
 
 namespace mtm {
 
@@ -9,11 +13,10 @@ namespace mtm {
     class SortedList {
     private:
         class Holder {
-        private:
+        public:
             T data;
             Holder *chain;
 
-        public:
             Holder(T data)
                     : data(data), chain(nullptr) {};
 
@@ -21,7 +24,7 @@ namespace mtm {
             Holder(const Holder &copy) : Holder(copy.data) {
                 if (copy.chain != nullptr) {
                     // copy the chain
-                    chain = new Holder(copy.chain);
+                    chain = new Holder(*copy.chain);
                 }
             }
 
@@ -31,10 +34,26 @@ namespace mtm {
                 if (this == &other) return *this;
 
                 data = other.data;
-                chain = new Holder(other.chain);
+                if (other.chain == nullptr) {
+                    chain = nullptr;
+                } else {
+                    chain = new Holder(other.chain);
+                }
+            }
+
+            const T &getData() {
+                return data;
+            }
+
+            Holder *next() {
+                return chain;
             }
 
         };
+
+        const SortedList<T> &iterable() const {
+            return *this;
+        }
 
         Holder *head;
         int length;
@@ -48,7 +67,13 @@ namespace mtm {
         //constructor of the sortedlist initialization of the copy
         //2. copy constructor
         SortedList(const SortedList<T> &copy)
-                : head(copy.head), length(copy.length) {}
+                : length(copy.length) {
+            if (copy.head != nullptr) {
+                head = new Holder(*copy.head);
+            } else {
+                head = nullptr;
+            }
+        }
 
 
         //declares the assignment operator for the SortedList class template.
@@ -58,18 +83,26 @@ namespace mtm {
             if (this == &other) return *this;
 
             //TODO: check if copy by value
-            head = other.head;
+            if (other.head != nullptr) {
+                head = new Holder(*other.head);
+            }
             length = other.length;
+
+            return *this;
         }
 
         //4. ~SortedList() - destructor
         ~SortedList() {
+
+//            FOREACH(
+//                    delete current;
+//            )
             Holder *current = head;
             while (current != nullptr) {
                 Holder *temp = current;
                 current = current->chain;
-                // Without temp, once current is advanced,
-                // the reference to the Holder that needs to be deleted would be lost.
+//                 Without temp, once current is advanced,
+//                 the reference to the Holder that needs to be deleted would be lost.
                 delete temp;
             }
 
@@ -90,20 +123,20 @@ namespace mtm {
         }
 
         //8. insert - inserts a new element to the list
-        void insert(T input) {
-            auto *NewInput = new Holder(input);
+        void insert(const T &input) {
+            auto *newInput = new Holder(input);
             if (head == nullptr || input > head->data) {
-                NewInput->chain = head;
-                head = NewInput;
+                newInput->chain = head;
+                head = newInput;
             } else {
                 auto *current = head;
                 //find the last place that the input is bigger than the value in it
-                while (current->chain != nullptr && current->chain->data >= input) {
+                while (current->chain != nullptr && (current->chain->data > input)) {
                     current = current->chain;
                 }
                 //once you find it update the next and put it in the right place
-                NewInput->chain = current->chain;
-                current->chain = NewInput;
+                newInput->chain = current->chain;
+                current->chain = newInput;
             }
             // we added a new number then the length will increase
             length++;
@@ -118,7 +151,7 @@ namespace mtm {
             Holder *current = head;
             Holder *previous = nullptr;
 
-            while (current != nullptr && current != toDelete.holder) {
+            while (current != nullptr && &current->getData() != &*toDelete) {
                 previous = current;
                 current = current->chain;
             }
@@ -145,33 +178,42 @@ namespace mtm {
         // 11. filter - returns a new list with elements that satisfy a given condition
         SortedList filter(bool *prediction(T)) const {
             SortedList<T> newList;
-            Holder *current = head;
-            while (current != nullptr) {
-                if (prediction(current->data)) {
-                    newList.insert(current->data);
-                }
-                current = current->chain;
-            }
+            FOREACH(
+                    if (prediction(current)) {
+                        newList.insert(current);
+                    }
+            );
             return newList;
+//            Holder *current = head;
+//            while (current != nullptr) {
+//                if (prediction(current->data)) {
+//                    newList.insert(current->data);
+//                }
+//                current = current->chain;
+//            }
+//            return newList;
         }
 
         //12. apply - returns a new list with elements that were modified by an operation
-        SortedList apply(T *func(T)) const {
+//        SortedList apply(T func(const T &)) const {
+        SortedList apply(std::function<T(const T &)> func) const {
             SortedList<T> newList;
-            Holder *current = head;
-            while (current != nullptr) {
-                newList.insert(func(current->data));
-                current = current->chain;
-            }
+            FOREACH(
+                    newList.insert(func(current));
+            )
+//            for (const T &current: iterable()) {
+//                newList.insert(func(current));
+//            }
             return newList;
         }
+
 
     };
 
     template<class T>
     class SortedList<T>::ConstIterator {
     private:
-        Holder *holder;
+        Holder *current;
 
     public:
         //* constructors and destructor:
@@ -179,7 +221,7 @@ namespace mtm {
         //* 2. copy constructor
         //* 3. operator= - assignment operator
         //* 4. ~ConstIterator() - destructor
-        ConstIterator(Holder *holder) : holder(holder) {}
+        ConstIterator(Holder *holder) : current(holder) {}
 
         ConstIterator(const ConstIterator &other) = default;
 
@@ -189,19 +231,19 @@ namespace mtm {
 
         //5. operator* - returns the element the iterator points to
         const T &operator*() const {
-            return holder->data;
+            return current->getData();
         }
 
         //6. operator++ - advances the iterator to the next element
         ConstIterator &operator++() {
-            if (holder == nullptr) return std::out_of_range("Iterator out of range");
-            holder = holder->chain;
+            if (current == nullptr) throw std::out_of_range("Iterator out of range");
+            current = current->next();
             return *this;
         }
 
         //7. operator!= - returns true if the iterator points to a different element
         bool operator!=(const ConstIterator &other) const {
-            return holder != other.holder;
+            return current != other.current;
         }
     };
 }
