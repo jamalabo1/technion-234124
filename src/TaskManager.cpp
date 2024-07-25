@@ -5,9 +5,11 @@
 #include "TaskManager.h"
 
 
+//bool operator<()
+
 // List implementation
 
-TaskManager::PersonList::PersonList() : count(0) {
+TaskManager::PersonList::PersonList() : list(nullptr), count(0) {
 
 }
 
@@ -76,12 +78,9 @@ Person &TaskManager::PersonList::Iterator::operator*() {
 }
 
 
-
 // End list implementation
 
-TaskManager::TaskManager() {
-
-}
+TaskManager::TaskManager() = default;
 
 void TaskManager::assignTask(const string &personName, const Task &task) {
 
@@ -114,9 +113,7 @@ void TaskManager::bumpPriorityByType(TaskType type, int priority) {
     for (Person &person: persons) {
         SortedList<Task> personTasks = person.getTasks();
 
-        personTasks.apply(handler);
-
-        person.setTasks(personTasks);
+        person.setTasks(personTasks.apply(handler));
     }
 }
 
@@ -127,33 +124,43 @@ void TaskManager::printAllEmployees() const {
 }
 
 void TaskManager::printTasksByType(TaskType type) const {
-    for (const Person &person: persons) {
-        for (const Task &task: person.getTasks()) {
-            if (task.getType() != type) continue;
+    SortedList<Task> tasks = getTasks().filter([type](const Task &task) {
+        return task.getType() == type;
+    });
 
-            std::cout << task << std::endl;
-        }
+    for (const Task &task: tasks) {
+        std::cout << task << std::endl;
     }
 }
 
 void TaskManager::printAllTasks() const {
+    SortedList<Task> tasks = getTasks();
+
+    for (const Task &task: tasks) {
+        std::cout << task << std::endl;
+    }
+}
+
+SortedList<Task> TaskManager::getTasks() const {
+    SortedList<Task> tasks;
     for (const Person &person: persons) {
         for (const Task &task: person.getTasks()) {
-            std::cout << task << std::endl;
+            tasks.insert(task);
         }
     }
+    return tasks;
 }
 
 
 Task TaskManager::PriorityBumpHandler::operator()(const Task &task) {
     bool matchType = task.getType() == type;
 
-    auto newTask = Task(task.getPriority() + (matchType ? priority : 0), task.getType(), task.getDescription());
     if (matchType) {
+        auto newTask = Task(task.getPriority() + priority, task.getType(), task.getDescription());
         newTask.setId(task.getId());
         return newTask;
     }
-    return newTask;
+    return task;
 }
 
 TaskManager::PriorityBumpHandler::PriorityBumpHandler(const TaskType &type, const int &priority) : type(type),

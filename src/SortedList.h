@@ -13,9 +13,12 @@ namespace mtm {
     class SortedList {
     private:
         class Holder {
-        public:
+        private:
             T data;
             Holder *chain;
+
+
+        public:
 
             Holder(T data)
                     : data(data), chain(nullptr) {};
@@ -49,6 +52,9 @@ namespace mtm {
                 return chain;
             }
 
+            void setChain(Holder *holder) {
+                chain = holder;
+            }
         };
 
         const SortedList<T> &iterable() const {
@@ -82,7 +88,6 @@ namespace mtm {
         SortedList<T> &operator=(const SortedList<T> &other) {
             if (this == &other) return *this;
 
-            //TODO: check if copy by value
             if (other.head != nullptr) {
                 head = new Holder(*other.head);
             }
@@ -93,16 +98,12 @@ namespace mtm {
 
         //4. ~SortedList() - destructor
         ~SortedList() {
-
-//            FOREACH(
-//                    delete current;
-//            )
             Holder *current = head;
             while (current != nullptr) {
                 Holder *temp = current;
-                current = current->chain;
-//                 Without temp, once current is advanced,
-//                 the reference to the Holder that needs to be deleted would be lost.
+                current = current->next();
+                // Without temp, once current is advanced,
+                // the reference to the Holder that needs to be deleted would be lost.
                 delete temp;
             }
 
@@ -124,26 +125,26 @@ namespace mtm {
 
         //8. insert - inserts a new element to the list
         void insert(const T &input) {
-            auto *newInput = new Holder(input);
-            if (head == nullptr || input > head->data) {
-                newInput->chain = head;
+            Holder *newInput = new Holder(input);
+            if (head == nullptr || input > head->getData()) {
+                newInput->setChain(head);
                 head = newInput;
             } else {
-                auto *current = head;
+                Holder *current = head;
                 //find the last place that the input is bigger than the value in it
-                while (current->chain != nullptr && (current->chain->data > input)) {
-                    current = current->chain;
+                while (current->next() != nullptr && (current->next()->getData() > input)) {
+                    current = current->next();
                 }
                 //once you find it update the next and put it in the right place
-                newInput->chain = current->chain;
-                current->chain = newInput;
+                newInput->setChain(current->next());
+                current->setChain(newInput);
             }
             // we added a new number then the length will increase
             length++;
         }
 
         //9. remove - removes an element from the list
-        void remove(ConstIterator toDelete) {
+        void remove(const ConstIterator &toDelete) {
             //check if empty
             if (head == nullptr)
                 return;
@@ -153,17 +154,17 @@ namespace mtm {
 
             while (current != nullptr && &current->getData() != &*toDelete) {
                 previous = current;
-                current = current->chain;
+                current = current->next();
             }
 
             if (current == nullptr) return; //the line was not found
 
             if (previous == nullptr) {
                 // in the situation where the list is just one number
-                head = current->chain;
+                head = current->next();
             } else {
                 // make the previous one make two steps forward
-                previous->chain = current->chain;
+                previous->setChain(current->next());
             }
             // manged to find the number and to delete it
             delete current;
@@ -176,37 +177,24 @@ namespace mtm {
         }
 
         // 11. filter - returns a new list with elements that satisfy a given condition
-        SortedList filter(bool *prediction(T)) const {
+        SortedList filter(std::function<bool(T)> prediction) const {
             SortedList<T> newList;
-            FOREACH(
-                    if (prediction(current)) {
-                        newList.insert(current);
-                    }
-            );
+            for (const T &current: iterable()) {
+                if (prediction(current)) {
+                    newList.insert(current);
+                }
+            }
             return newList;
-//            Holder *current = head;
-//            while (current != nullptr) {
-//                if (prediction(current->data)) {
-//                    newList.insert(current->data);
-//                }
-//                current = current->chain;
-//            }
-//            return newList;
         }
 
         //12. apply - returns a new list with elements that were modified by an operation
-//        SortedList apply(T func(const T &)) const {
         SortedList apply(std::function<T(const T &)> func) const {
             SortedList<T> newList;
-            FOREACH(
-                    newList.insert(func(current));
-            )
-//            for (const T &current: iterable()) {
-//                newList.insert(func(current));
-//            }
+            for (const T &current: iterable()) {
+                newList.insert(func(current));
+            }
             return newList;
         }
-
 
     };
 

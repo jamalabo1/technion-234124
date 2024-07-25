@@ -50,7 +50,7 @@ private:
             Person &operator*();
 
             friend PersonList;
-        };;
+        };
 
         Iterator begin() const;
 
@@ -75,13 +75,14 @@ private:
         TaskType type;
         int priority;
     public:
-        PriorityBumpHandler(const TaskType&, const int&);
+        PriorityBumpHandler(const TaskType &, const int &);
 
         Task operator()(const Task &);
     };
 
     PersonList persons;
 
+    SortedList<Task> getTasks() const;
 
 public:
     /**
