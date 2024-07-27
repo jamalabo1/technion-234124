@@ -28,8 +28,7 @@ namespace mtm {
                     : data(data), chain(nullptr) {};
 
             // to avoid confusion, and deep copies, assignment by value is not allowed.
-            Holder& operator=(const Holder &other) = delete;
-
+            Holder &operator=(const Holder &other) = delete;
 
             const T &getData() const {
                 return data;
@@ -170,9 +169,9 @@ namespace mtm {
             return length;
         }
 
-        template<class Func>
+        template<typename Func>
         // 11. filter - returns a new list with elements that satisfy a given condition
-        SortedList filter(Func prediction) const {
+        SortedList filter(Func &prediction) const {
             SortedList<T> newList;
             for (const T &current: iterable()) {
                 if (prediction(current)) {
@@ -182,9 +181,10 @@ namespace mtm {
             return newList;
         }
 
-        template<class Func>
+
+        template<typename Func>
         //12. apply - returns a new list with elements that were modified by an operation
-        SortedList apply(Func func) const {
+        SortedList apply(Func &func) const {
             SortedList<T> newList;
             for (const T &current: iterable()) {
                 newList.insert(func(current));
