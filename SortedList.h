@@ -18,25 +18,18 @@ namespace mtm {
                 return *chain;
             }
 
-        public:
-            Holder(T data)
-                    : data(data), chain(nullptr) {};
-
             //This is a copy constructor for Holder
             Holder(const Holder &copy) : Holder(copy.data) {
                 chain = Holder::copyFromPointer(copy.next());
             }
 
-            //check ensures that if you are assigning an object to itself,
-            //it does nothing and returns *this to avoid self-assignment issues.
-            Holder &operator=(const Holder &other) {
-                if (this == &other) return *this;
+        public:
+            Holder(T data)
+                    : data(data), chain(nullptr) {};
 
-                data = other.data;
-                chain = Holder::copyFromPointer(other.next());
+            // to avoid confusion, and deep copies, assignment by value is not allowed.
+            Holder& operator=(const Holder &other) = delete;
 
-                return *this;
-            }
 
             const T &getData() const {
                 return data;
@@ -54,10 +47,7 @@ namespace mtm {
 
             static Holder *copyFromPointer(const Holder *other) {
                 if (other == nullptr) return nullptr;
-                if (other->next() == nullptr) {
-                    return new Holder(other->getData());
-                }
-                return new Holder(other->getHolder());
+                return new Holder(*other);
             }
         };
 
@@ -67,6 +57,17 @@ namespace mtm {
 
         Holder *head;
         int length;
+
+        void releaseChain() {
+            Holder *current = head;
+            while (current != nullptr) {
+                Holder *temp = current;
+                current = current->next();
+                // Without temp, once current is advanced,
+                // the reference to the Holder that needs to be deleted would be lost.
+                delete temp;
+            }
+        }
 
     public:
         //constructor of the sortedlist initialization empty
@@ -88,6 +89,9 @@ namespace mtm {
         SortedList<T> &operator=(const SortedList<T> &other) {
             if (this == &other) return *this;
 
+
+            releaseChain();
+
             head = Holder::copyFromPointer(other.head);
             length = other.length;
 
@@ -96,15 +100,7 @@ namespace mtm {
 
         //4. ~SortedList() - destructor
         ~SortedList() {
-            Holder *current = head;
-            while (current != nullptr) {
-                Holder *temp = current;
-                current = current->next();
-                // Without temp, once current is advanced,
-                // the reference to the Holder that needs to be deleted would be lost.
-                delete temp;
-            }
-
+            releaseChain();
         }
 
         //* iterator:
