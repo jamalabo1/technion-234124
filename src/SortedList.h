@@ -55,7 +55,7 @@ namespace mtm {
         }
 
         Holder *head;
-        int length;
+        int count;
 
         void releaseChain() {
             Holder *current = head;
@@ -72,12 +72,12 @@ namespace mtm {
         //constructor of the sortedlist initialization empty
         //1. SortedList() - creates an empty list.
         SortedList()
-                : head(nullptr), length(0) {};
+                : head(nullptr), count(0) {};
 
         //constructor of the sortedlist initialization of the copy
         //2. copy constructor
         SortedList(const SortedList<T> &copy)
-                : length(copy.length) {
+                : count(copy.count) {
             head = Holder::copyFromPointer(copy.head);
         }
 
@@ -89,10 +89,12 @@ namespace mtm {
             if (this == &other) return *this;
 
 
+            Holder *copiedChain = Holder::copyFromPointer(other.head);
+
             releaseChain();
 
-            head = Holder::copyFromPointer(other.head);
-            length = other.length;
+            head = copiedChain;
+            count = other.count;
 
             return *this;
         }
@@ -133,7 +135,7 @@ namespace mtm {
                 current->setChain(newInput);
             }
             // we added a new number then the length will increase
-            length++;
+            count++;
         }
 
         //9. remove - removes an element from the list
@@ -161,17 +163,17 @@ namespace mtm {
             }
             // manged to find the number and to delete it
             delete current;
-            length--;
+            count--;
         }
 
         //10. length - returns the number of elements in the list
-        int size() const {
-            return length;
+        int length() const {
+            return count;
         }
 
         template<typename Func>
         // 11. filter - returns a new list with elements that satisfy a given condition
-        SortedList filter(Func &prediction) const {
+        SortedList filter(Func prediction) const {
             SortedList<T> newList;
             for (const T &current: iterable()) {
                 if (prediction(current)) {
@@ -184,7 +186,7 @@ namespace mtm {
 
         template<typename Func>
         //12. apply - returns a new list with elements that were modified by an operation
-        SortedList apply(Func &func) const {
+        SortedList apply(Func func) const {
             SortedList<T> newList;
             for (const T &current: iterable()) {
                 newList.insert(func(current));
