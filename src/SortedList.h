@@ -4,9 +4,6 @@
 #include <stdexcept>
 #include <functional>
 
-#define FOREACH(statement) for(const T& current : iterable()) { \
-statement }
-
 namespace mtm {
 
     template<typename T>
@@ -17,18 +14,17 @@ namespace mtm {
             T data;
             Holder *chain;
 
+            Holder &getHolder() const {
+                return *chain;
+            }
 
         public:
-
             Holder(T data)
                     : data(data), chain(nullptr) {};
 
             //This is a copy constructor for Holder
             Holder(const Holder &copy) : Holder(copy.data) {
-                if (copy.chain != nullptr) {
-                    // copy the chain
-                    chain = new Holder(*copy.chain);
-                }
+                chain = Holder::copyFromPointer(copy.next());
             }
 
             //check ensures that if you are assigning an object to itself,
@@ -37,23 +33,31 @@ namespace mtm {
                 if (this == &other) return *this;
 
                 data = other.data;
-                if (other.chain == nullptr) {
-                    chain = nullptr;
-                } else {
-                    chain = new Holder(other.chain);
-                }
+                chain = Holder::copyFromPointer(other.next());
+
+                return *this;
             }
 
-            const T &getData() {
+            const T &getData() const {
                 return data;
             }
 
-            Holder *next() {
+            // next name was used instead of getChain to provide a meaningful info about the expected output.
+            Holder *next() const {
                 return chain;
             }
 
+            // allow the setting of a chain
             void setChain(Holder *holder) {
                 chain = holder;
+            }
+
+            static Holder *copyFromPointer(const Holder *other) {
+                if (other == nullptr) return nullptr;
+                if (other->next() == nullptr) {
+                    return new Holder(other->getData());
+                }
+                return new Holder(other->getHolder());
             }
         };
 
@@ -74,11 +78,7 @@ namespace mtm {
         //2. copy constructor
         SortedList(const SortedList<T> &copy)
                 : length(copy.length) {
-            if (copy.head != nullptr) {
-                head = new Holder(*copy.head);
-            } else {
-                head = nullptr;
-            }
+            head = Holder::copyFromPointer(copy.head);
         }
 
 
@@ -88,9 +88,7 @@ namespace mtm {
         SortedList<T> &operator=(const SortedList<T> &other) {
             if (this == &other) return *this;
 
-            if (other.head != nullptr) {
-                head = new Holder(*other.head);
-            }
+            head = Holder::copyFromPointer(other.head);
             length = other.length;
 
             return *this;
@@ -176,8 +174,9 @@ namespace mtm {
             return length;
         }
 
+        template<class Func>
         // 11. filter - returns a new list with elements that satisfy a given condition
-        SortedList filter(std::function<bool(T)> prediction) const {
+        SortedList filter(Func prediction) const {
             SortedList<T> newList;
             for (const T &current: iterable()) {
                 if (prediction(current)) {
@@ -187,8 +186,9 @@ namespace mtm {
             return newList;
         }
 
+        template<class Func>
         //12. apply - returns a new list with elements that were modified by an operation
-        SortedList apply(std::function<T(const T &)> func) const {
+        SortedList apply(Func func) const {
             SortedList<T> newList;
             for (const T &current: iterable()) {
                 newList.insert(func(current));
