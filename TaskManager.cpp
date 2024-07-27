@@ -4,9 +4,6 @@
 #include <functional>
 #include "TaskManager.h"
 
-
-//bool operator<()
-
 // List implementation
 
 TaskManager::PersonList::PersonList() : list(nullptr), count(0) {
@@ -77,8 +74,8 @@ Person &TaskManager::PersonList::Iterator::operator*() {
     return list->list[currentIndex];
 }
 
-
 // End list implementation
+
 
 TaskManager::TaskManager() = default;
 
@@ -86,9 +83,10 @@ void TaskManager::assignTask(const string &personName, const Task &task) {
 
     bool personExists = persons.exists(personName);
     if (!personExists && persons.size() >= MAX_PERSONS) {
-        throw std::runtime_error("");
+        throw std::runtime_error("maximum capacity has been reached");
     }
-    Task copy = task;
+    // since all types in the class are clr types, default copy ctr by value can be used.
+    Task copy(task);
     copy.setId(nextTaskId++);
 
     if (personExists) {
@@ -124,9 +122,9 @@ void TaskManager::printAllEmployees() const {
 }
 
 void TaskManager::printTasksByType(TaskType type) const {
-    SortedList<Task> tasks = getTasks().filter([type](const Task &task) {
-        return task.getType() == type;
-    });
+    TaskFilterByTypeHandler handler(type);
+
+    SortedList<Task> tasks = getTasks().filter(handler);
 
     for (const Task &task: tasks) {
         std::cout << task << std::endl;
@@ -152,6 +150,10 @@ SortedList<Task> TaskManager::getTasks() const {
 }
 
 
+TaskManager::PriorityBumpHandler::PriorityBumpHandler(const TaskType &type, const int &priority) : type(type),
+                                                                                                   priority(priority) {
+}
+
 Task TaskManager::PriorityBumpHandler::operator()(const Task &task) {
     bool matchType = task.getType() == type;
 
@@ -163,7 +165,10 @@ Task TaskManager::PriorityBumpHandler::operator()(const Task &task) {
     return task;
 }
 
-TaskManager::PriorityBumpHandler::PriorityBumpHandler(const TaskType &type, const int &priority) : type(type),
-                                                                                                   priority(priority) {
+TaskManager::TaskFilterByTypeHandler::TaskFilterByTypeHandler(TaskType type) : type(type) {
 
+}
+
+bool TaskManager::TaskFilterByTypeHandler::operator()(const Task &task) {
+    return task.getType() == type;
 }

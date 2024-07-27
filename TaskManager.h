@@ -49,7 +49,6 @@ private:
 
             Person &operator*();
 
-            friend PersonList;
         };
 
         Iterator begin() const;
@@ -78,6 +77,15 @@ private:
         PriorityBumpHandler(const TaskType &, const int &);
 
         Task operator()(const Task &);
+    };
+
+    class TaskFilterByTypeHandler {
+    private:
+        TaskType type;
+    public:
+        TaskFilterByTypeHandler(TaskType type);
+
+        bool operator()(const Task &);
     };
 
     PersonList persons;
