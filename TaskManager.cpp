@@ -100,9 +100,14 @@ void TaskManager::assignTask(const string &personName, const Task &task) {
 }
 
 void TaskManager::completeTask(const string &personName) {
-    Person &person = persons.findPersonByName(personName);
+    try {
 
-    person.completeTask();
+        Person &person = persons.findPersonByName(personName);
+
+        person.completeTask();
+    } catch (std::runtime_error &) {
+        std::cout << "No tasks assigned to this person" << std::endl;
+    }
 }
 
 void TaskManager::bumpPriorityByType(TaskType type, int priority) {
