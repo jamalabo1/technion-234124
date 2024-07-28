@@ -14,19 +14,12 @@ TaskManager::PersonList::~PersonList() {
     delete[] list;
 }
 
-bool TaskManager::PersonList::exists(const string &name) {
+Person *TaskManager::PersonList::findPersonByName(const string &name) {
     for (Person &person: *this) {
-        if (person.getName() == name) return true;
-    }
-    return false;
-}
-
-Person &TaskManager::PersonList::findPersonByName(const string &name) {
-    for (Person &person: *this) {
-        if (person.getName() == name) return person;
+        if (person.getName() == name) return &person;
     }
 
-    throw std::runtime_error("person does not exist");
+    return nullptr;
 }
 
 void TaskManager::PersonList::insert(Person &person) {
@@ -80,18 +73,17 @@ Person &TaskManager::PersonList::Iterator::operator*() {
 TaskManager::TaskManager() = default;
 
 void TaskManager::assignTask(const string &personName, const Task &task) {
-
-    bool personExists = persons.exists(personName);
-    if (!personExists && persons.size() >= MAX_PERSONS) {
+    // returns a pointer to the requested person if exists.
+    Person *pPerson = persons.findPersonByName(personName);
+    if (pPerson == nullptr && persons.size() >= MAX_PERSONS) {
         throw std::runtime_error("maximum capacity has been reached");
     }
     // since all types in the class are clr types, default copy ctr by value can be used.
     Task copy(task);
     copy.setId(nextTaskId++);
 
-    if (personExists) {
-        Person &person = persons.findPersonByName(personName);
-        person.assignTask(copy);
+    if (pPerson != nullptr) {
+        pPerson->assignTask(copy);
     } else {
         Person person(personName);
         person.assignTask(copy);
@@ -100,14 +92,14 @@ void TaskManager::assignTask(const string &personName, const Task &task) {
 }
 
 void TaskManager::completeTask(const string &personName) {
-    try {
+    Person *person = persons.findPersonByName(personName);
 
-        Person &person = persons.findPersonByName(personName);
-
-        person.completeTask();
-    } catch (std::runtime_error &) {
+    if (person == nullptr) {
         std::cout << "No tasks assigned to this person" << std::endl;
+        return;
     }
+
+    person->completeTask();
 }
 
 void TaskManager::bumpPriorityByType(TaskType type, int priority) {
@@ -129,7 +121,7 @@ void TaskManager::printAllEmployees() const {
 void TaskManager::printTasksByType(TaskType type) const {
     TaskFilterByTypeHandler handler(type);
 
-    SortedList<Task> tasks = getTasks().filter(handler);
+    SortedList<Task> tasks = getAllTasks().filter(handler);
 
     for (const Task &task: tasks) {
         std::cout << task << std::endl;
@@ -137,14 +129,14 @@ void TaskManager::printTasksByType(TaskType type) const {
 }
 
 void TaskManager::printAllTasks() const {
-    SortedList<Task> tasks = getTasks();
+    SortedList<Task> tasks = getAllTasks();
 
     for (const Task &task: tasks) {
         std::cout << task << std::endl;
     }
 }
 
-SortedList<Task> TaskManager::getTasks() const {
+SortedList<Task> TaskManager::getAllTasks() const {
     SortedList<Task> tasks;
     for (const Person &person: persons) {
         for (const Task &task: person.getTasks()) {
@@ -163,7 +155,7 @@ Task TaskManager::PriorityBumpHandler::operator()(const Task &task) {
     bool matchType = task.getType() == type;
 
     if (matchType) {
-        auto newTask = Task(task.getPriority() + priority, task.getType(), task.getDescription());
+        Task newTask = Task(task.getPriority() + priority, task.getType(), task.getDescription());
         newTask.setId(task.getId());
         return newTask;
     }
