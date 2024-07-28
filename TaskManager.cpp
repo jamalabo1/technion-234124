@@ -1,7 +1,6 @@
 //
 // Created by jamal on 20/07/2024.
 //
-#include <functional>
 #include "TaskManager.h"
 
 // List implementation
