@@ -56,12 +56,7 @@ private:
         Iterator end() const;
 
 
-        bool exists(const string &name);
-
-        /**
-         * @throws std::NotFound
-         **/
-        Person &findPersonByName(const string &name);
+        Person *findPersonByName(const string &name);
 
         void insert(Person &person);
 
@@ -90,7 +85,7 @@ private:
 
     PersonList persons;
 
-    SortedList<Task> getTasks() const;
+    SortedList<Task> getAllTasks() const;
 
 public:
     /**

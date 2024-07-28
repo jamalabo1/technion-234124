@@ -27,3 +27,7 @@ add_executable(hw3_exc
 )
 
 target_link_libraries(hw3_exc PUBLIC hw3_lib)
+
+add_executable(tests tests.cpp)
+
+target_link_libraries(tests PUBLIC hw3_lib)
