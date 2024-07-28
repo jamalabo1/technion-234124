@@ -1,0 +1,124 @@
+* commit bdc44ac7996ae07a1acaf2cb208892677f3161d9
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Sun Jul 28 13:32:30 2024 +0300
+| 
+|     submission touches
+| 
+|  CMakeLists.txt  |  33 ----
+|  Person.cpp      |  51 ------
+|  Person.h        |  79 --------
+|  SortedList.h    | 235 +-----------------------
+|  Task.cpp        |  83 ---------
+|  Task.h          | 115 ------------
+|  TaskManager.cpp |   1 -
+|  main.cpp        | 531 ------------------------------------------------------
+|  8 files changed, 1 insertion(+), 1127 deletions(-)
+| 
+* commit 42d35994accc198896a0c3fbf5299d8b39aa3a13
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Sun Jul 28 13:29:40 2024 +0300
+| 
+|     moved `LinkedList` header declaration to namespace declaration.
+|     
+|     fixed SortedList length function naming
+|     & refactor code
+| 
+|  CMakeLists.txt  |   6 +-
+|  Person.cpp      |   6 +-
+|  Person.h        |   2 +-
+|  SortedList.h    | 583 +++++++++++++++++++++++++++++++++++++++++-------------
+|  Task.cpp        |  50 ++---
+|  Task.h          |   2 +-
+|  TaskManager.cpp |  42 ++--
+|  TaskManager.h   |   9 +-
+|  8 files changed, 499 insertions(+), 201 deletions(-)
+| 
+* commit 937de2f9220cec51c3d1d5a8a944ecb522e25567
+| Author: farahqub <farah.qub@campus.technion.ac.il>
+| Date:   Sat Jul 27 15:48:04 2024 +0300
+| 
+|     copy before release chain
+| 
+|  SortedList.h    | 24 +++++++++++++-----------
+|  TaskManager.cpp |  9 +++++++--
+|  2 files changed, 20 insertions(+), 13 deletions(-)
+| 
+* commit c9a71048aed2f6496eb22ca87ea9856f4930ccf3
+| Author: farahqub <farah.qub@campus.technion.ac.il>
+| Date:   Sat Jul 27 15:23:50 2024 +0300
+| 
+|     deleted assignment operator
+| 
+|  SortedList.h | 12 ++++++------
+|  1 file changed, 6 insertions(+), 6 deletions(-)
+| 
+* commit 5e1799d2da6799f9b485c44e650b5b652a3d952a
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Sat Jul 27 13:57:22 2024 +0300
+| 
+|     fix memory leak
+| 
+|  SortedList.h | 46 +++++++++++++++++++++-------------------------
+|  1 file changed, 21 insertions(+), 25 deletions(-)
+| 
+* commit 1fcc1fad4e4a0818601dd606afe0521ef858f488
+| Author: farahqub <farah.qub@campus.technion.ac.il>
+| Date:   Sat Jul 27 12:29:02 2024 +0300
+| 
+|     final changes
+| 
+|  SortedList.h    | 50 +++++++++++++++++++++++++-------------------------
+|  TaskManager.cpp | 27 ++++++++++++++++-----------
+|  TaskManager.h   | 10 +++++++++-
+|  3 files changed, 50 insertions(+), 37 deletions(-)
+| 
+* commit 59607c44a7a7060e5f9044d78f83c8f36d8916aa
+| Author: farahqub <farah.qub@campus.technion.ac.il>
+| Date:   Thu Jul 25 16:47:35 2024 +0300
+| 
+|     changes
+| 
+|  SortedList.h    | 74 +++++++++++++++++++++++--------------------------------
+|  TaskManager.cpp | 39 +++++++++++++++++------------
+|  TaskManager.h   |  5 ++--
+|  3 files changed, 57 insertions(+), 61 deletions(-)
+| 
+* commit 24832f3954ce496b9d695e946321bda6642354e6
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Wed Jul 24 18:18:25 2024 +0300
+| 
+|     TaskManager
+| 
+|  CMakeLists.txt  |   1 +
+|  Person.cpp      |   4 +-
+|  SortedList.h    | 112 +++++++++++++++++++++++++------------
+|  TaskManager.cpp | 162 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+|  TaskManager.h   |  68 +++++++++++++++++++++++
+|  main.cpp        |  14 ++---
+|  6 files changed, 317 insertions(+), 44 deletions(-)
+| 
+* commit 5e4b24902a74bdbf48fe09d4e287128bdbdc636c
+| Author: farahqub <farah.qub@campus.technion.ac.il>
+| Date:   Sat Jul 20 21:24:18 2024 +0300
+| 
+|     implemented sorted list
+| 
+|  SortedList.h | 198 +++++++++++++++++++++++++++++++++++++++++++--------------
+|  1 file changed, 151 insertions(+), 47 deletions(-)
+| 
+* commit da49b9ed82623ce67a4603f7be6f3579ab6637e4
+  Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+  Date:   Sat Jul 20 16:56:26 2024 +0300
+  
+      - file org
+      - SortedList holder class
+  
+   CMakeLists.txt |  28 +++
+   Person.cpp     |  51 ++++++
+   Person.h       |  79 +++++++++
+   SortedList.h   | 103 +++++++++++
+   Task.cpp       |  83 +++++++++
+   Task.h         | 115 ++++++++++++
+   TaskManager.h  |  75 ++++++++
+   main.cpp       | 531 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   8 files changed, 1065 insertions(+)
