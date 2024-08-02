@@ -18,20 +18,35 @@ add_library(matam4-utilites
 
 target_include_directories(matam4-utilites PUBLIC .)
 
-add_library(matam4
+add_library(matam4-lib
 
         MatamStory.cpp
-        Players/Warrior.h
-        Players/Archer.h
-        "Players/Magician.h"
-        Behaviours/Behaviour.h
-        Behaviours/RiskTaking.h
-        Events/SpecialEvent.h
-        Events/EncounterEvent.h
+        impl/Players/Player.cpp
+
+        include/Strategy/Strategy.h
+        include/Strategy/RiskTaking.h
+
+        include/Events/EncounterEvent.h
+        include/Events/SpecialEvent.h
+
+        include/Players/Player.h
+        include/Players/Archer.h
+        include/Players/Magician.h
+        include/Players/Warrior.h
+        include/Strategy/Responsibile.h
+        impl/Players/Warior.cpp
+        include/Strategy/Responsibile.cpp
+        include/Strategy/RiskTaking.cpp
+        impl/Players/Magician.cpp
+        impl/Players/Archer.cpp
+        impl/Events/EncounterEvent.cpp
+
+
 )
 
-target_link_libraries(matam4 PUBLIC matam4-utilites)
-target_include_directories(matam4 PUBLIC .)
+target_link_libraries(matam4-lib PUBLIC matam4-utilites)
+
+target_include_directories(matam4-lib PUBLIC include)
 
 add_executable(matam4-exc
          main.cpp

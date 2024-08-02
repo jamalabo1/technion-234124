@@ -8,8 +8,10 @@
 #include "Player.h"
 
 
-class Magician : Player {
-
+class Magician : Player
+{
+public:
+    Magician(unique_ptr<Strategy>&);
 };
 
 #endif //TECHNION_234124_MAGICIAN_H

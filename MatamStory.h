@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <iostream>
@@ -7,7 +6,8 @@
 #include "Events/Event.h"
 
 
-class MatamStory{
+class MatamStory
+{
 private:
     unsigned int m_turnIndex;
 

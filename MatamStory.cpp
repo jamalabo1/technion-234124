@@ -20,6 +20,9 @@ MatamStory::MatamStory(std::istream& eventsStream, std::istream& playersStream) 
 
 void MatamStory::playTurn(Player& player) {
 
+    Player player;
+
+
     /**
      * Steps to implement (there may be more, depending on your design):
      * 1. Get the next event from the events list
