@@ -8,6 +8,13 @@
 #include "Player.h"
 
 class Warrior : Player {
+    int CombatPower;
+public:
+   Warrior(){
+       max_HP = 150;
+       current_HP = max_HP;
+       CombatPower = Force *2 + Level;
+   }
 
 };
 

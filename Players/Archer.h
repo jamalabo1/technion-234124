@@ -5,4 +5,15 @@
 #ifndef TECHNION_234124_ARCHER_H
 #define TECHNION_234124_ARCHER_H
 
+#include "Player.h"
+
+class Archer : Player {
+
+public:
+
+    Archer(){
+        Coins = 20;
+    }
+};
+
 #endif //TECHNION_234124_ARCHER_H
