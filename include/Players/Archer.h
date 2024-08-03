@@ -10,8 +10,6 @@ class Archer : Player
 {
 public:
     Archer(unique_ptr<Strategy>& strategy);
-
-
 };
 
 #endif //TECHNION_234124_ARCHER_H

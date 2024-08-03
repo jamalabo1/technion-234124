@@ -11,12 +11,7 @@ project(technion-234124)
 set(CMAKE_CXX_STANDARD 17)
 
 
-add_library(matam4-utilites
-        Utilities.cpp
-        Utilities.h
-)
 
-target_include_directories(matam4-utilites PUBLIC .)
 
 add_library(matam4-lib
 
@@ -33,21 +28,28 @@ add_library(matam4-lib
         include/Players/Archer.h
         include/Players/Magician.h
         include/Players/Warrior.h
-        include/Strategy/Responsibile.h
+        include/Strategy/Responsible.h
+
         impl/Players/Warior.cpp
-        include/Strategy/Responsibile.cpp
-        include/Strategy/RiskTaking.cpp
+        impl/Strategy/Responsible.cpp
+        impl/Strategy/RiskTaking.cpp
         impl/Players/Magician.cpp
         impl/Players/Archer.cpp
         impl/Events/EncounterEvent.cpp
+        impl/Events/SpecialEvent.cpp
+
+
+
+        Utilities.cpp
+        Utilities.h
 
 
 )
-
-target_link_libraries(matam4-lib PUBLIC matam4-utilites)
 
 target_include_directories(matam4-lib PUBLIC include)
 
 add_executable(matam4-exc
          main.cpp
 )
+
+target_link_libraries(matam4-exc PUBLIC matam4-lib)

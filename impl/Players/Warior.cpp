@@ -4,12 +4,12 @@
 #include <Players/Warrior.h>
 
 
-Warrior::Warrior(unique_ptr<Strategy>& strategy) : Player(strategy)
+Warrior::Warrior(unique_ptr<Strategy>& strategy) : Player(strategy, "Warrior", "Warrior")
 {
     setMaxHealth(150);
 }
 
-void Warrior::postCombat(bool battelWon)
+void Warrior::postCombat(bool battleWon)
 {
     loseHp(10);
 }

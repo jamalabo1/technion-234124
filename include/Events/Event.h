@@ -5,8 +5,7 @@
 
 using std::string;
 
-class Event
-{
+class Event {
 public:
     /**
      * Gets the description of the event
@@ -15,5 +14,5 @@ public:
     */
     string getDescription() const;
 
-    void applyTo(Player& player);
+    virtual void applyTo(Player &player);
 };

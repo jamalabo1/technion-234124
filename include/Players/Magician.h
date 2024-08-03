@@ -12,6 +12,8 @@ class Magician : Player
 {
 public:
     Magician(unique_ptr<Strategy>&);
+
+    void experienceSolarEclipse() override;
 };
 
 #endif //TECHNION_234124_MAGICIAN_H

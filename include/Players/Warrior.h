@@ -12,9 +12,9 @@
 class Warrior final : public Player
 {
 public:
-    Warrior(std::unique_ptr<Strategy>&);
+    explicit Warrior(std::unique_ptr<Strategy>&);
 
-    void postCombat(bool battelWon) override;
+    void postCombat(bool battleWon) override;
 
     int getCombatPower() const override;
 };

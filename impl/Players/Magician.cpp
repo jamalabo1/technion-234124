@@ -3,6 +3,9 @@
 //
 #include <Players/Magician.h>
 
-Magician::Magician(unique_ptr<Strategy>& strategy) : Player(strategy)
-{
+Magician::Magician(unique_ptr<Strategy> &strategy) : Player(strategy, "Magician", "Magician") {
+}
+
+void Magician::experienceSolarEclipse() {
+    addHp(1);
 }

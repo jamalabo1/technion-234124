@@ -6,10 +6,10 @@
 #define RESPONSIBILE_H
 #include "Strategy.h"
 
-class Responsibile : Strategy
+class Responsible : Strategy
 {
 public:
-    Responsibile();
+    Responsible();
 
     void buyHp(Player& player, const int& cost, const int& hp) override;
 };

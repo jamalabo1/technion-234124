@@ -8,27 +8,38 @@
 #include "Event.h"
 
 
-class SpecialEvent : Event
-{
+class SpecialEvent : Event {
 };
 
-class PotionsMerchantOffer
-{
+
+class SolarEclipseEvent : SpecialEvent {
 public:
-    int cost;
-    int hp;
+    void applyTo(Player &player) override;
 };
 
-class PotionsMerchantEvent : SpecialEvent
-{
+
+class PotionsMerchantEvent : SpecialEvent {
 private:
+    class PotionsMerchantOffer {
+        int cost;
+        int hp;
+    public:
+
+        PotionsMerchantOffer(int cost, int hp);
+
+        int getCost() const;
+
+        int getHp() const;
+
+    };
+
     PotionsMerchantOffer offer;
 
+    PotionsMerchantEvent();
+
+
 public:
-    void applyTo(Player& player)
-    {
-        player.reviewOffer(offer.cost, offer.hp);
-    }
+    void applyTo(Player &player) override;
 };
 
 #endif //TECHNION_234124_SPECIALEVENT_H

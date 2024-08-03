@@ -8,8 +8,7 @@
 using std::string;
 using std::unique_ptr;
 
-class Player
-{
+class Player {
 private:
     string name;
     int level;
@@ -19,20 +18,24 @@ private:
     int coins;
     unique_ptr<Strategy> strategy;
 
+    string job;
+    string character;
+
 protected:
     ~Player() = default;
 
 
-    explicit Player(unique_ptr<Strategy>& strategy, const int level = 1, const int coins = 10,
-                    const int force = 5,
-                    const int health = 100) :
-        level(level), force(force), health(health), maxHealth(health), coins(coins), strategy(std::move(strategy))
-    {
-    }
+    explicit Player(unique_ptr<Strategy> &strategy,
+                    string job,
+                    string character,
+                    int level = 1,
+                    int coins = 10,
+                    int force = 5,
+                    int health = 100);
 
-    void setMaxHealth(int maxHealth);
+    void setMaxHealth(int healthQty);
 
-    void setCoins(int coins);
+    void setCoins(int numOfCoins);
 
 public:
     /**
@@ -93,10 +96,10 @@ public:
 
 
     /**
-     *  a function called after the player had a battel
-     * @param battelWon describes wether the player has won the battel
-     */
-    void virtual postCombat(bool battelWon);
+    *  a function called after the player had a battle
+    * @param battleWon describes weather the player has won the battle
+    */
+    virtual void postCombat(bool battleWon);
 
 
     /**
@@ -111,6 +114,10 @@ public:
      */
     int loseHp(int hp);
 
+    /**
+     *
+     * @return newly set coins
+     */
     int loseCoins(int coins);
 
     /**
@@ -123,7 +130,7 @@ public:
 
     /**
      *
-     * @return newly set conins
+     * @return newly set coins
      */
     int addCoins(int quantity);
 
@@ -141,5 +148,12 @@ public:
      * @param hp hp trade
      */
     void trade(int cost, int hp);
+
+
+    /**
+     * Player experiences a solar eclipse.
+     * */
+    virtual void experienceSolarEclipse();
 };
+
 #endif //TECHNION_234124_PLAYER_H
