@@ -5,6 +5,7 @@
 #include <string>
 #include <Strategy/Strategy.h>
 
+
 using std::string;
 using std::unique_ptr;
 
@@ -18,22 +19,23 @@ private:
     int coins;
     unique_ptr<Strategy> strategy;
 
-    string job;
     string character;
 
 protected:
-    ~Player() = default;
+    // prevent creating a base type instance.
+    Player() = default;
 
 
-    explicit Player(unique_ptr<Strategy> &strategy,
+    explicit Player(string name,
+                    unique_ptr<Strategy> &strategy,
                     string job,
-                    string character,
                     int level = 1,
                     int coins = 10,
                     int force = 5,
                     int health = 100);
 
     void setMaxHealth(int healthQty);
+    void setHealth(int healthQty);
 
     void setCoins(int numOfCoins);
 
@@ -140,7 +142,7 @@ public:
      * @param cost Cost of the hp offer
      * @param hp hp offer
      */
-    void reviewOffer(int cost, int hp);
+    int reviewOffer(int cost, int hp);
 
     /**
      * Performs a trade of hp for coins
@@ -150,10 +152,18 @@ public:
     void trade(int cost, int hp);
 
 
+    int addForce(int quantity);
+
+    int loseForce(int quantity);
+
+
+
     /**
      * Player experiences a solar eclipse.
      * */
-    virtual void experienceSolarEclipse();
+    virtual int experienceSolarEclipse();
+
+    std::tuple<int, int, string> stats() const;
 };
 
 #endif //TECHNION_234124_PLAYER_H

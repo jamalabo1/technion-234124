@@ -6,13 +6,17 @@
 using std::string;
 
 class Event {
+protected:
+    // prevent creating a base type instance.
+    Event() = default;
+
 public:
     /**
      * Gets the description of the event
      *
      * @return - the description of the event
     */
-    string getDescription() const;
+    virtual string getDescription() const = 0;
 
-    virtual void applyTo(Player &player);
+    virtual string applyTo(std::shared_ptr<Player> player) = 0;
 };

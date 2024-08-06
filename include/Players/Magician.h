@@ -8,12 +8,12 @@
 #include "Player.h"
 
 
-class Magician : Player
+class Magician : public  Player
 {
 public:
-    Magician(unique_ptr<Strategy>&);
+    Magician(string name, unique_ptr<Strategy>);
 
-    void experienceSolarEclipse() override;
+    int experienceSolarEclipse() override;
 };
 
 #endif //TECHNION_234124_MAGICIAN_H

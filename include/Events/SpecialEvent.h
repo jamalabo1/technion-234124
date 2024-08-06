@@ -8,17 +8,27 @@
 #include "Event.h"
 
 
-class SpecialEvent : Event {
-};
+class SpecialEvent : public  Event {
+private:
+    string key;
+protected:
+    SpecialEvent(const string &key);
 
-
-class SolarEclipseEvent : SpecialEvent {
 public:
-    void applyTo(Player &player) override;
+
+    string getDescription() const override;
 };
 
 
-class PotionsMerchantEvent : SpecialEvent {
+class SolarEclipseEvent : public  SpecialEvent {
+public:
+    SolarEclipseEvent();
+
+    string applyTo(std::shared_ptr<Player> player) override;
+};
+
+
+class PotionsMerchantEvent : public  SpecialEvent {
 private:
     class PotionsMerchantOffer {
         int cost;
@@ -35,11 +45,10 @@ private:
 
     PotionsMerchantOffer offer;
 
+public:
     PotionsMerchantEvent();
 
-
-public:
-    void applyTo(Player &player) override;
+    string applyTo(std::shared_ptr<Player> player) override;
 };
 
 #endif //TECHNION_234124_SPECIALEVENT_H

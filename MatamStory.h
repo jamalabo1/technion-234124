@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 
 #include "Players/Player.h"
 #include "Events/Event.h"
@@ -11,6 +12,13 @@ class MatamStory
 private:
     unsigned int m_turnIndex;
 
+
+    std::vector<std::shared_ptr<Event>> events;
+    std::vector<std::shared_ptr<Player>> players;
+
+    void postEvent(const Player &);
+
+
     /**
      * Playes a single turn for a player
      *
@@ -18,7 +26,7 @@ private:
      *
      * @return - void
     */
-    void playTurn(Player& player);
+    void playTurn(std::shared_ptr<Player> player);
 
     /**
      * Plays a single round of the game
@@ -33,6 +41,9 @@ private:
      * @return - true if the game is over, false otherwise
     */
     bool isGameOver() const;
+
+
+    void printLeaderboard();
 
 public:
     /**

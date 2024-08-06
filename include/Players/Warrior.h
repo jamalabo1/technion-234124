@@ -9,10 +9,9 @@
 
 #include "Player.h"
 
-class Warrior final : public Player
-{
+class Warrior : public Player {
 public:
-    explicit Warrior(std::unique_ptr<Strategy>&);
+    Warrior(string name, std::unique_ptr<Strategy>);
 
     void postCombat(bool battleWon) override;
 

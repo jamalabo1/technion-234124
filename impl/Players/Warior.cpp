@@ -4,9 +4,10 @@
 #include <Players/Warrior.h>
 
 
-Warrior::Warrior(unique_ptr<Strategy>& strategy) : Player(strategy, "Warrior", "Warrior")
+Warrior::Warrior(string name, unique_ptr<Strategy> strategy) : Player(name, strategy, "Warrior")
 {
     setMaxHealth(150);
+    setHealth(150);
 }
 
 void Warrior::postCombat(bool battleWon)

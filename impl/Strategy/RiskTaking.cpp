@@ -6,10 +6,14 @@
 
 RiskTaking::RiskTaking() = default;
 
-void RiskTaking::buyHp(Player& player, const int& cost, const int& hp)
-{
-    if (player.getHealthPoints() < 50)
-    {
+int RiskTaking::buyHp(Player &player, const int &cost, const int &hp) {
+    if (player.getHealthPoints() < 50) {
         player.trade(cost, hp);
+        return cost;
     }
+    return 0;
+}
+
+std::string RiskTaking::getKey() {
+    return "RiskTaking";
 }

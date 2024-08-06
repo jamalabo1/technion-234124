@@ -4,9 +4,10 @@
 
 #include "Players/Player.h"
 
-Player::Player(unique_ptr<Strategy> &strategy, string job, string character, const int level, const int coins,
-               const int force, const int health) :
-        level(level), force(force), health(health), maxHealth(health), coins(coins), strategy(std::move(strategy)), job(job), character(character) {
+Player::Player(string name, unique_ptr<Strategy> &strategy, string job, const int level, const int coins,
+               const int force, const int health) : name(name),
+                                                    level(level), force(force), health(health), maxHealth(health),
+                                                    coins(coins), strategy(std::move(strategy)), character(job) {
 }
 
 
@@ -14,13 +15,18 @@ void Player::setMaxHealth(const int healthQty) {
     maxHealth = healthQty;
 }
 
+void Player::setHealth(int healthQty) {
+    health = healthQty;
+}
+
+
 void Player::setCoins(const int numOfCoins) {
     coins = numOfCoins;
 }
 
 string Player::getDescription() const {
-    return getName() + ", " + job + " with" + character + " character" +
-           "(level " + std::to_string(getLevel()) + ", force " + std::to_string(getForce()) + ")";
+    return getName() + ", " + character + " with " + strategy->getKey() + " character" +
+           " (level " + std::to_string(getLevel()) + ", force " + std::to_string(getForce()) + ")";
 }
 
 string Player::getName() const {
@@ -59,7 +65,7 @@ int Player::levelUp(const int step) {
 }
 
 int Player::loseHp(const int hp) {
-    return health -= hp;
+    return addHp(-hp);
 }
 
 int Player::loseCoins(const int coinsNum) {
@@ -68,15 +74,16 @@ int Player::loseCoins(const int coinsNum) {
 
 
 int Player::addHp(const int hp) {
-    return health += hp;
+    health = std::min(maxHealth, std::max(health + hp, 0));
+    return health;
 }
 
 int Player::addCoins(const int quantity) {
     return coins += quantity;
 }
 
-void Player::reviewOffer(const int cost, const int hp) {
-    strategy->buyHp(*this, cost, hp);
+int Player::reviewOffer(const int cost, const int hp) {
+    return strategy->buyHp(*this, cost, hp);
 }
 
 void Player::trade(const int cost, const int hp) {
@@ -85,7 +92,21 @@ void Player::trade(const int cost, const int hp) {
     addHp(hp);
 }
 
-void Player::experienceSolarEclipse() {
-    loseHp(1);
+int Player::experienceSolarEclipse() {
+    loseForce(1);
+    return -1;
 }
+
+std::tuple<int, int, string> Player::stats() const {
+    return std::tie(level, coins, name);
+}
+
+int Player::addForce(int quantity) {
+    return force += quantity;
+}
+
+int Player::loseForce(int quantity) {
+    return addForce(-quantity);
+}
+
 

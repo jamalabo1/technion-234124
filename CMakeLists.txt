@@ -53,3 +53,5 @@ add_executable(matam4-exc
 )
 
 target_link_libraries(matam4-exc PUBLIC matam4-lib)
+
+file(COPY tests DESTINATION .)

@@ -6,6 +6,8 @@
 #define TECHNION_234124_ENCOUNTEREVENT_H
 
 #include "Event.h"
+#include <map>
+#include <memory>
 #include <vector>
 
 class Monster {
@@ -16,31 +18,57 @@ private:
     int damage;
     int combatPower;
 
-    Monster() = delete;
 
-    Monster(string  key, int loot, int damage, int combatPower);
+protected:
+    Monster(string key, int loot, int damage, int combatPower);
+    // only allow pack to create a copy.
+    Monster(const Monster &, int length);
+
+
+    string generalStats() const;
 
 public:
+    using ptr = std::shared_ptr<const Monster>;
+    // disable copies.
+    Monster(const Monster &) = delete;
 
 
+    static std::map<string, ptr> getMonsters();
 
-    static std::vector<std::tuple<string, Monster>> getMonsters() ;
 
-    int getCombatPower();
-    int getDamage();
-    int getLoot();
+    int getCombatPower() const;
 
-    string getKey()const;
+    int getDamage() const;
+
+    int getLoot() const;
+
+    string getKey() const;
+
+    virtual string getDescription() const;
+
 };
 
-class EncounterEvent : Event {
+class Pack : public  Monster {
 private:
-    Monster monster;
+    int length;
 
 public:
-    EncounterEvent(Monster monster);
+    Pack(const std::vector<std::shared_ptr<const Monster>>& pack);
 
-    void applyTo(Player &player) override;
+    string getDescription() const override;
+};
+
+class EncounterEvent : public  Event {
+private:
+    // since it's a statically initialized instances, there is no need to copy.
+    Monster::ptr monster;
+
+public:
+    EncounterEvent(Monster::ptr monster);
+
+    string getDescription() const override;
+
+    string applyTo(std::shared_ptr<Player> player) override;
 };
 
 #endif //TECHNION_234124_ENCOUNTEREVENT_H

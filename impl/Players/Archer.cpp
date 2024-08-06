@@ -3,7 +3,7 @@
 //
 #include <Players/Archer.h>
 
-Archer::Archer(unique_ptr<Strategy>& strategy) : Player(strategy, "Archer", "Archer")
+Archer::Archer(string name, unique_ptr<Strategy> strategy) : Player(name, strategy, "Archer")
 {
     setCoins(20);
 }

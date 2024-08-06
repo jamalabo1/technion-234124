@@ -7,12 +7,14 @@
 
 #include "Strategy.h"
 
-class RiskTaking final : Strategy
+class RiskTaking final : public Strategy
 {
 public:
     RiskTaking();
 
-    void buyHp(Player& player, const int& cost, const int& hp) override;
+    int buyHp(Player& player, const int& cost, const int& hp) override;
+
+    std::string getKey() override;
 };
 
 #endif //TECHNION_234124_RISKTAKING_H

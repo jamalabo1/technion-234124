@@ -2,16 +2,30 @@
 // Created by jamal on 04/08/2024.
 //
 #include "Events/SpecialEvent.h"
+#include "../../Utilities.h"
 
-void SolarEclipseEvent::applyTo(Player &player) {
-    player.experienceSolarEclipse();
+SpecialEvent::SpecialEvent(const string &key) : key(key) {
+
 }
 
-void PotionsMerchantEvent::applyTo(Player &player) {
-    player.reviewOffer(offer.getCost(), offer.getHp());
+string SpecialEvent::getDescription() const {
+    return key;
 }
 
-PotionsMerchantEvent::PotionsMerchantEvent() : offer(5, 10) {
+
+string SolarEclipseEvent::applyTo(std::shared_ptr<Player> player) {
+    return getSolarEclipseMessage(*player, player->experienceSolarEclipse());
+}
+
+SolarEclipseEvent::SolarEclipseEvent() : SpecialEvent("SolarEclipse") {
+
+}
+
+string PotionsMerchantEvent::applyTo(std::shared_ptr<Player> player) {
+    return getPotionsPurchaseMessage(*player, player->reviewOffer(offer.getCost(), offer.getHp()));
+}
+
+PotionsMerchantEvent::PotionsMerchantEvent() : SpecialEvent("PotionsMerchant"), offer(5, 10) {
 
 }
 
@@ -26,3 +40,4 @@ int PotionsMerchantEvent::PotionsMerchantOffer::getCost() const {
 int PotionsMerchantEvent::PotionsMerchantOffer::getHp() const {
     return hp;
 }
+

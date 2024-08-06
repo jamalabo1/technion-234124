@@ -3,9 +3,10 @@
 //
 #include <Players/Magician.h>
 
-Magician::Magician(unique_ptr<Strategy> &strategy) : Player(strategy, "Magician", "Magician") {
+Magician::Magician(string name, unique_ptr<Strategy> strategy) : Player(name, strategy, "Magician") {
 }
 
-void Magician::experienceSolarEclipse() {
-    addHp(1);
+int Magician::experienceSolarEclipse() {
+    addForce(1);
+    return 1;
 }

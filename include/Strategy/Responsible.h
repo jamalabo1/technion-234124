@@ -4,14 +4,17 @@
 
 #ifndef RESPONSIBILE_H
 #define RESPONSIBILE_H
+
 #include "Strategy.h"
 
-class Responsible : Strategy
+class Responsible : public Strategy
 {
 public:
     Responsible();
 
-    void buyHp(Player& player, const int& cost, const int& hp) override;
+    int buyHp(Player& player, const int& cost, const int& hp) override;
+
+    std::string getKey() override;
 };
 
 #endif //RESPONSIBILE_H
