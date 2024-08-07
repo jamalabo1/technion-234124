@@ -21,6 +21,7 @@ private:
 
 protected:
     Monster(string key, int loot, int damage, int combatPower);
+
     // only allow pack to create a copy.
     Monster(const Monster &, int length);
 
@@ -29,6 +30,7 @@ protected:
 
 public:
     using ptr = std::shared_ptr<const Monster>;
+
     // disable copies.
     Monster(const Monster &) = delete;
 
@@ -48,22 +50,25 @@ public:
 
 };
 
-class Pack : public  Monster {
+class Pack : public Monster {
 private:
     int length;
 
 public:
-    Pack(const std::vector<std::shared_ptr<const Monster>>& pack);
+    Pack(const std::vector<Monster::ptr> &pack);
 
     string getDescription() const override;
 };
 
-class EncounterEvent : public  Event {
+
+class EncounterEvent : public Event {
 private:
     // since it's a statically initialized instances, there is no need to copy.
     Monster::ptr monster;
 
+    CREATE_FACTORY_REGISTER();
 public:
+
     EncounterEvent(Monster::ptr monster);
 
     string getDescription() const override;

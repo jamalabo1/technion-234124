@@ -3,10 +3,12 @@
 //
 #include <Players/Magician.h>
 
-Magician::Magician(string name, unique_ptr<Strategy> strategy) : Player(name, strategy, "Magician") {
+Magician::Magician(string name, shared_ptr<Strategy> strategy) : Player(name, strategy, Magician::Key) {
 }
 
 int Magician::experienceSolarEclipse() {
     addForce(1);
     return 1;
 }
+
+GENERIC_REGISTER(Magician);

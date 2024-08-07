@@ -4,12 +4,22 @@
 #include <memory>
 #include <string>
 #include <Strategy/Strategy.h>
+#include "Factory.h"
 
 
 using std::string;
 using std::unique_ptr;
+using std::shared_ptr;
 
-class Player {
+#define GENERIC_REGISTER(Type) IMPLEMENT_FACTORY_REGISTER(Type) { \
+        registerFactory(#Type, FactorableTypeInfo([](const std::vector<std::string> &arguments) {\
+            auto strategy = Strategy::createType(arguments[2], arguments);\
+            return std::make_shared<Type>(arguments[0], strategy);\
+        }));\
+}\
+
+
+class Player : public Factorable<Player> {
 private:
     string name;
     int level;
@@ -17,17 +27,13 @@ private:
     int health;
     int maxHealth;
     int coins;
-    unique_ptr<Strategy> strategy;
+    shared_ptr<Strategy> strategy;
 
     string character;
 
 protected:
-    // prevent creating a base type instance.
-    Player() = default;
-
-
     explicit Player(string name,
-                    unique_ptr<Strategy> &strategy,
+                    shared_ptr<Strategy> &strategy,
                     string job,
                     int level = 1,
                     int coins = 10,
@@ -35,11 +41,15 @@ protected:
                     int health = 100);
 
     void setMaxHealth(int healthQty);
+
     void setHealth(int healthQty);
 
     void setCoins(int numOfCoins);
 
 public:
+    // prevent creating a base type instance.
+    Player() = delete;
+
     /**
      * Gets the description of the player
      *
@@ -155,7 +165,6 @@ public:
     int addForce(int quantity);
 
     int loseForce(int quantity);
-
 
 
     /**

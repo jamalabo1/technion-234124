@@ -3,6 +3,7 @@
 //
 #include <Events/EncounterEvent.h>
 #include <memory>
+#include <stdexcept>
 #include "../../Utilities.h"
 
 using std::to_string;
@@ -128,3 +129,49 @@ string EncounterEvent::getDescription() const {
     return monster->getDescription();
 }
 
+// behaves like a static register for the type.
+IMPLEMENT_FACTORY_REGISTER(EncounterEvent) {
+    for (const auto &item: Monster::getMonsters()) {
+        registerFactory(
+                item.first,
+                FactorableTypeInfo(
+                        [item](const std::vector<string> &arguments) {
+                            return make_shared<EncounterEvent>(item.second);
+                        }
+                )
+        );
+    }
+    registerFactory(
+            "Pack",
+            FactorableTypeInfo(
+                    [](const std::vector<string> &arguments) {
+                        auto monsters = Monster::getMonsters();
+
+                        if (arguments.empty()) {
+                            throw std::invalid_argument("");
+                        }
+
+
+                        // if size is 1 then there is a problem
+                        if (arguments.size() == 1) {
+                            throw std::invalid_argument("");
+                        }
+
+
+                        int length = std::atoi(arguments[0].c_str());
+                        vector<Monster::ptr> monsterPack;
+                        for (int i = 0; i < length; i++) {
+                            const string &monsterKey = arguments[1 + i];
+
+                            monsterPack.emplace_back(
+                                    monsters.at(monsterKey)
+                            );
+                        }
+                        return make_shared<EncounterEvent>(
+                                make_shared<Pack>(monsterPack)
+                        );
+
+                    }
+            )
+    );
+}

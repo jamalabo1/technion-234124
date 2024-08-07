@@ -3,7 +3,11 @@
 //
 #include <Players/Archer.h>
 
-Archer::Archer(string name, unique_ptr<Strategy> strategy) : Player(name, strategy, "Archer")
-{
+using std::make_shared;
+using std::vector;
+
+Archer::Archer(string name, shared_ptr<Strategy> strategy) : Player(name, strategy, Archer::Key) {
     setCoins(20);
 }
+
+GENERIC_REGISTER(Archer);

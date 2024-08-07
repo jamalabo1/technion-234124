@@ -8,12 +8,15 @@
 #include "Player.h"
 
 
-class Magician : public  Player
-{
+class Magician : public Player {
+private:
+    CREATE_FACTORY_REGISTER();
 public:
-    Magician(string name, unique_ptr<Strategy>);
+    Magician(string name, shared_ptr<Strategy>);
 
     int experienceSolarEclipse() override;
+
+    static inline string Key = "Magician";
 };
 
 #endif //TECHNION_234124_MAGICIAN_H

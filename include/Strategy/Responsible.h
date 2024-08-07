@@ -7,12 +7,13 @@
 
 #include "Strategy.h"
 
-class Responsible : public Strategy
-{
+class Responsible : public Strategy {
+private:
+    CREATE_FACTORY_REGISTER();
 public:
     Responsible();
 
-    int buyHp(Player& player, const int& cost, const int& hp) override;
+    int buyHp(Player &player, const int &cost, const int &hp) override;
 
     std::string getKey() override;
 };

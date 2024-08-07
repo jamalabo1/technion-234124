@@ -8,8 +8,12 @@
 #include "Player.h"
 
 class Archer : public Player {
+private:
+    CREATE_FACTORY_REGISTER();
 public:
-    Archer(string name, unique_ptr<Strategy> strategy);
+    Archer(string name, shared_ptr<Strategy> strategy);
+
+    static inline string Key = "Archer";
 };
 
 #endif //TECHNION_234124_ARCHER_H

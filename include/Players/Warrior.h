@@ -10,12 +10,16 @@
 #include "Player.h"
 
 class Warrior : public Player {
+private:
+    CREATE_FACTORY_REGISTER();
 public:
-    Warrior(string name, std::unique_ptr<Strategy>);
+    Warrior(string name, std::shared_ptr<Strategy>);
 
     void postCombat(bool battleWon) override;
 
     int getCombatPower() const override;
+
+    static inline string Key = "Warrior";
 };
 
 

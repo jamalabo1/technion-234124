@@ -4,6 +4,10 @@
 #include "Events/SpecialEvent.h"
 #include "../../Utilities.h"
 
+using std::vector;
+using std::shared_ptr;
+using std::make_shared;
+
 SpecialEvent::SpecialEvent(const string &key) : key(key) {
 
 }
@@ -13,7 +17,7 @@ string SpecialEvent::getDescription() const {
 }
 
 
-string SolarEclipseEvent::applyTo(std::shared_ptr<Player> player) {
+string SolarEclipseEvent::applyTo(shared_ptr<Player> player) {
     return getSolarEclipseMessage(*player, player->experienceSolarEclipse());
 }
 
@@ -21,7 +25,7 @@ SolarEclipseEvent::SolarEclipseEvent() : SpecialEvent("SolarEclipse") {
 
 }
 
-string PotionsMerchantEvent::applyTo(std::shared_ptr<Player> player) {
+string PotionsMerchantEvent::applyTo(shared_ptr<Player> player) {
     return getPotionsPurchaseMessage(*player, player->reviewOffer(offer.getCost(), offer.getHp()));
 }
 
@@ -41,3 +45,12 @@ int PotionsMerchantEvent::PotionsMerchantOffer::getHp() const {
     return hp;
 }
 
+IMPLEMENT_FACTORY_REGISTER(SpecialEvent) {
+    registerFactory("PotionsMerchant", FactorableTypeInfo([](const vector<string> &) {
+        return make_shared<PotionsMerchantEvent>();
+    }));
+
+    registerFactory("SolarEclipse", FactorableTypeInfo([](const vector<string> &) {
+        return make_shared<SolarEclipseEvent>();
+    }));
+}

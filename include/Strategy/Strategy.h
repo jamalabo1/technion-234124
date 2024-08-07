@@ -7,13 +7,21 @@
 
 
 #include <string>
+#include "Factory.h"
 
 // forward declaration of player since both depend on each other.
 class Player;
 
+
+#define GENERIC_STRATEGY_REGISTER(Type) IMPLEMENT_FACTORY_REGISTER(Type) { \
+        registerFactory(#Type, FactorableTypeInfo([](const std::vector<std::string> &) {\
+            return std::make_shared<Type>();\
+        }));\
+}\
+
 // it's all about handling types of events
 // meaning that its jawhar is the handling.
-class Strategy {
+class Strategy : public Factorable<Strategy> {
 protected:
     // prevent creating a base type instance.
     // although since this is ab abstract class, this method is usless.

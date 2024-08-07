@@ -7,12 +7,13 @@
 
 #include "Strategy.h"
 
-class RiskTaking final : public Strategy
-{
+class RiskTaking final : public Strategy {
+private:
+    CREATE_FACTORY_REGISTER();
 public:
     RiskTaking();
 
-    int buyHp(Player& player, const int& cost, const int& hp) override;
+    int buyHp(Player &player, const int &cost, const int &hp) override;
 
     std::string getKey() override;
 };

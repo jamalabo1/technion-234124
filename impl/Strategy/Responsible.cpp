@@ -18,3 +18,5 @@ int Responsible::buyHp(Player &player, const int &cost, const int &hp) {
 std::string Responsible::getKey() {
     return "Responsible";
 }
+
+GENERIC_STRATEGY_REGISTER(Responsible);

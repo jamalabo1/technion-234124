@@ -8,11 +8,13 @@
 #include "Event.h"
 
 
-class SpecialEvent : public  Event {
+class SpecialEvent : public Event {
 private:
     string key;
+
+    CREATE_FACTORY_REGISTER();
 protected:
-    SpecialEvent(const string &key);
+    explicit SpecialEvent(const string &key);
 
 public:
 
@@ -20,7 +22,7 @@ public:
 };
 
 
-class SolarEclipseEvent : public  SpecialEvent {
+class SolarEclipseEvent : public SpecialEvent {
 public:
     SolarEclipseEvent();
 
@@ -28,7 +30,7 @@ public:
 };
 
 
-class PotionsMerchantEvent : public  SpecialEvent {
+class PotionsMerchantEvent : public SpecialEvent {
 private:
     class PotionsMerchantOffer {
         int cost;

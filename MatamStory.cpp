@@ -2,6 +2,7 @@
 #include "MatamStory.h"
 
 #include "Utilities.h"
+#include "Loaders.h"
 #include <functional>
 
 #include <Events/SpecialEvent.h>
@@ -50,100 +51,11 @@ std::vector<std::string> split(const std::string &s) {
 }
 
 MatamStory::MatamStory(std::istream &eventsStream, std::istream &playersStream) {
+    auto monsters = Monster::getMonsters();
 
-    /*===== TODO: Open and read events file =====*/
+    this->events = Loaders::loadEvents(eventsStream);
 
-
-    const std::map<string, Monster::ptr> &monsters = Monster::getMonsters();
-
-
-    readLines(eventsStream, [&monsters, this](string &line) {
-        // if type is a monster
-        if (monsters.count(line)) {
-            this->events.emplace_back(
-                    make_shared<EncounterEvent>(monsters.at(line))
-            );
-        } else if (line == "SolarEclipse") {
-            this->events.emplace_back(
-                    make_shared<SolarEclipseEvent>()
-            );
-        } else if (line == "PotionsMerchant") {
-            this->events.emplace_back(
-                    make_shared<PotionsMerchantEvent>()
-            );
-        } else {
-            auto lineSplit = split(line);
-            if (lineSplit.size() == 0);// TODO: error;
-
-            if (lineSplit[0] == "Pack") {
-                // if size is 1 then there is a problem
-                if (lineSplit.size() == 1) {
-                    //TODO: error;
-                }
-
-
-                int length = std::atoi(lineSplit[1].c_str());
-                vector<Monster::ptr> monsterPack;
-                for (int i = 0; i < length; i++) {
-                    string monsterKey = lineSplit[2 + i];
-
-                    monsterPack.emplace_back(
-                            monsters.at(monsterKey)
-                    );
-                }
-                this->events.emplace_back(
-                        make_shared<EncounterEvent>(
-                                make_shared<Pack>(monsterPack)
-                        )
-                );
-            } else {
-                //TODO: error
-            }
-            //it;s a pack
-        }
-    });
-
-
-    readLines(playersStream, [this](string &line) {
-
-        vector<string> playerInfo = split(line);
-
-        string name = playerInfo[0];
-        string job = playerInfo[1];
-        string character = playerInfo[2];
-
-        auto strategyFactory = [&character]() -> unique_ptr<Strategy> {
-            if (character == "Responsible") {
-                return make_unique<Responsible>();
-            }
-            if (character == "RiskTaking") {
-                return make_unique<RiskTaking>();
-            }
-            return {};
-        };
-
-        if (job == "Warrior") {
-            this->players.emplace_back(
-                    shared_ptr<Player>(new Warrior(name, strategyFactory()))
-            );
-        } else if (job == "Archer") {
-            this->players.emplace_back(
-                    shared_ptr<Player>(new Archer(name, strategyFactory()))
-            );
-        } else if (job == "Magician") {
-            this->players.emplace_back(
-                    shared_ptr<Player>(new Magician(name, strategyFactory()))
-            );
-        }
-
-    });
-    /*==========================================*/
-
-
-    /*===== TODO: Open and Read players file =====*/
-
-    /*============================================*/
-
+    this->players= Loaders::loadPlayers(playersStream);
 
     this->m_turnIndex = 0;
 }
@@ -213,7 +125,7 @@ void MatamStory::play() {
     printStartMessage();
     /*===== TODO: Print start message entry for each player using "printStartPlayerEntry" =====*/
 
-    for (int i = 0; i < players.size(); ++i) {
+    for (int i = 0; i < (int) players.size(); ++i) {
         printStartPlayerEntry(i + 1, *players[i]);
     }
 
@@ -226,8 +138,8 @@ void MatamStory::play() {
 
     printGameOver();
     /*===== TODO: Print either a "winner" message or "no winner" message =====*/
-    auto maxPlayer  = *std::min_element(players.begin(), players.end());
-    if(maxPlayer->getHealthPoints() == 0) {
+    auto maxPlayer = *std::min_element(players.begin(), players.end());
+    if (maxPlayer->getHealthPoints() == 0) {
         printNoWinners();
     } else {
         printWinner(*maxPlayer);

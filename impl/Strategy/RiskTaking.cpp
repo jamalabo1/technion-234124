@@ -17,3 +17,5 @@ int RiskTaking::buyHp(Player &player, const int &cost, const int &hp) {
 std::string RiskTaking::getKey() {
     return "RiskTaking";
 }
+
+GENERIC_STRATEGY_REGISTER(RiskTaking);

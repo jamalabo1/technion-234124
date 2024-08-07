@@ -38,6 +38,7 @@ add_library(matam4-lib
         impl/Events/EncounterEvent.cpp
         impl/Events/SpecialEvent.cpp
 
+        include/Loaders.h
 
 
         Utilities.cpp
@@ -50,6 +51,7 @@ target_include_directories(matam4-lib PUBLIC include)
 
 add_executable(matam4-exc
          main.cpp
+        include/Factory.h
 )
 
 target_link_libraries(matam4-exc PUBLIC matam4-lib)
