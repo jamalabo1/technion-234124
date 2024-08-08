@@ -10,8 +10,13 @@
 #include <memory>
 #include <vector>
 
-class Monster {
-private:
+
+#define GENERIC_MONSTER_REGISTER(Type) IMPLEMENT_FACTORY_REGISTER(Type) { registerFactory(#Type, \
+    [](const std::vector<string>&){ return std::make_shared<Type>(); }                                                  \
+); }
+
+class Monster : public Factorable<Monster> {
+protected:
 
     string key;
     int loot;
@@ -21,9 +26,6 @@ private:
 
 protected:
     Monster(string key, int loot, int damage, int combatPower);
-
-    // only allow pack to create a copy.
-    Monster(const Monster &, int length);
 
 
     string generalStats() const;
@@ -35,41 +37,74 @@ public:
     Monster(const Monster &) = delete;
 
 
-    static std::map<string, ptr> getMonsters();
+//    static std::map<string, ptr> getMonsters();
 
 
-    int getCombatPower() const;
+    virtual int getCombatPower() const;
 
-    int getDamage() const;
+    virtual int getDamage() const;
 
-    int getLoot() const;
+    virtual int getLoot() const;
 
     string getKey() const;
 
-    virtual string getDescription() const;
+    virtual void postCombat();
 
+    virtual string getDescription() const;
+};
+
+class Snail : public Monster {
+private:
+    CREATE_FACTORY_REGISTER();
+public:
+    Snail();
+};
+
+class Slime : public Monster {
+private:
+    CREATE_FACTORY_REGISTER();
+public:
+    Slime();
+};
+
+class Balrog : public Monster {
+private:
+    CREATE_FACTORY_REGISTER();
+public:
+    Balrog();
+
+    void postCombat() override;
 };
 
 class Pack : public Monster {
 private:
-    int length;
+    std::vector<shared_ptr<Monster>> pack;
 
+    CREATE_FACTORY_REGISTER();
 public:
-    Pack(const std::vector<Monster::ptr> &pack);
+    Pack(const std::vector<shared_ptr<Monster>> &pack);
 
     string getDescription() const override;
+
+//    int getLoot() const override;
+//
+//    int getDamage() const override;
+//
+//    int getCombatPower() const override;
+
+    void postCombat() override;
 };
 
 
 class EncounterEvent : public Event {
 private:
     // since it's a statically initialized instances, there is no need to copy.
-    Monster::ptr monster;
+    shared_ptr<Monster> monster;
 
     CREATE_FACTORY_REGISTER();
 public:
 
-    EncounterEvent(Monster::ptr monster);
+    EncounterEvent(shared_ptr<Monster> monster);
 
     string getDescription() const override;
 

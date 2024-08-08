@@ -32,11 +32,18 @@ protected:
         using FactoryRType = std::shared_ptr<T>;
         using FactoryType = std::function<FactoryRType(FactoryArgType)>;
 
+    private:
+        FactoryType factory;
+    public:
+
         FactorableTypeInfo() = default;
 
         FactorableTypeInfo(const FactoryType &factory) : factory(factory) {};
 
-        FactoryType factory;
+        FactoryRType operator()(const FactoryArgType &);
+
+        FactoryRType operator()();
+
     };
 
 private:
@@ -44,6 +51,12 @@ private:
 
 protected:
     static void registerFactory(const std::string &, const FactorableTypeInfo &);
+
+    static void registerFactory(const std::string &, const typename FactorableTypeInfo::FactoryType &);
+
+    static void
+    registerFactory(const std::string &, const std::function<typename FactorableTypeInfo::FactoryRType()> &);
+
 
 public:
 
@@ -56,14 +69,60 @@ public:
     static typename FactorableTypeInfo::FactoryRType
     createType(const std::string &key, const typename FactorableTypeInfo::FactoryArgType &arguments);
 
+    static std::map<std::string, FactorableTypeInfo> getFactories();
+
+    static std::vector<std::string> getFactoryKeys();
 };
+
+template<typename T>
+typename Factorable<T>::FactorableTypeInfo::FactoryRType
+Factorable<T>::FactorableTypeInfo::operator()(const Factorable::FactorableTypeInfo::FactoryArgType &arguments) {
+    return factory(arguments);
+}
+
+
+template<typename T>
+typename Factorable<T>::FactorableTypeInfo::FactoryRType
+Factorable<T>::FactorableTypeInfo::operator()() {
+    Factorable::FactorableTypeInfo::FactoryArgType arguments;
+    return factory(arguments);
+}
+
+template<typename T>
+void Factorable<T>::registerFactory(const std::string &key,
+                                    const std::function<typename FactorableTypeInfo::FactoryRType()> &factory) {
+    registerFactory(key, FactorableTypeInfo([factory](const typename FactorableTypeInfo::FactoryArgType &) {
+        return factory();
+    }));
+}
+
+template<typename T>
+void Factorable<T>::registerFactory(const std::string &key,
+                                    const typename Factorable::FactorableTypeInfo::FactoryType &factory) {
+    registerFactory(key, FactorableTypeInfo(factory));
+}
+
+template<typename T>
+std::map<std::string, typename Factorable<T>::FactorableTypeInfo> Factorable<T>::getFactories() {
+    return factories;
+}
+
+template<typename T>
+std::vector<std::string> Factorable<T>::getFactoryKeys() {
+    std::vector<std::string> keys;
+    keys.reserve(factories.size());
+    for (const auto &[key, _]: factories) {
+        keys.push_back(key);
+    }
+    return keys;
+}
 
 template<typename T>
 typename Factorable<T>::FactorableTypeInfo::FactoryRType
 Factorable<T>::createType(const std::string &key,
                           const typename Factorable::FactorableTypeInfo::FactoryArgType &arguments) {
     if (!factories.count(key)) throw TypeFactoryDoesNotExistException();
-    return factories[key].factory(arguments);
+    return factories[key](arguments);
 }
 
 
@@ -76,14 +135,6 @@ void Factorable<T>::registerFactory(const std::string &key, const Factorable::Fa
             )
     );
 }
-
-
-//Event::EventTypeInfo::FactoryRType
-//Event::createEvent(const string &key, const Event::EventTypeInfo::FactoryArgType &arguments) {
-//    if (!events.count(key)) throw EventDoesNotExistException();
-//    return events[key].factory(arguments);
-//}
-
 
 
 #endif //TECHNION_234124_FACTORY_H

@@ -27,32 +27,7 @@ inline bool operator<(const shared_ptr<Player> &a, const shared_ptr<Player> &b) 
     return a->stats() > b->stats();
 }
 
-void readLines(std::istream &stream, const std::function<void(string &)> &callback) {
-    std::string line;
-    while (getline(stream, line)) {
-//        std::stringstream sline(line);
-//        std::string platIndependent;
-//        sline >> platIndependent;
-
-        callback(line);
-    }
-}
-
-std::vector<std::string> split(const std::string &s) {
-    std::vector<std::string> result;
-    std::stringstream ss(s);
-    std::string item;
-
-    while (getline(ss, item, ' ')) {
-        result.push_back(item);
-    }
-
-    return result;
-}
-
 MatamStory::MatamStory(std::istream &eventsStream, std::istream &playersStream) {
-    auto monsters = Monster::getMonsters();
-
     this->events = Loaders::loadEvents(eventsStream);
 
     this->players= Loaders::loadPlayers(playersStream);

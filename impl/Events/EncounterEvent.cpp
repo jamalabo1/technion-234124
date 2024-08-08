@@ -22,27 +22,6 @@ Monster::Monster(string key, int loot, int damage, int combatPower) : key(key), 
 }
 
 
-map<string, Monster::ptr> Monster::getMonsters() {
-    static Monster snail("Snail", 2, 10, 5);
-    static Monster slime("Slime", 5, 25, 12);
-    static Monster balrog("Balrog", 100, 9001, 15);
-
-//    static auto snailPtr = shared_ptr<const Monster>(&snail);
-
-//    static Monster::ptr snailPtr = shared_ptr<const Monster>(&snail);
-//    static Monster::ptr slimePtr = shared_ptr<const Monster>(&slime);
-//    static Monster::ptr barlogPtr = shared_ptr<const Monster>(&barlog);
-//
-
-    // to disable the ability to free the instances, since they are static.
-    return {
-            {snail.getKey(),  Monster::ptr(Monster::ptr{}, &snail)},
-            {slime.getKey(),  Monster::ptr(Monster::ptr{}, &slime)},
-            {balrog.getKey(), Monster::ptr(Monster::ptr{}, &balrog)}
-    };
-}
-
-
 int Monster::getCombatPower() const {
     return combatPower;
 }
@@ -71,14 +50,15 @@ string Monster::generalStats() const {
            + ")";
 }
 
-Monster::Monster(const Monster &base, int length) : Monster(
-        base.getKey(),
-        base.getLoot() * length,
-        base.getDamage() * length,
-        base.getCombatPower() * length
-) {
-
+void Monster::postCombat() {
+    // default behaviour: no-effect
 }
+
+Snail::Snail() : Monster("Snail", 2, 10, 5) {}
+
+Slime::Slime() : Monster("Slime", 5, 25, 12) {}
+
+Balrog::Balrog() : Monster("Balrog", 100, 9001, 15) {}
 
 template<typename T, typename Func>
 int accumulate(std::vector<T> vec, Func func) {
@@ -89,21 +69,44 @@ int accumulate(std::vector<T> vec, Func func) {
     return result;
 }
 
-Pack::Pack(const vector<Monster::ptr> &pack) : Monster(
+Pack::Pack(const vector<shared_ptr<Monster>> &pack) : Monster(
         "pack",
         ACCUMULATE_VECTOR(pack, getLoot),
         ACCUMULATE_VECTOR(pack, getDamage),
         ACCUMULATE_VECTOR(pack, getCombatPower)
-), length(pack.size()) {
+), pack(pack) {
 
 }
 
 string Pack::getDescription() const {
-    return "Pack of " + to_string(length) + " members " + generalStats();
+    return "Pack of " + to_string(pack.size()) + " members " + generalStats();
+}
+
+// just update on post combat.
+//int Pack::getLoot() const {
+//    return ACCUMULATE_VECTOR(pack, getLoot);
+//}
+//
+//int Pack::getDamage() const {
+//    return ACCUMULATE_VECTOR(pack, getDamage);
+//}
+//
+//int Pack::getCombatPower() const {
+//    return ACCUMULATE_VECTOR(pack, getCombatPower);
+//}
+
+void Pack::postCombat() {
+    for (auto &item: pack) {
+        item->postCombat();
+    }
+
+    loot = ACCUMULATE_VECTOR(pack, getLoot);
+    damage = ACCUMULATE_VECTOR(pack, getDamage);
+    combatPower = ACCUMULATE_VECTOR(pack, getCombatPower);
 }
 
 
-EncounterEvent::EncounterEvent(Monster::ptr monster) : monster(monster) {
+EncounterEvent::EncounterEvent(shared_ptr<Monster> monster) : monster(monster) {
 
 }
 
@@ -117,6 +120,7 @@ string EncounterEvent::applyTo(shared_ptr<Player> player) {
         player->loseHp(monster->getDamage());
     }
     player->postCombat(playerWon);
+    monster->postCombat();
 
     if (!playerWon) {
         return getEncounterLostMessage(*player, monster->getDamage());
@@ -131,47 +135,51 @@ string EncounterEvent::getDescription() const {
 
 // behaves like a static register for the type.
 IMPLEMENT_FACTORY_REGISTER(EncounterEvent) {
-    for (const auto &item: Monster::getMonsters()) {
-        registerFactory(
-                item.first,
-                FactorableTypeInfo(
-                        [item](const std::vector<string> &arguments) {
-                            return make_shared<EncounterEvent>(item.second);
-                        }
-                )
-        );
+    // import most factories
+    for (const auto &key: Monster::getFactoryKeys()) {
+        registerFactory(key, FactorableTypeInfo([key](const std::vector<string> &args) {
+            // could've used the provided factory, but it's the Monster responsible to call the factory.
+            return make_shared<EncounterEvent>(Monster::createType(key, args));
+        }));
     }
+}
+
+
+void Balrog::postCombat() {
+    combatPower += 2;
+}
+
+
+IMPLEMENT_FACTORY_REGISTER(Pack) {
     registerFactory(
             "Pack",
-            FactorableTypeInfo(
-                    [](const std::vector<string> &arguments) {
-                        auto monsters = Monster::getMonsters();
+            [](const std::vector<string> &arguments) {
 
-                        if (arguments.empty()) {
-                            throw std::invalid_argument("");
-                        }
+                if (arguments.empty()) {
+                    throw std::invalid_argument("");
+                }
 
 
-                        // if size is 1 then there is a problem
-                        if (arguments.size() == 1) {
-                            throw std::invalid_argument("");
-                        }
+                // if size is 1 then there is a problem
+                if (arguments.size() == 1) {
+                    throw std::invalid_argument("");
+                }
 
 
-                        int length = std::atoi(arguments[0].c_str());
-                        vector<Monster::ptr> monsterPack;
-                        for (int i = 0; i < length; i++) {
-                            const string &monsterKey = arguments[1 + i];
+                int length = std::atoi(arguments[0].c_str());
+                vector<shared_ptr<Monster>> monsterPack;
+                for (int i = 0; i < length; i++) {
+                    const string &monsterKey = arguments[1 + i];
 
-                            monsterPack.emplace_back(
-                                    monsters.at(monsterKey)
-                            );
-                        }
-                        return make_shared<EncounterEvent>(
-                                make_shared<Pack>(monsterPack)
-                        );
-
-                    }
-            )
+                    monsterPack.emplace_back(
+                            Monster::createType(monsterKey, arguments)
+                    );
+                }
+                return make_shared<Pack>(monsterPack);
+            }
     );
 }
+
+GENERIC_MONSTER_REGISTER(Snail);
+GENERIC_MONSTER_REGISTER(Slime);
+GENERIC_MONSTER_REGISTER(Balrog);

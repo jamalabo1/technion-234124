@@ -8,7 +8,7 @@ Responsible::Responsible() = default;
 
 int Responsible::buyHp(Player &player, const int &cost, const int &hp) {
     int total = 0;
-    while (player.getCoins() > cost || player.isFullHealth()) {
+    while (player.getCoins() > cost || !player.isFullHealth()) {
         player.trade(cost, hp);
         total += hp;
     }
