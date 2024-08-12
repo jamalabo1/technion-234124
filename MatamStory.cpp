@@ -3,19 +3,13 @@
 
 #include "Utilities.h"
 #include "Loaders.h"
+
 #include <functional>
 
-#include <Events/SpecialEvent.h>
-#include <Events/EncounterEvent.h>
-
-#include <Strategy/Responsible.h>
-#include <Strategy/RiskTaking.h>
-
-#include <Players/Warrior.h>
-#include <Players/Magician.h>
-#include <Players/Archer.h>
-
 #include <sstream>
+
+
+
 
 using std::vector;
 using std::shared_ptr;
@@ -27,10 +21,21 @@ inline bool operator<(const shared_ptr<Player> &a, const shared_ptr<Player> &b) 
     return a->stats() > b->stats();
 }
 
-MatamStory::MatamStory(std::istream &eventsStream, std::istream &playersStream) {
-    this->events = Loaders::loadEvents(eventsStream);
 
-    this->players= Loaders::loadPlayers(playersStream);
+MatamStory::MatamStory(std::istream &eventsStream, std::istream &playersStream) {
+    try {
+        this->events = Loaders::loadEvents(eventsStream);
+    } catch (TypeFactoryDoesNotExistException &) {
+        std::cout << "Invalid Events File" << std::endl;
+        exit(1);
+    }
+
+    try {
+        this->players = Loaders::loadPlayers(playersStream);
+    } catch (TypeFactoryDoesNotExistException &) {
+        std::cout << "Invalid Players File" << std::endl;
+        exit(1);
+    }
 
     this->m_turnIndex = 0;
 }
@@ -43,50 +48,53 @@ void MatamStory::playTurn(shared_ptr<Player> player) {
      * 3. Play the event
      * 4. Print the turn outcome with "printTurnOutcome"
     */
+    // get the current event based on a modules index.
     shared_ptr<Event> currentEvent = events[m_turnIndex % events.size()];
 
+    // print the details of the current player & event
     printTurnDetails(m_turnIndex + 1, *player, *currentEvent);
 
+    // apply the event to the player and get the result.
     string result = currentEvent->applyTo(player);
 
+    // print the outcome of the event.
     printTurnOutcome(result);
 
-    postEvent(*player);
+    // perform post action after an event has been applied.
+    postEvent();
 }
 
 void MatamStory::playRound() {
 
+    // print round start message
     printRoundStart();
 
-    /*===== TODO: Play a turn for each player =====*/
-
+    // loop over players and play turns.
     for (shared_ptr<Player> &player: players) {
+        // if player has been terminated, do not include!.
         if (player->getHealthPoints() == 0)continue;
         playTurn(player);
     }
 
-    /*=============================================*/
-
+    // print round end message
     printRoundEnd();
 
+    // print the leaderboard after playing a round
     printLeaderboard();
-    /*=======================================================================================*/
 
     printBarrier();
 }
 
 bool MatamStory::isGameOver() const {
-    /*===== TODO: Implement the game over condition =====*/
-
+    // check if all players are dead or there is a winner.
     bool all_dead = true;
     for (const auto &item: players) {
-        if (item->getLevel() == 10) return true;
+        if (item->getLevel() == WIN_LEVEL) return true;
         if (item->getHealthPoints() != 0) {
             all_dead = false;
         }
     }
     return all_dead;
-
     // if players is empty then all players are 0 health.
     return players.empty() || std::any_of(players.begin(), players.end(),
                                           [](const shared_ptr<Player> &player) {
@@ -98,13 +106,11 @@ bool MatamStory::isGameOver() const {
 
 void MatamStory::play() {
     printStartMessage();
-    /*===== TODO: Print start message entry for each player using "printStartPlayerEntry" =====*/
 
     for (int i = 0; i < (int) players.size(); ++i) {
         printStartPlayerEntry(i + 1, *players[i]);
     }
 
-    /*=========================================================================================*/
     printBarrier();
 
     while (!isGameOver()) {
@@ -112,26 +118,28 @@ void MatamStory::play() {
     }
 
     printGameOver();
-    /*===== TODO: Print either a "winner" message or "no winner" message =====*/
+
+    // if there is no players, then there is no winners.
+    if (players.empty()) {
+        printNoWinners();
+        return;
+    }
+
     auto maxPlayer = *std::min_element(players.begin(), players.end());
     if (maxPlayer->getHealthPoints() == 0) {
         printNoWinners();
     } else {
         printWinner(*maxPlayer);
     }
-
-    /*========================================================================*/
 }
 
-void MatamStory::postEvent(const Player &player) {
+void MatamStory::postEvent() {
     m_turnIndex = (m_turnIndex + 1);
 }
 
 
 void MatamStory::printLeaderboard() {
     printLeaderBoardMessage();
-
-    /*===== TODO: Print leaderboard entry for each player using "printLeaderBoardEntry" =====*/
 
     vector<shared_ptr<Player>> sorted(players.size());
 

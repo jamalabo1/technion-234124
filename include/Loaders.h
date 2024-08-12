@@ -6,10 +6,21 @@
 #define TECHNION_234124_LOADERS_H
 
 #include <vector>
+
+#include <Events/Event.h>
+#include <Strategy/Strategy.h>
+#include <Players/Player.h>
+
 #include <Events/SpecialEvent.h>
 #include <Events/EncounterEvent.h>
+//
+#include <Strategy/Responsible.h>
+#include <Strategy/RiskTaking.h>
+//
+#include <Players/Warrior.h>
+#include <Players/Magician.h>
+#include <Players/Archer.h>
 
-#include <Players/Player.h>
 #include <stdexcept>
 #include <sstream>
 

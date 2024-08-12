@@ -54,6 +54,22 @@ void Monster::postCombat() {
     // default behaviour: no-effect
 }
 
+void Monster::addCombatPower(const int &quantity) {
+    combatPower += quantity;
+}
+
+void Monster::setLoot(const int &qty) {
+    loot = qty;
+}
+
+void Monster::setCombatPower(const int &qty) {
+    combatPower = qty;
+}
+
+void Monster::setDamage(const int &qty) {
+    damage = qty;
+}
+
 Snail::Snail() : Monster("Snail", 2, 10, 5) {}
 
 Slime::Slime() : Monster("Slime", 5, 25, 12) {}
@@ -100,9 +116,9 @@ void Pack::postCombat() {
         item->postCombat();
     }
 
-    loot = ACCUMULATE_VECTOR(pack, getLoot);
-    damage = ACCUMULATE_VECTOR(pack, getDamage);
-    combatPower = ACCUMULATE_VECTOR(pack, getCombatPower);
+    setLoot(ACCUMULATE_VECTOR(pack, getLoot));
+    setDamage(ACCUMULATE_VECTOR(pack, getDamage));
+    setCombatPower(ACCUMULATE_VECTOR(pack, getCombatPower));
 }
 
 
@@ -125,7 +141,7 @@ string EncounterEvent::applyTo(shared_ptr<Player> player) {
     if (!playerWon) {
         return getEncounterLostMessage(*player, monster->getDamage());
     }
-    // TODO: check if really got levels.
+
     return getEncounterWonMessage(*player, monster->getLoot());
 }
 
@@ -137,16 +153,16 @@ string EncounterEvent::getDescription() const {
 IMPLEMENT_FACTORY_REGISTER(EncounterEvent) {
     // import most factories
     for (const auto &key: Monster::getFactoryKeys()) {
-        registerFactory(key, FactorableTypeInfo([key](const std::vector<string> &args) {
-            // could've used the provided factory, but it's the Monster responsible to call the factory.
+        registerFactory(key, [key](const std::vector<string> &args) {
+            // could've used the provided factory, but it's the Monster responsibility to call the factory.
             return make_shared<EncounterEvent>(Monster::createType(key, args));
-        }));
+        });
     }
 }
 
 
 void Balrog::postCombat() {
-    combatPower += 2;
+    addCombatPower(2);
 }
 
 

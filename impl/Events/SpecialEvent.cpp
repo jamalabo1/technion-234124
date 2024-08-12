@@ -17,40 +17,34 @@ string SpecialEvent::getDescription() const {
 }
 
 
-string SolarEclipseEvent::applyTo(shared_ptr<Player> player) {
+string SolarEclipse::applyTo(shared_ptr<Player> player) {
     return getSolarEclipseMessage(*player, player->experienceSolarEclipse());
 }
 
-SolarEclipseEvent::SolarEclipseEvent() : SpecialEvent("SolarEclipse") {
+SolarEclipse::SolarEclipse() : SpecialEvent("SolarEclipse") {
 
 }
 
-string PotionsMerchantEvent::applyTo(shared_ptr<Player> player) {
+string PotionsMerchant::applyTo(shared_ptr<Player> player) {
     return getPotionsPurchaseMessage(*player, player->reviewOffer(offer.getCost(), offer.getHp()));
 }
 
-PotionsMerchantEvent::PotionsMerchantEvent() : SpecialEvent("PotionsMerchant"), offer(5, 10) {
+PotionsMerchant::PotionsMerchant() : SpecialEvent("PotionsMerchant"), offer(5, 10) {
 
 }
 
-PotionsMerchantEvent::PotionsMerchantOffer::PotionsMerchantOffer(const int cost, const int hp) : cost(cost), hp(hp) {
+PotionsMerchant::PotionsMerchantOffer::PotionsMerchantOffer(const int cost, const int hp) : cost(cost), hp(hp) {
 
 }
 
-int PotionsMerchantEvent::PotionsMerchantOffer::getCost() const {
+int PotionsMerchant::PotionsMerchantOffer::getCost() const {
     return cost;
 }
 
-int PotionsMerchantEvent::PotionsMerchantOffer::getHp() const {
+int PotionsMerchant::PotionsMerchantOffer::getHp() const {
     return hp;
 }
 
-IMPLEMENT_FACTORY_REGISTER(SpecialEvent) {
-    registerFactory("PotionsMerchant", FactorableTypeInfo([](const vector<string> &) {
-        return make_shared<PotionsMerchantEvent>();
-    }));
 
-    registerFactory("SolarEclipse", FactorableTypeInfo([](const vector<string> &) {
-        return make_shared<SolarEclipseEvent>();
-    }));
-}
+GENERIC_SPECIAL_EVENT_REGISTER(PotionsMerchant);
+GENERIC_SPECIAL_EVENT_REGISTER(SolarEclipse);

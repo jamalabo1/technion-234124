@@ -7,16 +7,22 @@
 #include "Events/Event.h"
 
 
-class MatamStory
-{
+class MatamStory {
 private:
     unsigned int m_turnIndex;
 
+    static const int WIN_LEVEL = 10;
 
-    std::vector<std::shared_ptr<Event>> events;
-    std::vector<std::shared_ptr<Player>> players;
 
-    void postEvent(const Player &);
+    vector<shared_ptr<Event>> events;
+    vector<shared_ptr<Player>> players;
+
+    /**
+     * Performs a post-action to applying an event.
+     *
+     * @return - void
+     * */
+    void postEvent();
 
 
     /**
@@ -26,7 +32,7 @@ private:
      *
      * @return - void
     */
-    void playTurn(std::shared_ptr<Player> player);
+    void playTurn(shared_ptr<Player> player);
 
     /**
      * Plays a single round of the game
@@ -42,7 +48,11 @@ private:
     */
     bool isGameOver() const;
 
-
+    /**
+     * Print the leaderboard.
+     *
+     * @return - void
+     * **/
     void printLeaderboard();
 
 public:
@@ -55,7 +65,7 @@ public:
      * @return - MatamStory object with the given events and players
      *
     */
-    MatamStory(std::istream& eventsStream, std::istream& playersStream);
+    MatamStory(std::istream &eventsStream, std::istream &playersStream);
 
     /**
      * Plays the entire game

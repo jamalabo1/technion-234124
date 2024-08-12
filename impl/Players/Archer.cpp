@@ -6,8 +6,8 @@
 using std::make_shared;
 using std::vector;
 
-Archer::Archer(string name, shared_ptr<Strategy> strategy) : Player(name, strategy, Archer::Key) {
+Archer::Archer(string name, shared_ptr<Strategy> strategy) : Player(std::move(name), std::move(strategy), Archer::Key) {
     setCoins(20);
 }
 
-GENERIC_REGISTER(Archer);
+GENERIC_PLAYER_REGISTER(Archer);

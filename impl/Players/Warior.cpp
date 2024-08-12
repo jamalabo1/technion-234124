@@ -4,7 +4,7 @@
 #include <Players/Warrior.h>
 
 
-Warrior::Warrior(string name, shared_ptr<Strategy> strategy) : Player(name, strategy, Warrior::Key)
+Warrior::Warrior(string name, shared_ptr<Strategy> strategy) : Player(std::move(name), std::move(strategy), Warrior::Key)
 {
     setMaxHealth(150);
     setHealth(150);
@@ -20,4 +20,4 @@ int Warrior::getCombatPower() const
     return 2 * getForce() + getLevel();
 }
 
-GENERIC_REGISTER(Warrior);
+GENERIC_PLAYER_REGISTER(Warrior);

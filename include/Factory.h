@@ -16,11 +16,17 @@ public:\
 FactoryRegister();\
 };\
 \
-static inline FactoryRegister factoryRegister;              \
+static inline FactoryRegister factoryRegister{};              \
 
 
-#define IMPLEMENT_FACTORY_REGISTER(Type) Type::FactoryRegister::FactoryRegister()
+#define IMPLEMENT_FACTORY_REGISTER(Type)  \
+Type::FactoryRegister::FactoryRegister()
 
+class TypeFactoryDoesNotExistException : public std::exception {
+
+public:
+    TypeFactoryDoesNotExistException() : std::exception("type info does not exist") {}
+};
 
 template<typename T>
 class Factorable {
@@ -47,7 +53,7 @@ protected:
     };
 
 private:
-    static inline std::map<std::string, FactorableTypeInfo> factories;
+    static inline std::map<std::string, FactorableTypeInfo> factories{};
 
 protected:
     static void registerFactory(const std::string &, const FactorableTypeInfo &);
@@ -60,11 +66,6 @@ protected:
 
 public:
 
-    class TypeFactoryDoesNotExistException : public std::exception {
-
-    public:
-        TypeFactoryDoesNotExistException() : std::exception("type info does not exist") {}
-    };
 
     static typename FactorableTypeInfo::FactoryRType
     createType(const std::string &key, const typename FactorableTypeInfo::FactoryArgType &arguments);
@@ -86,6 +87,7 @@ typename Factorable<T>::FactorableTypeInfo::FactoryRType
 Factorable<T>::FactorableTypeInfo::operator()() {
     Factorable::FactorableTypeInfo::FactoryArgType arguments;
     return factory(arguments);
+//    return this->operator()(arguments);
 }
 
 template<typename T>

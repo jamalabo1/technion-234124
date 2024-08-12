@@ -3,7 +3,9 @@
 //
 #include <Players/Magician.h>
 
-Magician::Magician(string name, shared_ptr<Strategy> strategy) : Player(name, strategy, Magician::Key) {
+#include <utility>
+
+Magician::Magician(string name, shared_ptr<Strategy> strategy) : Player(std::move(name), std::move(strategy), Magician::Key) {
 }
 
 int Magician::experienceSolarEclipse() {
@@ -11,4 +13,4 @@ int Magician::experienceSolarEclipse() {
     return 1;
 }
 
-GENERIC_REGISTER(Magician);
+GENERIC_PLAYER_REGISTER(Magician);

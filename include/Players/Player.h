@@ -10,9 +10,10 @@
 using std::string;
 using std::unique_ptr;
 using std::shared_ptr;
+using std::tuple;
 
-#define GENERIC_REGISTER(Type) IMPLEMENT_FACTORY_REGISTER(Type) { \
-        registerFactory(#Type, FactorableTypeInfo([](const std::vector<std::string> &arguments) {\
+#define GENERIC_PLAYER_REGISTER(Type) IMPLEMENT_FACTORY_REGISTER(Type) { \
+        registerFactory(#Type, FactorableTypeInfo([](const vector<string> &arguments) {\
             auto strategy = Strategy::createType(arguments[2], arguments);\
             return std::make_shared<Type>(arguments[0], strategy);\
         }));\
@@ -21,6 +22,13 @@ using std::shared_ptr;
 
 class Player : public Factorable<Player> {
 private:
+
+    static const int MAX_LEVEL = 10;
+    static const int MIN_LEVEL = 1;
+    static const int MIN_HEALTH = 0;
+    static const int MIN_COINS = 1;
+
+
     string name;
     int level;
     int force;
@@ -33,7 +41,7 @@ private:
 
 protected:
     explicit Player(string name,
-                    shared_ptr<Strategy> &strategy,
+                    shared_ptr<Strategy> strategy,
                     string job,
                     int level = 1,
                     int coins = 10,
@@ -118,7 +126,27 @@ public:
      * levels up the player
      * @return newly set level
      */
-    int levelUp(int step = 1);
+    int levelUp(const int &step = 1);
+
+    /**
+     *
+     * @param hp Hp amount to add
+     * @return health of player after add
+    */
+    int addHp(int hp);
+
+    /**
+     *
+     * @return newly set coins
+     */
+    int addCoins(int quantity);
+
+    /**
+     * Adds force
+     *
+     * @returns force after modification
+     * */
+    int addForce(int quantity);
 
     /**
      *
@@ -133,18 +161,13 @@ public:
     int loseCoins(int coins);
 
     /**
+     * Loses force
      *
-     * @param hp Hp amount to add
-     * @return health of player after add
-     */
-    int addHp(int hp);
-
-
-    /**
+     * @param quantity quantity of force to lose
      *
-     * @return newly set coins
-     */
-    int addCoins(int quantity);
+     * @returns force after modification
+     * */
+    int loseForce(int quantity);
 
     /**
      * offers the player to review an offer from the merchant
@@ -162,17 +185,12 @@ public:
     void trade(int cost, int hp);
 
 
-    int addForce(int quantity);
-
-    int loseForce(int quantity);
-
-
     /**
      * Player experiences a solar eclipse.
      * */
     virtual int experienceSolarEclipse();
 
-    std::tuple<int, int, string> stats() const;
+    tuple<int, int, string> stats() const;
 };
 
 #endif //TECHNION_234124_PLAYER_H

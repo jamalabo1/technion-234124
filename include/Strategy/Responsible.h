@@ -15,7 +15,7 @@ public:
 
     int buyHp(Player &player, const int &cost, const int &hp) override;
 
-    std::string getKey() override;
+    string getKey() override;
 };
 
 #endif //RESPONSIBILE_H

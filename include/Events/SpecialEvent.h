@@ -7,12 +7,21 @@
 
 #include "Event.h"
 
+using std::vector;
+using std::shared_ptr;
+using std::string;
+
+#define GENERIC_SPECIAL_EVENT_REGISTER(Type)  \
+IMPLEMENT_FACTORY_REGISTER(Type) { \
+        registerFactory(#Type, FactorableTypeInfo([](const vector<string> &) { \
+                return make_shared<Type>(); \
+        })); \
+}
 
 class SpecialEvent : public Event {
 private:
     string key;
 
-    CREATE_FACTORY_REGISTER();
 protected:
     explicit SpecialEvent(const string &key);
 
@@ -22,15 +31,19 @@ public:
 };
 
 
-class SolarEclipseEvent : public SpecialEvent {
+class SolarEclipse : public SpecialEvent {
+private:
+    CREATE_FACTORY_REGISTER();
 public:
-    SolarEclipseEvent();
+    SolarEclipse();
 
-    string applyTo(std::shared_ptr<Player> player) override;
+    string applyTo(shared_ptr<Player> player) override;
 };
 
 
-class PotionsMerchantEvent : public SpecialEvent {
+class PotionsMerchant : public SpecialEvent {
+private:
+    CREATE_FACTORY_REGISTER();
 private:
     class PotionsMerchantOffer {
         int cost;
@@ -48,9 +61,9 @@ private:
     PotionsMerchantOffer offer;
 
 public:
-    PotionsMerchantEvent();
+    PotionsMerchant();
 
-    string applyTo(std::shared_ptr<Player> player) override;
+    string applyTo(shared_ptr<Player> player) override;
 };
 
 #endif //TECHNION_234124_SPECIALEVENT_H

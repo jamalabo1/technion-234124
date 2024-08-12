@@ -4,10 +4,12 @@
 
 #include "Players/Player.h"
 
-Player::Player(string name, shared_ptr<Strategy> &strategy, string job, const int level, const int coins,
+using std::to_string;
+
+Player::Player(string name, shared_ptr<Strategy> strategy, string job, const int level, const int coins,
                const int force, const int health) : name(name),
                                                     level(level), force(force), health(health), maxHealth(health),
-                                                    coins(coins), strategy(std::move(strategy)), character(job) {
+                                                    coins(coins), strategy(strategy), character(job) {
 }
 
 
@@ -26,7 +28,7 @@ void Player::setCoins(const int numOfCoins) {
 
 string Player::getDescription() const {
     return getName() + ", " + character + " with " + strategy->getKey() + " character" +
-           " (level " + std::to_string(getLevel()) + ", force " + std::to_string(getForce()) + ")";
+           " (level " + to_string(getLevel()) + ", force " + to_string(getForce()) + ")";
 }
 
 string Player::getName() const {
@@ -60,8 +62,19 @@ bool Player::isFullHealth() const {
     return getHealthPoints() == maxHealth;
 }
 
-int Player::levelUp(const int step) {
-    return level += step;
+int Player::levelUp(const int &step) {
+    level = std::min(std::max(level + step, MIN_LEVEL), MAX_LEVEL);
+    return level;
+}
+
+int Player::addHp(const int hp) {
+    health = std::min(maxHealth, std::max(health + hp, MIN_HEALTH));
+    return health;
+}
+
+int Player::addCoins(const int quantity) {
+    coins = std::max(coins + quantity, MIN_COINS);
+    return coins;
 }
 
 int Player::loseHp(const int hp) {
@@ -69,18 +82,9 @@ int Player::loseHp(const int hp) {
 }
 
 int Player::loseCoins(const int coinsNum) {
-    return coins -= coinsNum;
+    return addCoins(-coinsNum);
 }
 
-
-int Player::addHp(const int hp) {
-    health = std::min(maxHealth, std::max(health + hp, 0));
-    return health;
-}
-
-int Player::addCoins(const int quantity) {
-    return coins += quantity;
-}
 
 int Player::reviewOffer(const int cost, const int hp) {
     return strategy->buyHp(*this, cost, hp);
