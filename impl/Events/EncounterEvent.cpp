@@ -202,7 +202,7 @@ tuple<int, Tree> createTree(const std::vector<string> &arguments, int offsetStar
 }
 
 IMPLEMENT_FACTORY_REGISTER(Pack) {
-    registerFactory(
+    Pack::registerFactory(
             "Packx",
             [](const std::vector<string> &arguments) {
 
@@ -224,9 +224,9 @@ IMPLEMENT_FACTORY_REGISTER(Pack) {
 
                     if (monsterKey == "pack") {
                         int pLength = std::atoi(arguments[i + 1].c_str());
-                        monsterPack.emplace_back(
-                                Monster::createType(monsterKey, slice(arguments, i + 1, i + pLength))
-                        );
+                        // monsterPack.emplace_back(
+                                // Monster::createType(monsterKey, slice(arguments, i + 1, i + pLength))
+                        // );
                     }
 
                     monsterPack.emplace_back(

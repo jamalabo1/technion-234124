@@ -21,6 +21,8 @@
 #include <Players/Magician.h>
 #include <Players/Archer.h>
 
+#include "Factory.h"
+
 #include <stdexcept>
 #include <sstream>
 
@@ -50,6 +52,7 @@ namespace Loaders {
 
 
     shared_ptr<Event> createEvent(const string &line) {
+
 
         vector<string> lines = split(line);
 

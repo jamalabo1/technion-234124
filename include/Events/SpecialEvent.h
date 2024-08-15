@@ -14,7 +14,7 @@ using std::string;
 
 #define GENERIC_SPECIAL_EVENT_REGISTER(Type)  \
 IMPLEMENT_FACTORY_REGISTER(Type) { \
-        registerFactory(#Type, FactorableTypeInfo([](const vector<string> &) { \
+        Type::registerFactory(#Type, FactorableTypeInfo([](const vector<string> &) { \
                 return make_shared<Type>(); \
         })); \
 }

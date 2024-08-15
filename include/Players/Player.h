@@ -23,10 +23,10 @@ using std::tuple;
 class Player : public Factorable<Player> {
 private:
 
-    static const int MAX_LEVEL = 10;
-    static const int MIN_LEVEL = 1;
-    static const int MIN_HEALTH = 0;
-    static const int MIN_COINS = 1;
+    static inline const int MAX_LEVEL = 10;
+    static inline const int MIN_LEVEL = 1;
+    static inline const int MIN_HEALTH = 0;
+    static inline const int MIN_COINS = 1;
 
 
     string name;

@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <stdexcept>
 
 
 #define CREATE_FACTORY_REGISTER()     class FactoryRegister { \
@@ -22,10 +23,10 @@ static inline FactoryRegister factoryRegister{};              \
 #define IMPLEMENT_FACTORY_REGISTER(Type)  \
 Type::FactoryRegister::FactoryRegister()
 
-class TypeFactoryDoesNotExistException : public std::exception {
+class TypeFactoryDoesNotExistException : public std::runtime_error {
 
 public:
-    TypeFactoryDoesNotExistException() : std::exception("type info does not exist") {}
+    TypeFactoryDoesNotExistException() : std::runtime_error("type info does not exist") {}
 };
 
 template<typename T>
@@ -52,8 +53,10 @@ protected:
 
     };
 
-private:
-    static inline std::map<std::string, FactorableTypeInfo> factories{};
+public:
+    using FactoriesType = std::map<std::string, FactorableTypeInfo>;
+
+    // static inline FactoriesType factories;
 
 protected:
     static void registerFactory(const std::string &, const FactorableTypeInfo &);
@@ -62,6 +65,8 @@ protected:
 
     static void
     registerFactory(const std::string &, const std::function<typename FactorableTypeInfo::FactoryRType()> &);
+
+    static FactoriesType getFactory();
 
 
 public:
@@ -76,6 +81,14 @@ public:
 };
 
 template<typename T>
+typename Factorable<T>::FactoriesType Factorable<T>::getFactory()
+{
+    static FactoriesType factory;
+
+    return factory;
+}
+
+template<typename T>
 typename Factorable<T>::FactorableTypeInfo::FactoryRType
 Factorable<T>::FactorableTypeInfo::operator()(const Factorable::FactorableTypeInfo::FactoryArgType &arguments) {
     return factory(arguments);
@@ -87,7 +100,6 @@ typename Factorable<T>::FactorableTypeInfo::FactoryRType
 Factorable<T>::FactorableTypeInfo::operator()() {
     Factorable::FactorableTypeInfo::FactoryArgType arguments;
     return factory(arguments);
-//    return this->operator()(arguments);
 }
 
 template<typename T>
@@ -106,11 +118,12 @@ void Factorable<T>::registerFactory(const std::string &key,
 
 template<typename T>
 std::map<std::string, typename Factorable<T>::FactorableTypeInfo> Factorable<T>::getFactories() {
-    return factories;
+    return getFactory();
 }
 
 template<typename T>
 std::vector<std::string> Factorable<T>::getFactoryKeys() {
+    auto factories = getFactory();
     std::vector<std::string> keys;
     keys.reserve(factories.size());
     for (const auto &[key, _]: factories) {
@@ -123,6 +136,7 @@ template<typename T>
 typename Factorable<T>::FactorableTypeInfo::FactoryRType
 Factorable<T>::createType(const std::string &key,
                           const typename Factorable::FactorableTypeInfo::FactoryArgType &arguments) {
+    auto factories = getFactory();
     if (!factories.count(key)) throw TypeFactoryDoesNotExistException();
     return factories[key](arguments);
 }
@@ -130,6 +144,7 @@ Factorable<T>::createType(const std::string &key,
 
 template<typename T>
 void Factorable<T>::registerFactory(const std::string &key, const Factorable::FactorableTypeInfo &info) {
+    auto factories = getFactory();
     factories.insert(
             std::pair(
                     key,
