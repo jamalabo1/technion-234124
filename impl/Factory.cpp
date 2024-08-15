@@ -6,7 +6,7 @@
 
 template<typename T>
 typename Factorable<T>::FactoriesType &Factorable<T>::getFactory() {
-    static auto *factories = new FactoriesType();
+    static std::unique_ptr<FactoriesType> factories = std::make_unique<FactoriesType>();
 
     return *factories;
 }

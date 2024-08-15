@@ -207,11 +207,11 @@ public:
 };
 
 
-tuple<int, Tree> createTree(const std::vector<string> &arguments, int offsetStart) {
+tuple<int, shared_ptr<Monster>> createTree(const std::vector<string> &arguments, int offsetStart) {
     if (arguments[offsetStart] == "Pack") {
         int length = atoi(arguments[offsetStart + 1].c_str());
         int endOffset = offsetStart + 2;
-        vector<Tree> nodes;
+        vector<shared_ptr<Monster>> nodes;
         for (int i = 0; i < length; i++) {
             string key = arguments[endOffset];
             if (key == "Pack") {
@@ -219,37 +219,36 @@ tuple<int, Tree> createTree(const std::vector<string> &arguments, int offsetStar
                 endOffset = offsetEnd;
                 nodes.emplace_back(tree);
             } else {
-                Tree tree(Monster::createType(key, arguments), key);
-                //endOffset = endOffset + i;
+//                Tree tree(Monster::createType(key, arguments), key);
                 endOffset++;
-                nodes.emplace_back(tree);
+                nodes.emplace_back(
+                        Monster::createType(key, arguments)
+                );
             }
         }
 
-        vector<shared_ptr<Monster>> monstersPack;
-        monstersPack.reserve(nodes.size());
-        for (const auto &item: nodes) {
-            monstersPack.emplace_back(item.item);
-        }
+//        vector<shared_ptr<Monster>> monstersPack;
+//        monstersPack.reserve(nodes.size());
+//        for (const auto &item: nodes) {
+//            monstersPack.emplace_back(item.item);
+//        }
 
-        auto pack = make_shared<Pack>(monstersPack);
-        Tree tree(nodes, pack, "Pack");
-        return std::pair(endOffset, tree);
+        auto pack = make_shared<Pack>(nodes);
+//        Tree tree(nodes, pack, "Pack");
+        return std::pair(endOffset, pack);
     } else {
-        return std::pair(offsetStart, Tree(
-                Monster::createType(arguments[offsetStart], arguments), arguments[offsetStart]
-        ));
+        return std::pair(offsetStart,
+                         Monster::createType(arguments[offsetStart], arguments)
+        );
     }
 }
 
 IMPLEMENT_FACTORY_REGISTER(Pack) {
-
-
     registerFactory("Pack",
                     [](const vector<string> &arguments) {
                         auto [_, tree] = createTree(arguments, 0);
 
-                        return tree.item;
+                        return tree;
                     });
 }
 
