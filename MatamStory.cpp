@@ -9,8 +9,6 @@
 #include <sstream>
 
 
-
-
 using std::vector;
 using std::shared_ptr;
 using std::make_shared;

@@ -15,6 +15,10 @@ using std::map;
 
 #define ACCUMULATE_VECTOR(vec, func) accumulate(pack, [](auto x) { return x->func(); })
 
+template
+class Factorable<Monster>;
+
+
 Monster::Monster(string key, int loot, int damage, int combatPower) : key(key), loot(loot), damage(damage),
                                                                       combatPower(combatPower) {
 
@@ -86,7 +90,7 @@ int accumulate(std::vector<T> vec, Func func) {
 }
 
 Pack::Pack(const vector<shared_ptr<Monster>> &pack) : Monster(
-        "pack",
+        "Pack",
         ACCUMULATE_VECTOR(pack, getLoot),
         ACCUMULATE_VECTOR(pack, getDamage),
         ACCUMULATE_VECTOR(pack, getCombatPower)
@@ -94,8 +98,33 @@ Pack::Pack(const vector<shared_ptr<Monster>> &pack) : Monster(
 
 }
 
+#include <iostream>
+
 string Pack::getDescription() const {
-    return "Pack of " + to_string(pack.size()) + " members " + generalStats();
+
+
+
+//    std::cout << "------ START PACK " << this << "------" << std::endl;
+//    for (int i = 0; i < pack.size(); i++) {
+//        std::cout << pack[i]->getDescription() << std::endl;
+//    }
+//    std::cout << "------END PACK" << this << "------" << std::endl;
+
+    string desc = "[";
+
+    for (int i = 0; i < pack.size(); i++) {
+        if (pack[i]->getKey() == "Pack") {
+            desc += pack[i]->getDescription();
+        } else {
+            desc += "\"" + pack[i]->getKey() + "\"";
+        }
+        if (i != pack.size() - 1) desc += ",";
+    }
+
+    desc += "]";
+    return desc;
+
+//    return "Pack of " + to_string(pack.size()) + " members " + generalStats();
 }
 
 // just update on post combat.
@@ -169,35 +198,47 @@ void Balrog::postCombat() {
 class Tree {
 public:
     vector<Tree> nodes;
-    string item;
+    shared_ptr<Monster> item;
+    string key;
 
-    Tree(const string &item) : nodes(), item(item) {}
+    Tree(const shared_ptr<Monster> &item, string key) : nodes(), item(item), key(key) {}
 
-    Tree(const vector<Tree> &nodes, const string &item) : nodes(nodes), item(item) {}
+    Tree(const vector<Tree> &nodes, const shared_ptr<Monster> &item, string key) : nodes(nodes), item(item), key(key) {}
 };
 
 
 tuple<int, Tree> createTree(const std::vector<string> &arguments, int offsetStart) {
     if (arguments[offsetStart] == "Pack") {
         int length = atoi(arguments[offsetStart + 1].c_str());
-        int endOffset = offsetStart;
+        int endOffset = offsetStart + 2;
         vector<Tree> nodes;
         for (int i = 0; i < length; i++) {
-            string key = arguments[offsetStart + i + 2];
+            string key = arguments[endOffset];
             if (key == "Pack") {
-                auto [offsetEnd, tree] = createTree(arguments, endOffset + i + 2);
+                auto [offsetEnd, tree] = createTree(arguments, endOffset);
                 endOffset = offsetEnd;
                 nodes.emplace_back(tree);
             } else {
-                Tree tree(key);
+                Tree tree(Monster::createType(key, arguments), key);
+                //endOffset = endOffset + i;
+                endOffset++;
                 nodes.emplace_back(tree);
             }
         }
 
-        Tree tree(nodes, "Pack");
+        vector<shared_ptr<Monster>> monstersPack;
+        monstersPack.reserve(nodes.size());
+        for (const auto &item: nodes) {
+            monstersPack.emplace_back(item.item);
+        }
+
+        auto pack = make_shared<Pack>(monstersPack);
+        Tree tree(nodes, pack, "Pack");
         return std::pair(endOffset, tree);
     } else {
-        return std::pair(offsetStart, Tree(arguments[offsetStart]));
+        return std::pair(offsetStart, Tree(
+                Monster::createType(arguments[offsetStart], arguments), arguments[offsetStart]
+        ));
     }
 }
 
@@ -225,7 +266,7 @@ IMPLEMENT_FACTORY_REGISTER(Pack) {
                     if (monsterKey == "pack") {
                         int pLength = std::atoi(arguments[i + 1].c_str());
                         // monsterPack.emplace_back(
-                                // Monster::createType(monsterKey, slice(arguments, i + 1, i + pLength))
+                        // Monster::createType(monsterKey, slice(arguments, i + 1, i + pLength))
                         // );
                     }
 
@@ -240,12 +281,9 @@ IMPLEMENT_FACTORY_REGISTER(Pack) {
 
     registerFactory("Pack",
                     [](const vector<string> &arguments) {
-                        vector<shared_ptr<Monster>> monsterPack;
+                        auto [_, tree] = createTree(arguments, 0);
 
-
-                        auto [_,tree] = createTree(arguments, 0);
-
-                        return make_shared<Pack>(monsterPack);
+                        return tree.item;
                     });
 }
 

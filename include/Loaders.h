@@ -62,7 +62,7 @@ namespace Loaders {
 
         string key = lines[0];
 
-        lines.erase(lines.begin());
+//        lines.erase(lines.begin());
 
         // forward the creation to the type info.
         return Event::createType(key, lines);

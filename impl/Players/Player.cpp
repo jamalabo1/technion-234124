@@ -6,6 +6,8 @@
 
 using std::to_string;
 
+
+
 Player::Player(string name, shared_ptr<Strategy> strategy, string job, const int level, const int coins,
                const int force, const int health) : name(name),
                                                     level(level), force(force), health(health), maxHealth(health),

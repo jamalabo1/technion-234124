@@ -16,6 +16,8 @@ set(CMAKE_CXX_STANDARD 17)
 add_library(matam4-lib
 
         include/Factory.h
+        impl/Factory.cpp
+
         MatamStory.cpp
         impl/Players/Player.cpp
 
@@ -43,6 +45,7 @@ add_library(matam4-lib
 
         Utilities.cpp
         Utilities.h
+        impl/Strategy/Strategy.cpp
 )
 
 target_include_directories(matam4-lib PUBLIC include)
