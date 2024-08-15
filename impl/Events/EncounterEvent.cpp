@@ -166,9 +166,44 @@ void Balrog::postCombat() {
 }
 
 
+class Tree {
+public:
+    vector<Tree> nodes;
+    string item;
+
+    Tree(const string &item) : nodes(), item(item) {}
+
+    Tree(const vector<Tree> &nodes, const string &item) : nodes(nodes), item(item) {}
+};
+
+
+tuple<int, Tree> createTree(const std::vector<string> &arguments, int offsetStart) {
+    if (arguments[offsetStart] == "Pack") {
+        int length = atoi(arguments[offsetStart + 1].c_str());
+        int endOffset = offsetStart;
+        vector<Tree> nodes;
+        for (int i = 0; i < length; i++) {
+            string key = arguments[offsetStart + i + 2];
+            if (key == "Pack") {
+                auto [offsetEnd, tree] = createTree(arguments, endOffset + i + 2);
+                endOffset = offsetEnd;
+                nodes.emplace_back(tree);
+            } else {
+                Tree tree(key);
+                nodes.emplace_back(tree);
+            }
+        }
+
+        Tree tree(nodes, "Pack");
+        return std::pair(endOffset, tree);
+    } else {
+        return std::pair(offsetStart, Tree(arguments[offsetStart]));
+    }
+}
+
 IMPLEMENT_FACTORY_REGISTER(Pack) {
     registerFactory(
-            "Pack",
+            "Packx",
             [](const std::vector<string> &arguments) {
 
                 if (arguments.empty()) {
@@ -184,17 +219,36 @@ IMPLEMENT_FACTORY_REGISTER(Pack) {
 
                 int length = std::atoi(arguments[0].c_str());
                 vector<shared_ptr<Monster>> monsterPack;
-                for (int i = 0; i < length; i++) {
-                    const string &monsterKey = arguments[1 + i];
+                for (int i = 1; i < arguments.size(); i++) {
+                    const string &monsterKey = arguments[i];
+
+                    if (monsterKey == "pack") {
+                        int pLength = std::atoi(arguments[i + 1].c_str());
+                        monsterPack.emplace_back(
+                                Monster::createType(monsterKey, slice(arguments, i + 1, i + pLength))
+                        );
+                    }
 
                     monsterPack.emplace_back(
                             Monster::createType(monsterKey, arguments)
+
                     );
                 }
                 return make_shared<Pack>(monsterPack);
             }
     );
+
+    registerFactory("Pack",
+                    [](const vector<string> &arguments) {
+                        vector<shared_ptr<Monster>> monsterPack;
+
+
+                        auto [_,tree] = createTree(arguments, 0);
+
+                        return make_shared<Pack>(monsterPack);
+                    });
 }
+
 
 GENERIC_MONSTER_REGISTER(Snail);
 GENERIC_MONSTER_REGISTER(Slime);

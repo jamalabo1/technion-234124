@@ -32,18 +32,20 @@ protected:
 
     string generalStats() const;
 
-    void addCombatPower(const int& quantity);
+    void addCombatPower(const int &quantity);
 
-    void setLoot(const int& loot);
+    void setLoot(const int &loot);
 
-    void setCombatPower(const int& combatPower);
+    void setCombatPower(const int &combatPower);
 
-    void setDamage(const int& damage);
+    void setDamage(const int &damage);
 
 
 public:
     // disable copies.
     Monster(const Monster &) = delete;
+
+    virtual ~Monster() = default;
 
 
     virtual int getCombatPower() const;
