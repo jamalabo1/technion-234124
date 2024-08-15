@@ -58,6 +58,8 @@ public:
     // prevent creating a base type instance.
     Player() = delete;
 
+    virtual ~Player() = default;
+
     /**
      * Gets the description of the player
      *

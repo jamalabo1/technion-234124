@@ -5,8 +5,10 @@
 
 
 template<typename T>
-typename Factorable<T>::FactoriesType& Factorable<T>::getFactory() {
-    return m_factories;
+typename Factorable<T>::FactoriesType &Factorable<T>::getFactory() {
+    static auto *factories = new FactoriesType();
+
+    return *factories;
 }
 
 template<typename T>
@@ -61,8 +63,9 @@ Factorable<T>::createType(const std::string &key,
 
 template<typename T>
 void Factorable<T>::registerFactory(const std::string &key, const Factorable::FactorableTypeInfo &info) {
-    FactoriesType& factories = getFactory();
-    factories.insert(
+    FactoriesType &factory = getFactory();
+
+    factory.insert(
             std::pair(
                     key,
                     std::move(info)
@@ -75,15 +78,18 @@ class Player;
 template
 class Factorable<Player>;
 
+
 class Strategy;
 
 template
 class Factorable<Strategy>;
 
+
 class Event;
 
 template
 class Factorable<Event>;
+
 
 class Monster;
 

@@ -112,7 +112,7 @@ string Pack::getDescription() const {
 
     string desc = "[";
 
-    for (int i = 0; i < pack.size(); i++) {
+    for (size_t i = 0; i < pack.size(); i++) {
         if (pack[i]->getKey() == "Pack") {
             desc += pack[i]->getDescription();
         } else {
@@ -243,41 +243,7 @@ tuple<int, Tree> createTree(const std::vector<string> &arguments, int offsetStar
 }
 
 IMPLEMENT_FACTORY_REGISTER(Pack) {
-    Pack::registerFactory(
-            "Packx",
-            [](const std::vector<string> &arguments) {
 
-                if (arguments.empty()) {
-                    throw std::invalid_argument("");
-                }
-
-
-                // if size is 1 then there is a problem
-                if (arguments.size() == 1) {
-                    throw std::invalid_argument("");
-                }
-
-
-                int length = std::atoi(arguments[0].c_str());
-                vector<shared_ptr<Monster>> monsterPack;
-                for (int i = 1; i < arguments.size(); i++) {
-                    const string &monsterKey = arguments[i];
-
-                    if (monsterKey == "pack") {
-                        int pLength = std::atoi(arguments[i + 1].c_str());
-                        // monsterPack.emplace_back(
-                        // Monster::createType(monsterKey, slice(arguments, i + 1, i + pLength))
-                        // );
-                    }
-
-                    monsterPack.emplace_back(
-                            Monster::createType(monsterKey, arguments)
-
-                    );
-                }
-                return make_shared<Pack>(monsterPack);
-            }
-    );
 
     registerFactory("Pack",
                     [](const vector<string> &arguments) {

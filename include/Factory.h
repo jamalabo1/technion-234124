@@ -10,14 +10,14 @@
 #include <string>
 #include <functional>
 #include <stdexcept>
-
+#include <memory>
 
 #define CREATE_FACTORY_REGISTER()     class FactoryRegister { \
 public:\
 FactoryRegister();\
 };\
 \
-static inline FactoryRegister factoryRegister{};              \
+static inline FactoryRegister factoryRegister{}              \
 
 
 #define IMPLEMENT_FACTORY_REGISTER(Type)  \
@@ -55,8 +55,6 @@ protected:
 
 public:
     using FactoriesType = std::map<std::string, FactorableTypeInfo>;
-
-    static inline FactoriesType m_factories;
 
 protected:
     static void registerFactory(const std::string &, const FactorableTypeInfo &);

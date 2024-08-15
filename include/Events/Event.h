@@ -14,6 +14,8 @@ using std::shared_ptr;
 
 class Event : public Factorable<Event> {
 public:
+    virtual ~Event() = default;
+
     /**
      * Gets the description of the event
      *
