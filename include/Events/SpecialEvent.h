@@ -1,4 +1,3 @@
-
 //
 // Created by jamal on 01/08/2024.
 //
@@ -11,11 +10,12 @@
 using std::vector;
 using std::shared_ptr;
 using std::string;
+using std::make_tuple;
 
 #define GENERIC_SPECIAL_EVENT_REGISTER(Type)  \
 IMPLEMENT_FACTORY_REGISTER(Type) { \
         Type::registerFactory(#Type, FactorableTypeInfo([](const vector<string> &) { \
-                return make_shared<Type>(); \
+                return make_tuple(make_shared<Type>(), 1); \
         })); \
 }
 
@@ -46,7 +46,12 @@ class PotionsMerchant : public SpecialEvent {
 private:
     CREATE_FACTORY_REGISTER();
 private:
+    static const int DEFAULT_OFFER_COST = 5;
+    static const int DEFAULT_OFFER_HP = 10;
+
     class PotionsMerchantOffer {
+
+
         int cost;
         int hp;
     public:

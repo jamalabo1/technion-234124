@@ -3,14 +3,6 @@
 //
 #include "Factory.h"
 
-
-template<typename T>
-typename Factorable<T>::FactoriesType &Factorable<T>::getFactory() {
-    static std::unique_ptr<FactoriesType> factories = std::make_unique<FactoriesType>();
-
-    return *factories;
-}
-
 template<typename T>
 typename Factorable<T>::FactorableTypeInfo::FactoryRType
 Factorable<T>::FactorableTypeInfo::operator()(const Factorable::FactorableTypeInfo::FactoryArgType &arguments) {
@@ -23,6 +15,13 @@ typename Factorable<T>::FactorableTypeInfo::FactoryRType
 Factorable<T>::FactorableTypeInfo::operator()() {
     Factorable::FactorableTypeInfo::FactoryArgType arguments;
     return factory(arguments);
+}
+
+template<typename T>
+typename Factorable<T>::FactoriesType &Factorable<T>::getFactory() {
+    static std::unique_ptr<FactoriesType> factories = std::make_unique<FactoriesType>();
+
+    return *factories;
 }
 
 template<typename T>
@@ -95,3 +94,4 @@ class Monster;
 
 template
 class Factorable<Monster>;
+

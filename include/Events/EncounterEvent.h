@@ -11,7 +11,7 @@
 
 
 #define GENERIC_MONSTER_REGISTER(Type) IMPLEMENT_FACTORY_REGISTER(Type) { registerFactory(#Type, \
-    FactorableTypeInfo([](const std::vector<string>&){ return std::make_shared<Type>(); })                                                  \
+    FactorableTypeInfo([](const std::vector<string>&){ return std::make_tuple(std::make_shared<Type>(),1); })                                                  \
 ); }
 
 using std::vector;

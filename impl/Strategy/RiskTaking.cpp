@@ -7,9 +7,9 @@
 RiskTaking::RiskTaking() = default;
 
 int RiskTaking::buyHp(Player &player, const int &cost, const int &hp) {
-    if (player.getHealthPoints() < 50) {
+    if (player.getHealthPoints() < MINIMUM_HP) {
         player.trade(cost, hp);
-        return cost;
+        return 1;
     }
     return 0;
 }

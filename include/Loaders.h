@@ -51,44 +51,63 @@ namespace Loaders {
     }
 
 
-    shared_ptr<Event> createEvent(const string &line) {
+    void createEvent(vector<shared_ptr<Event>> &events, const string &line) {
 
-
-        vector<string> lines = split(line);
-
-        if (lines.empty()) {
-            throw std::invalid_argument("");
+        vector<string> arguments = split(line);
+        for (size_t i = 0; i < arguments.size(); i++) {
+            vector<string> subArguments{arguments.begin() + i, arguments.end()};
+            auto [event, length] = Event::createType(subArguments[0], subArguments);
+            events.emplace_back(
+                    event
+            );
+            i += (length - 1);
         }
-
-        string key = lines[0];
-
-//        lines.erase(lines.begin());
-
-        // forward the creation to the type info.
-        return Event::createType(key, lines);
     }
 
     vector<shared_ptr<Event>> loadEvents(std::istream &eventsStream) {
         vector<shared_ptr<Event>> events;
 
-        readLines(eventsStream, [&events](const string &line) {
-            events.emplace_back(
-                    createEvent(line)
-            );
-        });
+        try {
+            readLines(eventsStream, [&events](const string &line) {
+                createEvent(events, line);
+            });
+        } catch (const TypeFactoryDoesNotExistException &) {
+            throw std::invalid_argument("Type does not exist");
+        }
 
         return events;
     }
 
     vector<shared_ptr<Player>> loadPlayers(std::istream &playersStream) {
-        vector<shared_ptr<Player>> players;
-        readLines(playersStream, [&players](const string &line) {
-            vector<string> playerInfo = split(line);
-            players.emplace_back(
-                    Player::createType(playerInfo[1], playerInfo)
-            );
-        });
-        return players;
+
+        try {
+
+            vector<shared_ptr<Player>> players;
+            readLines(playersStream, [&players](const string &line) {
+                vector<string> arguments = split(line);
+
+                for (size_t i = 0; i < arguments.size(); i++) {
+
+                    vector<string> playerInfo{arguments.begin() + i, arguments.end()};
+                    if (playerInfo.size() < 3) {
+                        throw std::invalid_argument("invalid player size");
+                    }
+
+                    auto [player, length] = Player::createType(playerInfo[1], playerInfo);
+
+                    players.emplace_back(
+                            player
+                    );
+                    i += (length - 1);
+                }
+            });
+            return players;
+
+        } catch (const TypeFactoryDoesNotExistException &) {
+            throw std::invalid_argument("Type does not exist");
+        }
+
+
     }
 
 

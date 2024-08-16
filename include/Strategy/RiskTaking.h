@@ -10,6 +10,9 @@
 class RiskTaking final : public Strategy {
 private:
     CREATE_FACTORY_REGISTER();
+
+    static const int MINIMUM_HP = 50;
+
 public:
     RiskTaking();
 

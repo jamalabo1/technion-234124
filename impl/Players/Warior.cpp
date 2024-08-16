@@ -4,19 +4,19 @@
 #include <Players/Warrior.h>
 
 
-Warrior::Warrior(string name, shared_ptr<Strategy> strategy) : Player(std::move(name), std::move(strategy), Warrior::Key)
-{
-    setMaxHealth(150);
-    setHealth(150);
+Warrior::Warrior(string name, shared_ptr<Strategy> strategy) : Player(std::move(name), std::move(strategy),
+                                                                      Warrior::Key) {
+    setMaxHealth(MAX_HEALTH);
+    setHealth(MAX_HEALTH);
 }
 
-void Warrior::postCombat(bool battleWon)
-{
-    loseHp(10);
+void Warrior::postCombat(bool battleWon) {
+    if (battleWon) {
+        loseHp(10);
+    }
 }
 
-int Warrior::getCombatPower() const
-{
+int Warrior::getCombatPower() const {
     return 2 * getForce() + getLevel();
 }
 

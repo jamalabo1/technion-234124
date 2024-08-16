@@ -29,7 +29,7 @@ string PotionsMerchant::applyTo(shared_ptr<Player> player) {
     return getPotionsPurchaseMessage(*player, player->reviewOffer(offer.getCost(), offer.getHp()));
 }
 
-PotionsMerchant::PotionsMerchant() : SpecialEvent("PotionsMerchant"), offer(5, 10) {
+PotionsMerchant::PotionsMerchant() : SpecialEvent("PotionsMerchant"), offer(DEFAULT_OFFER_COST, DEFAULT_OFFER_HP) {
 
 }
 

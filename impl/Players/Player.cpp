@@ -7,11 +7,15 @@
 using std::to_string;
 
 
-
 Player::Player(string name, shared_ptr<Strategy> strategy, string job, const int level, const int coins,
                const int force, const int health) : name(name),
                                                     level(level), force(force), health(health), maxHealth(health),
                                                     coins(coins), strategy(strategy), character(job) {
+
+
+    if (name.size() > 15 || name.size() < 3) {
+        throw std::invalid_argument("Invalid Players File");
+    }
 }
 
 
@@ -103,8 +107,8 @@ int Player::experienceSolarEclipse() {
     return -1;
 }
 
-std::tuple<int, int, string> Player::stats() const {
-    return std::tie(level, coins, name);
+std::tuple<int, int> Player::stats() const {
+    return std::tie(level, coins);
 }
 
 int Player::addForce(int quantity) {

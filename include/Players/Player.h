@@ -14,8 +14,8 @@ using std::tuple;
 
 #define GENERIC_PLAYER_REGISTER(Type) IMPLEMENT_FACTORY_REGISTER(Type) { \
         registerFactory(#Type, FactorableTypeInfo([](const vector<string> &arguments) {\
-            auto strategy = Strategy::createType(arguments[2], arguments);\
-            return std::make_shared<Type>(arguments[0], strategy);\
+            auto [strategy,strategyLength] = Strategy::createType(arguments[2], arguments); \
+            return std::make_tuple(std::make_shared<Type>(arguments[0], strategy), 2+strategyLength);\
         }));\
 }\
 
@@ -26,7 +26,7 @@ private:
     static inline const int MAX_LEVEL = 10;
     static inline const int MIN_LEVEL = 1;
     static inline const int MIN_HEALTH = 0;
-    static inline const int MIN_COINS = 1;
+    static inline const int MIN_COINS = 0;
 
 
     string name;
@@ -192,7 +192,7 @@ public:
      * */
     virtual int experienceSolarEclipse();
 
-    tuple<int, int, string> stats() const;
+    tuple<int, int> stats() const;
 };
 
 #endif //TECHNION_234124_PLAYER_H

@@ -12,6 +12,14 @@ using std::shared_ptr;
 using std::vector;
 using std::map;
 
+template<typename T, typename Func>
+int accumulate(std::vector<T> vec, Func func) {
+    int result = 0;
+    for (const auto &item: vec) {
+        result += func(item);
+    }
+    return result;
+}
 
 #define ACCUMULATE_VECTOR(vec, func) accumulate(pack, [](auto x) { return x->func(); })
 
@@ -80,14 +88,6 @@ Slime::Slime() : Monster("Slime", 5, 25, 12) {}
 
 Balrog::Balrog() : Monster("Balrog", 100, 9001, 15) {}
 
-template<typename T, typename Func>
-int accumulate(std::vector<T> vec, Func func) {
-    int result = 0;
-    for (const auto &item: vec) {
-        result += func(item);
-    }
-    return result;
-}
 
 Pack::Pack(const vector<shared_ptr<Monster>> &pack) : Monster(
         "Pack",
@@ -98,47 +98,9 @@ Pack::Pack(const vector<shared_ptr<Monster>> &pack) : Monster(
 
 }
 
-#include <iostream>
-
 string Pack::getDescription() const {
-
-
-
-//    std::cout << "------ START PACK " << this << "------" << std::endl;
-//    for (int i = 0; i < pack.size(); i++) {
-//        std::cout << pack[i]->getDescription() << std::endl;
-//    }
-//    std::cout << "------END PACK" << this << "------" << std::endl;
-
-    string desc = "[";
-
-    for (size_t i = 0; i < pack.size(); i++) {
-        if (pack[i]->getKey() == "Pack") {
-            desc += pack[i]->getDescription();
-        } else {
-            desc += "\"" + pack[i]->getKey() + "\"";
-        }
-        if (i != pack.size() - 1) desc += ",";
-    }
-
-    desc += "]";
-    return desc;
-
-//    return "Pack of " + to_string(pack.size()) + " members " + generalStats();
+    return "Pack of " + to_string(pack.size()) + " members " + generalStats();
 }
-
-// just update on post combat.
-//int Pack::getLoot() const {
-//    return ACCUMULATE_VECTOR(pack, getLoot);
-//}
-//
-//int Pack::getDamage() const {
-//    return ACCUMULATE_VECTOR(pack, getDamage);
-//}
-//
-//int Pack::getCombatPower() const {
-//    return ACCUMULATE_VECTOR(pack, getCombatPower);
-//}
 
 void Pack::postCombat() {
     for (auto &item: pack) {
@@ -156,7 +118,7 @@ EncounterEvent::EncounterEvent(shared_ptr<Monster> monster) : monster(monster) {
 }
 
 string EncounterEvent::applyTo(shared_ptr<Player> player) {
-    const bool playerWon = player->getCombatPower() >= monster->getCombatPower();
+    const bool playerWon = player->getCombatPower() > monster->getCombatPower();
 
     if (playerWon) {
         player->levelUp();
@@ -184,7 +146,8 @@ IMPLEMENT_FACTORY_REGISTER(EncounterEvent) {
     for (const auto &key: Monster::getFactoryKeys()) {
         registerFactory(key, [key](const std::vector<string> &args) {
             // could've used the provided factory, but it's the Monster responsibility to call the factory.
-            return make_shared<EncounterEvent>(Monster::createType(key, args));
+            auto [item, length] = Monster::createType(key, args);
+            return make_tuple(make_shared<EncounterEvent>(item), length);
         });
     }
 }
@@ -193,18 +156,6 @@ IMPLEMENT_FACTORY_REGISTER(EncounterEvent) {
 void Balrog::postCombat() {
     addCombatPower(2);
 }
-
-
-class Tree {
-public:
-    vector<Tree> nodes;
-    shared_ptr<Monster> item;
-    string key;
-
-    Tree(const shared_ptr<Monster> &item, string key) : nodes(), item(item), key(key) {}
-
-    Tree(const vector<Tree> &nodes, const shared_ptr<Monster> &item, string key) : nodes(nodes), item(item), key(key) {}
-};
 
 
 tuple<int, shared_ptr<Monster>> createTree(const std::vector<string> &arguments, int offsetStart) {
@@ -219,26 +170,21 @@ tuple<int, shared_ptr<Monster>> createTree(const std::vector<string> &arguments,
                 endOffset = offsetEnd;
                 nodes.emplace_back(tree);
             } else {
-//                Tree tree(Monster::createType(key, arguments), key);
                 endOffset++;
+                auto [item, _] = Monster::createType(key, arguments);
                 nodes.emplace_back(
-                        Monster::createType(key, arguments)
+                        item
                 );
             }
         }
 
-//        vector<shared_ptr<Monster>> monstersPack;
-//        monstersPack.reserve(nodes.size());
-//        for (const auto &item: nodes) {
-//            monstersPack.emplace_back(item.item);
-//        }
-
         auto pack = make_shared<Pack>(nodes);
-//        Tree tree(nodes, pack, "Pack");
         return std::pair(endOffset, pack);
     } else {
-        return std::pair(offsetStart,
-                         Monster::createType(arguments[offsetStart], arguments)
+        auto [item, _] = Monster::createType(arguments[offsetStart], arguments);
+        return std::pair(
+                offsetStart,
+                item
         );
     }
 }
@@ -246,9 +192,9 @@ tuple<int, shared_ptr<Monster>> createTree(const std::vector<string> &arguments,
 IMPLEMENT_FACTORY_REGISTER(Pack) {
     registerFactory("Pack",
                     [](const vector<string> &arguments) {
-                        auto [_, tree] = createTree(arguments, 0);
+                        auto [end, tree] = createTree(arguments, 0);
 
-                        return tree;
+                        return make_tuple(tree, end);
                     });
 }
 

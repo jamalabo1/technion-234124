@@ -16,6 +16,9 @@ using std::make_unique;
 
 // helper operator for shared_ptr<Player>
 inline bool operator<(const shared_ptr<Player> &a, const shared_ptr<Player> &b) {
+    if (a->stats() == b->stats()) {
+        return a->getName() < b->getName();
+    }
     return a->stats() > b->stats();
 }
 
@@ -23,14 +26,25 @@ inline bool operator<(const shared_ptr<Player> &a, const shared_ptr<Player> &b) 
 MatamStory::MatamStory(std::istream &eventsStream, std::istream &playersStream) {
     try {
         this->events = Loaders::loadEvents(eventsStream);
-    } catch (TypeFactoryDoesNotExistException &) {
+
+        if (events.size() < 2) {
+            throw std::invalid_argument("");
+        }
+
+    } catch (const std::invalid_argument &) {
+
         std::cout << "Invalid Events File" << std::endl;
         exit(1);
     }
 
     try {
         this->players = Loaders::loadPlayers(playersStream);
-    } catch (TypeFactoryDoesNotExistException &) {
+
+        if (players.size() < 2) {
+            throw std::invalid_argument("");
+        }
+
+    } catch (const std::invalid_argument &) {
         std::cout << "Invalid Players File" << std::endl;
         exit(1);
     }

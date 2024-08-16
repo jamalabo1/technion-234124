@@ -11,6 +11,7 @@
 
 using std::string;
 using std::make_shared;
+using std::make_tuple;
 using std::vector;
 
 // forward declaration of player since both depend on each other.
@@ -19,7 +20,7 @@ class Player;
 
 #define GENERIC_STRATEGY_REGISTER(Type) IMPLEMENT_FACTORY_REGISTER(Type) { \
         registerFactory(#Type, FactorableTypeInfo([](const vector<string> &) {\
-            return make_shared<Type>();\
+            return make_tuple(make_shared<Type>(), 1);\
         }));\
 }\
 

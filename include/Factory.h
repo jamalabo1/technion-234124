@@ -36,7 +36,7 @@ protected:
     class FactorableTypeInfo {
     public:
         using FactoryArgType = std::vector<std::string>;
-        using FactoryRType = std::shared_ptr<T>;
+        using FactoryRType = std::tuple<std::shared_ptr<T>, int>;
         using FactoryType = std::function<FactoryRType(FactoryArgType)>;
 
     private:
@@ -45,7 +45,7 @@ protected:
 
         FactorableTypeInfo() = default;
 
-        FactorableTypeInfo(const FactoryType &factory) : factory(factory) {};
+        FactorableTypeInfo(const FactoryType &factory) : factory(factory){};
 
         FactoryRType operator()(const FactoryArgType &);
 
@@ -65,15 +65,9 @@ protected:
     registerFactory(const std::string &, const std::function<typename FactorableTypeInfo::FactoryRType()> &);
 
     static FactoriesType& getFactory();
-
-
 public:
-
-
     static typename FactorableTypeInfo::FactoryRType
     createType(const std::string &key, const typename FactorableTypeInfo::FactoryArgType &arguments);
-
-//    static std::map<std::string, FactorableTypeInfo> getFactories();
 
     static std::vector<std::string> getFactoryKeys();
 };

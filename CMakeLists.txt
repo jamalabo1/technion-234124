@@ -45,7 +45,6 @@ add_library(matam4-lib
 
         Utilities.cpp
         Utilities.h
-        impl/Strategy/Strategy.cpp
 )
 
 target_include_directories(matam4-lib PUBLIC include)
@@ -57,3 +56,5 @@ add_executable(matam4-exc
 target_link_libraries(matam4-exc PUBLIC matam4-lib)
 
 file(COPY tests DESTINATION .)
+file(COPY simple_test_runner.py DESTINATION .)
+file(COPY run_tests.py DESTINATION .)

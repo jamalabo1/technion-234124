@@ -12,6 +12,9 @@
 class Warrior : public Player {
 private:
     CREATE_FACTORY_REGISTER();
+
+    static const int MAX_HEALTH = 150;
+
 public:
     Warrior(string name, std::shared_ptr<Strategy>);
 
