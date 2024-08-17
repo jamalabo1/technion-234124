@@ -157,13 +157,43 @@ void Balrog::postCombat() {
     addCombatPower(2);
 }
 
+int parseInt(string str) {
+    // trim leading zeros
+    int endIndex = 0;
+    for (size_t i = 0; i < str.size(); i++) {
+        if (str[i] == '0') {
+            endIndex = i + 1;
+        } else {
+            break;
+        }
+    }
+    string nstr = str.substr(endIndex, (str.size() - endIndex));
+
+    uint val = std::stoul(nstr);
+    if (to_string(val) != nstr) {
+        throw std::invalid_argument("value is not double");
+    }
+    return val;
+}
 
 tuple<int, shared_ptr<Monster>> createTree(const std::vector<string> &arguments, int offsetStart) {
     if (arguments[offsetStart] == "Pack") {
-        int length = atoi(arguments[offsetStart + 1].c_str());
+        if ((offsetStart - 2) == (int)arguments.size()) {
+            throw std::invalid_argument("invalid arguments size");
+        }
+
+        int length = parseInt(arguments[offsetStart + 1]);
+
+
         int endOffset = offsetStart + 2;
         vector<shared_ptr<Monster>> nodes;
+
         for (int i = 0; i < length; i++) {
+
+            if (endOffset >= (int) arguments.size()) {
+                throw std::invalid_argument("end offset is invalid");
+            }
+
             string key = arguments[endOffset];
             if (key == "Pack") {
                 auto [offsetEnd, tree] = createTree(arguments, endOffset);
@@ -180,21 +210,25 @@ tuple<int, shared_ptr<Monster>> createTree(const std::vector<string> &arguments,
 
         auto pack = make_shared<Pack>(nodes);
         return std::pair(endOffset, pack);
-    } else {
-        auto [item, _] = Monster::createType(arguments[offsetStart], arguments);
-        return std::pair(
-                offsetStart,
-                item
-        );
     }
+
+    auto [item, _] = Monster::createType(arguments[offsetStart], arguments);
+    return std::pair(
+            offsetStart,
+            item
+    );
+
 }
 
 IMPLEMENT_FACTORY_REGISTER(Pack) {
     registerFactory("Pack",
                     [](const vector<string> &arguments) {
-                        auto [end, tree] = createTree(arguments, 0);
-
-                        return make_tuple(tree, end);
+                        try {
+                            auto [end, tree] = createTree(arguments, 0);
+                            return make_tuple(tree, end);
+                        } catch (std::exception &) {
+                            throw std::invalid_argument("cannot create tree");
+                        }
                     });
 }
 

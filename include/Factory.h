@@ -12,6 +12,7 @@
 #include <stdexcept>
 #include <memory>
 
+
 #define CREATE_FACTORY_REGISTER()     class FactoryRegister { \
 public:\
 FactoryRegister();\
@@ -23,10 +24,7 @@ static inline FactoryRegister factoryRegister{}              \
 #define IMPLEMENT_FACTORY_REGISTER(Type)  \
 Type::FactoryRegister::FactoryRegister()
 
-class TypeFactoryDoesNotExistException : public std::runtime_error {
-
-public:
-    TypeFactoryDoesNotExistException() : std::runtime_error("type info does not exist") {}
+class TypeFactoryDoesNotExistException : public std::exception {
 };
 
 template<typename T>
@@ -45,7 +43,7 @@ protected:
 
         FactorableTypeInfo() = default;
 
-        FactorableTypeInfo(const FactoryType &factory) : factory(factory){};
+        FactorableTypeInfo(const FactoryType &factory) : factory(factory) {};
 
         FactoryRType operator()(const FactoryArgType &);
 
@@ -64,7 +62,8 @@ protected:
     static void
     registerFactory(const std::string &, const std::function<typename FactorableTypeInfo::FactoryRType()> &);
 
-    static FactoriesType& getFactory();
+    static FactoriesType &getFactory();
+
 public:
     static typename FactorableTypeInfo::FactoryRType
     createType(const std::string &key, const typename FactorableTypeInfo::FactoryArgType &arguments);

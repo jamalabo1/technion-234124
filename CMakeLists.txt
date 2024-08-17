@@ -11,8 +11,6 @@ project(technion-234124)
 set(CMAKE_CXX_STANDARD 17)
 
 
-
-
 add_library(matam4-lib
 
         include/Factory.h
@@ -50,11 +48,17 @@ add_library(matam4-lib
 target_include_directories(matam4-lib PUBLIC include)
 
 add_executable(matam4-exc
-         main.cpp
+        main.cpp
 )
 
 target_link_libraries(matam4-exc PUBLIC matam4-lib)
 
 file(COPY tests DESTINATION .)
-file(COPY simple_test_runner.py DESTINATION .)
 file(COPY run_tests.py DESTINATION .)
+
+
+#add_custom_command(
+#        TARGET matam4-exc POST_BUILD
+#        COMMAND python3 run_tests.py ./matam4-exc ./tests/custom_tests.json
+#        WORKING_DIRECTORY $<TARGET_FILE_DIR:matam4-exc>
+#)

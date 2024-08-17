@@ -7,14 +7,21 @@
 using std::to_string;
 
 
+bool isNotAlphaNumeric(const string& name) {
+    for (const auto &item: name) {
+        if(!std::isalpha(item)) return true;
+    }
+    return false;
+}
+
 Player::Player(string name, shared_ptr<Strategy> strategy, string job, const int level, const int coins,
                const int force, const int health) : name(name),
                                                     level(level), force(force), health(health), maxHealth(health),
                                                     coins(coins), strategy(strategy), character(job) {
 
 
-    if (name.size() > 15 || name.size() < 3) {
-        throw std::invalid_argument("Invalid Players File");
+    if (name.size() > 15 || name.size() < 3 || isNotAlphaNumeric(name)) {
+        throw std::invalid_argument("invalid player name");
     }
 }
 

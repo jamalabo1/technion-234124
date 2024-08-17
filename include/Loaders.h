@@ -38,13 +38,25 @@ namespace Loaders {
         }
     }
 
-    std::vector<std::string> split(const std::string &s) {
-        std::vector<std::string> result;
-        std::stringstream ss(s);
-        std::string item;
+    vector<string> split(const string &s) {
+        vector<string> result;
+        string item(s);
+        item += " ";
 
-        while (getline(ss, item, ' ')) {
-            result.push_back(item);
+        int startIndex = 0;
+        int endIndex = 0;
+        for (size_t i = 0; i < item.size(); i++) {
+            if (item[i] == ' ') {
+                if (startIndex < endIndex) {
+                    result.emplace_back(
+                            s.substr(startIndex, (endIndex - startIndex))
+                    );
+                }
+                startIndex = i + 1;
+                endIndex = i + 1;
+            } else {
+                endIndex++;
+            }
         }
 
         return result;
@@ -52,7 +64,6 @@ namespace Loaders {
 
 
     void createEvent(vector<shared_ptr<Event>> &events, const string &line) {
-
         vector<string> arguments = split(line);
         for (size_t i = 0; i < arguments.size(); i++) {
             vector<string> subArguments{arguments.begin() + i, arguments.end()};
@@ -67,47 +78,34 @@ namespace Loaders {
     vector<shared_ptr<Event>> loadEvents(std::istream &eventsStream) {
         vector<shared_ptr<Event>> events;
 
-        try {
-            readLines(eventsStream, [&events](const string &line) {
-                createEvent(events, line);
-            });
-        } catch (const TypeFactoryDoesNotExistException &) {
-            throw std::invalid_argument("Type does not exist");
-        }
+        readLines(eventsStream, [&events](const string &line) {
+            createEvent(events, line);
+        });
 
         return events;
     }
 
     vector<shared_ptr<Player>> loadPlayers(std::istream &playersStream) {
+        vector<shared_ptr<Player>> players;
+        readLines(playersStream, [&players](const string &line) {
+            vector<string> arguments = split(line);
 
-        try {
+            for (size_t i = 0; i < arguments.size(); i++) {
 
-            vector<shared_ptr<Player>> players;
-            readLines(playersStream, [&players](const string &line) {
-                vector<string> arguments = split(line);
-
-                for (size_t i = 0; i < arguments.size(); i++) {
-
-                    vector<string> playerInfo{arguments.begin() + i, arguments.end()};
-                    if (playerInfo.size() < 3) {
-                        throw std::invalid_argument("invalid player size");
-                    }
-
-                    auto [player, length] = Player::createType(playerInfo[1], playerInfo);
-
-                    players.emplace_back(
-                            player
-                    );
-                    i += (length - 1);
+                vector<string> playerInfo{arguments.begin() + i, arguments.end()};
+                if (playerInfo.size() < 3) {
+                    throw std::invalid_argument("invalid player info size");
                 }
-            });
-            return players;
 
-        } catch (const TypeFactoryDoesNotExistException &) {
-            throw std::invalid_argument("Type does not exist");
-        }
+                auto [player, length] = Player::createType(playerInfo[1], playerInfo);
 
-
+                players.emplace_back(
+                        player
+                );
+                i += (length - 1);
+            }
+        });
+        return players;
     }
 
 

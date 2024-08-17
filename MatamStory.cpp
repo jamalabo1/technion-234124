@@ -28,25 +28,24 @@ MatamStory::MatamStory(std::istream &eventsStream, std::istream &playersStream) 
         this->events = Loaders::loadEvents(eventsStream);
 
         if (events.size() < 2) {
-            throw std::invalid_argument("");
+            throw std::invalid_argument("Events must be greater or equal to 2");
         }
 
-    } catch (const std::invalid_argument &) {
-
-        std::cout << "Invalid Events File" << std::endl;
-        exit(1);
+    } catch (...) {
+        // propagate the exception
+        throw std::invalid_argument("Invalid Events File");
     }
 
     try {
         this->players = Loaders::loadPlayers(playersStream);
 
-        if (players.size() < 2) {
-            throw std::invalid_argument("");
+        if (players.size() < 2 || players.size() > 6) {
+            throw std::invalid_argument("Players must be GE 2 and LE 6");
         }
 
-    } catch (const std::invalid_argument &) {
-        std::cout << "Invalid Players File" << std::endl;
-        exit(1);
+    } catch (...) {
+        // propagate the exception
+        throw std::invalid_argument("Invalid Players File");
     }
 
     this->m_turnIndex = 0;
@@ -84,7 +83,10 @@ void MatamStory::playRound() {
     // loop over players and play turns.
     for (shared_ptr<Player> &player: players) {
         // if player has been terminated, do not include!.
-        if (player->getHealthPoints() == 0)continue;
+        if (player->getHealthPoints() == 0) {
+
+            continue;
+        }
         playTurn(player);
     }
 
@@ -100,6 +102,7 @@ void MatamStory::playRound() {
 bool MatamStory::isGameOver() const {
     // check if all players are dead or there is a winner.
     bool all_dead = true;
+
     for (const auto &item: players) {
         if (item->getLevel() == WIN_LEVEL) return true;
         if (item->getHealthPoints() != 0) {
@@ -107,13 +110,6 @@ bool MatamStory::isGameOver() const {
         }
     }
     return all_dead;
-    // if players is empty then all players are 0 health.
-    return players.empty() || std::any_of(players.begin(), players.end(),
-                                          [](const shared_ptr<Player> &player) {
-                                              return player->getLevel() == 10;
-                                          }
-    ); // Replace this line
-    /*===================================================*/
 }
 
 void MatamStory::play() {
@@ -138,7 +134,7 @@ void MatamStory::play() {
     }
 
     auto maxPlayer = *std::min_element(players.begin(), players.end());
-    if (maxPlayer->getHealthPoints() == 0) {
+    if (maxPlayer->getHealthPoints() == 0 && maxPlayer->getLevel() != WIN_LEVEL) {
         printNoWinners();
     } else {
         printWinner(*maxPlayer);
@@ -153,12 +149,13 @@ void MatamStory::postEvent() {
 void MatamStory::printLeaderboard() {
     printLeaderBoardMessage();
 
-    vector<shared_ptr<Player>> sorted(players.size());
+    vector<shared_ptr<Player>> sorted(players);
 
-    std::partial_sort_copy(players.begin(), players.end(), sorted.begin(), sorted.end());
+    std::sort(sorted.begin(), sorted.end());
 
 
     for (size_t i = 0; i < sorted.size(); i++) {
         printLeaderBoardEntry(i + 1, *sorted[i]);
     }
 }
+

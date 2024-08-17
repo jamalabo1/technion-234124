@@ -63,7 +63,6 @@ Factorable<T>::createType(const std::string &key,
 template<typename T>
 void Factorable<T>::registerFactory(const std::string &key, const Factorable::FactorableTypeInfo &info) {
     FactoriesType &factory = getFactory();
-
     factory.insert(
             std::pair(
                     key,
