@@ -1,3 +1,61 @@
+* commit 4d1ecdf44158d2452feece869c47ca842382de0f
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Sun Aug 18 23:00:35 2024 +0300
+| 
+|     another file structural changes for submission.
+|     changed `factorable.h` & `loader.h` path
+| 
+|  CMakeLists.txt                     | 14 +++++++-------
+|  Events/Event.h                     |  2 --
+|  MatamStory.cpp                     |  6 ++++--
+|  Factory.cpp => Players/Factory.cpp |  0
+|  Factory.h => Players/Factory.h     |  0
+|  Loaders.h => Players/Loaders.h     | 20 ++++++++++----------
+|  Players/Player.h                   |  2 +-
+|  Players/Strategy.h                 |  2 +-
+|  8 files changed, 23 insertions(+), 23 deletions(-)
+| 
+* commit f23c17de4341a29b7565507deb8b1b370f21c94a
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Sun Aug 18 22:54:38 2024 +0300
+| 
+|     file structural changes for submission
+| 
+|  CMakeLists.txt                              |  40 +--
+|  {impl/Events => Events}/EncounterEvent.cpp  |   4 +-
+|  {include/Events => Events}/EncounterEvent.h |   0
+|  {include/Events => Events}/Event.h          |   2 +-
+|  {impl/Events => Events}/SpecialEvent.cpp    |   4 +-
+|  {include/Events => Events}/SpecialEvent.h   |   0
+|  impl/Factory.cpp => Factory.cpp             |   0
+|  include/Factory.h => Factory.h              |   0
+|  include/Loaders.h => Loaders.h              |  20 +-
+|  {impl/Players => Players}/Archer.cpp        |   2 +-
+|  {include/Players => Players}/Archer.h       |   0
+|  {impl/Players => Players}/Magician.cpp      |   2 +-
+|  {include/Players => Players}/Magician.h     |   0
+|  {impl/Players => Players}/Player.cpp        |   2 +-
+|  {include/Players => Players}/Player.h       |   4 +-
+|  {impl/Strategy => Players}/Responsible.cpp  |   4 +-
+|  {include/Strategy => Players}/Responsible.h |   0
+|  {impl/Strategy => Players}/RiskTaking.cpp   |   4 +-
+|  {include/Strategy => Players}/RiskTaking.h  |   0
+|  {include/Strategy => Players}/Strategy.h    |   2 +-
+|  {impl/Players => Players}/Warior.cpp        |   2 +-
+|  {include/Players => Players}/Warrior.h      |   0
+|  dry.pdf                                     | Bin 0 -> 310383 bytes
+|  log.txt                                     | 346 ++++++++++++++++++++++++++
+|  tests/test1.events                          |   6 -
+|  tests/test1.expected                        |  96 -------
+|  tests/test1.players                         |   3 -
+|  tests/test2.events                          |   4 -
+|  tests/test2.expected                        |   1 -
+|  tests/test2.players                         |   3 -
+|  tests/test3.events                          |   5 -
+|  tests/test3.expected                        |   1 -
+|  tests/test3.players                         |   2 -
+|  33 files changed, 392 insertions(+), 167 deletions(-)
+| 
 * commit 1c7cd56d86bdeda3e34042fa3827bc168f8ba201
 | Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
 | Date:   Sun Aug 18 22:48:05 2024 +0300
