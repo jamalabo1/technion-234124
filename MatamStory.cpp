@@ -1,8 +1,10 @@
-#include <algorithm>
 #include "MatamStory.h"
 
 #include "Utilities.h"
-#include "Loaders.h"
+
+// this is a file that has the loaders logic, it's placed in the player directory
+// since the gradescope submission cannot take other files.
+#include "Players/Loaders.h"
 
 #include <functional>
 

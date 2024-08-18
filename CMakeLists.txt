@@ -13,8 +13,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_library(matam4-lib
 
-        Factory.h
-        Factory.cpp
+        Players/Factory.h
+        Players/Factory.cpp
 
         MatamStory.cpp
         Players/Player.cpp
@@ -39,13 +39,13 @@ add_library(matam4-lib
         Events/EncounterEvent.cpp
         Events/SpecialEvent.cpp
 
-        Loaders.h
+        Players/Loaders.h
 
         Utilities.cpp
         Utilities.h
 )
 
-target_include_directories(matam4-lib PUBLIC include)
+#target_include_directories(matam4-lib PUBLIC include)
 
 add_executable(matam4-exc
         main.cpp
@@ -53,9 +53,9 @@ add_executable(matam4-exc
 
 target_link_libraries(matam4-exc PUBLIC matam4-lib)
 
-file(COPY tests DESTINATION .)
-file(COPY run_tests.py DESTINATION .)
-
+#file(COPY tests DESTINATION .)
+#file(COPY run_tests.py DESTINATION .)
+#
 
 add_custom_command(
         TARGET matam4-exc POST_BUILD

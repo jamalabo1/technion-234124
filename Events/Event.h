@@ -12,8 +12,6 @@ using std::string;
 using std::shared_ptr;
 
 
-
-
 class Event : public Factorable<Event> {
 public:
     virtual ~Event() = default;

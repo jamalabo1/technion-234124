@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include "Strategy.h"
-#include "../Factory.h"
+#include "Factory.h"
 
 
 using std::string;

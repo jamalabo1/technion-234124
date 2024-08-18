@@ -7,7 +7,7 @@
 
 
 #include <string>
-#include "../Factory.h"
+#include "Factory.h"
 
 using std::string;
 using std::make_shared;
