@@ -1,0 +1,346 @@
+* commit 1c7cd56d86bdeda3e34042fa3827bc168f8ba201
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Sun Aug 18 22:48:05 2024 +0300
+| 
+|     remove usage of `std::min_element` & structural bindings (use std::get instead)
+| 
+|  CMakeLists.txt                 | 10 +++++-----
+|  MatamStory.cpp                 | 10 +++++++++-
+|  MatamStory.h                   |  2 ++
+|  impl/Events/EncounterEvent.cpp | 26 ++++++++++----------------
+|  include/Loaders.h              | 12 ++++++------
+|  5 files changed, 32 insertions(+), 28 deletions(-)
+| 
+* commit fe869018bb7cbbe0005bb8aaa064b526a132bdff
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Sun Aug 18 00:33:19 2024 +0300
+| 
+|     final fixes
+| 
+|  CMakeLists.txt                 | 14 +++++---
+|  MatamStory.cpp                 | 39 ++++++++++-----------
+|  impl/Events/EncounterEvent.cpp | 54 ++++++++++++++++++++++------
+|  impl/Factory.cpp               |  1 -
+|  impl/Players/Player.cpp        | 11 ++++--
+|  impl/Strategy/RiskTaking.cpp   |  2 +-
+|  include/Factory.h              | 11 +++---
+|  include/Loaders.h              | 76 +++++++++++++++++++---------------------
+|  8 files changed, 123 insertions(+), 85 deletions(-)
+| 
+* commit 4ae26b2953c001e3dedfbe34158bcf19ca0fcc61
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Sat Aug 17 02:56:59 2024 +0300
+| 
+|     progress
+| 
+|  CMakeLists.txt                  |  3 +-
+|  MatamStory.cpp                  | 18 +++++++-
+|  impl/Events/EncounterEvent.cpp  | 94 +++++++++------------------------------
+|  impl/Events/SpecialEvent.cpp    |  2 +-
+|  impl/Factory.cpp                | 16 +++----
+|  impl/Players/Player.cpp         | 10 +++--
+|  impl/Players/Warior.cpp         | 18 ++++----
+|  impl/Strategy/Responsible.cpp   |  4 +-
+|  impl/Strategy/RiskTaking.cpp    |  4 +-
+|  impl/Strategy/Strategy.cpp      |  7 ---
+|  include/Events/EncounterEvent.h |  2 +-
+|  include/Events/Event.h          |  2 +
+|  include/Events/SpecialEvent.h   |  9 +++-
+|  include/Factory.h               | 10 +----
+|  include/Loaders.h               | 71 ++++++++++++++++++-----------
+|  include/Players/Player.h        |  8 ++--
+|  include/Players/Warrior.h       |  3 ++
+|  include/Strategy/RiskTaking.h   |  3 ++
+|  include/Strategy/Strategy.h     |  3 +-
+|  19 files changed, 136 insertions(+), 151 deletions(-)
+| 
+* commit fdb137f86e8f0117566c6f1189a9cc528c58ca44
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Fri Aug 16 01:16:46 2024 +0300
+| 
+|     update to usage of unique_ptr
+| 
+|  impl/Events/EncounterEvent.cpp | 37 ++++++++++++++++++-------------------
+|  impl/Factory.cpp               |  2 +-
+|  2 files changed, 19 insertions(+), 20 deletions(-)
+| 
+* commit 3ee99e1540192cabefcd96d9888d610800ee0277
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Fri Aug 16 01:05:53 2024 +0300
+| 
+|     fix g++ build errors
+| 
+|  impl/Events/EncounterEvent.cpp | 36 +-----------------------------------
+|  impl/Factory.cpp               | 16 +++++++++++-----
+|  include/Events/Event.h         |  2 ++
+|  include/Factory.h              |  6 ++----
+|  include/Players/Player.h       |  2 ++
+|  5 files changed, 18 insertions(+), 44 deletions(-)
+| 
+* commit 26bd8f9582413062652690b323fd0f36c7a904a8
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Thu Aug 15 21:55:28 2024 +0300
+| 
+|     pack tree creator & fix static initialization (template)
+| 
+|  CMakeLists.txt                 |  3 ++
+|  MatamStory.cpp                 |  2 -
+|  impl/Events/EncounterEvent.cpp | 72 +++++++++++++++++++++++--------
+|  impl/Factory.cpp               | 91 ++++++++++++++++++++++++++++++++++++++++
+|  impl/Players/Player.cpp        |  2 +
+|  impl/Strategy/Strategy.cpp     |  7 ++++
+|  include/Factory.h              | 79 ++--------------------------------
+|  include/Loaders.h              |  2 +-
+|  tests/test1.events             |  3 +-
+|  9 files changed, 164 insertions(+), 97 deletions(-)
+| 
+* commit 7de87199b581912277fcbd2016c536f55e5b66fa
+| Author: jamal <jamalabomokh490@gmail.com>
+| Date:   Thu Aug 15 19:34:19 2024 +0300
+| 
+|     fix static initialization order undefined behaviour
+| 
+|  impl/Events/EncounterEvent.cpp |  8 ++++----
+|  include/Events/SpecialEvent.h  |  2 +-
+|  include/Factory.h              | 27 +++++++++++++++++++++------
+|  include/Loaders.h              |  3 +++
+|  include/Players/Player.h       |  8 ++++----
+|  5 files changed, 33 insertions(+), 15 deletions(-)
+| 
+* commit 78d11c9587fb17c8e406eccb80c47986cb414c24
+| Author: farahqub <farah.qub@campus.technion.ac.il>
+| Date:   Thu Aug 15 18:19:14 2024 +0300
+| 
+|     ADDED TREE ADD
+| 
+|  impl/Events/EncounterEvent.cpp  | 60 +++++++++++++++++++++++++++++++++++++--
+|  include/Events/EncounterEvent.h | 10 ++++---
+|  include/Events/SpecialEvent.h   |  1 +
+|  3 files changed, 64 insertions(+), 7 deletions(-)
+| 
+* commit 5714328cc4f28e8e0c4182dbd7fb166f92890b4d
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Mon Aug 12 14:03:57 2024 +0300
+| 
+|     organ
+| 
+|  CMakeLists.txt                  |  5 +--
+|  MatamStory.cpp                  | 64 ++++++++++++++++++++++-----------------
+|  MatamStory.h                    | 26 +++++++++++-----
+|  impl/Events/EncounterEvent.cpp  | 32 +++++++++++++++-----
+|  impl/Events/SpecialEvent.cpp    | 24 ++++++---------
+|  impl/Players/Archer.cpp         |  4 +--
+|  impl/Players/Magician.cpp       |  6 ++--
+|  impl/Players/Player.cpp         | 34 ++++++++++++---------
+|  impl/Players/Warior.cpp         |  4 +--
+|  include/Events/EncounterEvent.h | 37 +++++++++++-----------
+|  include/Events/Event.h          | 35 ++-------------------
+|  include/Events/SpecialEvent.h   | 27 ++++++++++++-----
+|  include/Factory.h               | 18 ++++++-----
+|  include/Loaders.h               | 13 +++++++-
+|  include/Players/Player.h        | 56 ++++++++++++++++++++++------------
+|  include/Strategy/Responsible.h  |  2 +-
+|  include/Strategy/RiskTaking.h   |  2 +-
+|  include/Strategy/Strategy.h     | 12 +++++---
+|  18 files changed, 224 insertions(+), 177 deletions(-)
+| 
+* commit 4f0094d735758341e129809ce5f868d317559636
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Thu Aug 8 15:41:56 2024 +0300
+| 
+|     change factorable behaviour
+|     change monster initialization & balrog behaviour
+| 
+|  MatamStory.cpp                  |  25 -------
+|  impl/Events/EncounterEvent.cpp  | 138 ++++++++++++++++++++------------------
+|  impl/Strategy/Responsible.cpp   |   2 +-
+|  include/Events/EncounterEvent.h |  61 +++++++++++++----
+|  include/Factory.h               |  71 +++++++++++++++++---
+|  5 files changed, 183 insertions(+), 114 deletions(-)
+| 
+* commit b20b20067d37bde8f4ab28eb49fa36aaa76c3902
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Thu Aug 8 00:15:25 2024 +0300
+| 
+|     implement factory pattern
+| 
+|  CMakeLists.txt                  |   2 +
+|  MatamStory.cpp                  | 102 +++-----------------------------------
+|  impl/Events/EncounterEvent.cpp  |  47 ++++++++++++++++++
+|  impl/Events/SpecialEvent.cpp    |  17 ++++++-
+|  impl/Players/Archer.cpp         |   8 ++-
+|  impl/Players/Magician.cpp       |   4 +-
+|  impl/Players/Player.cpp         |   2 +-
+|  impl/Players/Warior.cpp         |   4 +-
+|  impl/Strategy/Responsible.cpp   |   2 +
+|  impl/Strategy/RiskTaking.cpp    |   2 +
+|  include/Events/EncounterEvent.h |  11 ++--
+|  include/Events/Event.h          |  45 +++++++++++++++--
+|  include/Events/SpecialEvent.h   |  10 ++--
+|  include/Factory.h               |  89 +++++++++++++++++++++++++++++++++
+|  include/Loaders.h               |  83 +++++++++++++++++++++++++++++++
+|  include/Players/Archer.h        |   6 ++-
+|  include/Players/Magician.h      |   9 ++--
+|  include/Players/Player.h        |  25 +++++++---
+|  include/Players/Warrior.h       |   6 ++-
+|  include/Strategy/Responsible.h  |   7 +--
+|  include/Strategy/RiskTaking.h   |   7 +--
+|  include/Strategy/Strategy.h     |  10 +++-
+|  22 files changed, 365 insertions(+), 133 deletions(-)
+| 
+* commit 47fc27dfea7ec261f4ed64fa4781e74dc1496011
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Wed Aug 7 01:26:54 2024 +0300
+| 
+|     implemented initial readers + changes to signatures
+| 
+|  CMakeLists.txt                  |   2 +
+|  MatamStory.cpp                  | 204 ++++++++++++++++++++++++++++++++++++--
+|  MatamStory.h                    |  13 ++-
+|  impl/Events/EncounterEvent.cpp  | 121 +++++++++++++++++++---
+|  impl/Events/SpecialEvent.cpp    |  25 ++++-
+|  impl/Players/Archer.cpp         |   2 +-
+|  impl/Players/Magician.cpp       |   7 +-
+|  impl/Players/Player.cpp         |  43 ++++++--
+|  impl/Players/Warior.cpp         |   3 +-
+|  impl/Strategy/Responsible.cpp   |  15 ++-
+|  impl/Strategy/RiskTaking.cpp    |  14 ++-
+|  include/Events/EncounterEvent.h |  50 ++++++++--
+|  include/Events/Event.h          |   8 +-
+|  include/Events/SpecialEvent.h   |  23 +++--
+|  include/Players/Archer.h        |   6 +-
+|  include/Players/Magician.h      |   6 +-
+|  include/Players/Player.h        |  22 ++--
+|  include/Players/Warrior.h       |   5 +-
+|  include/Strategy/Responsible.h  |   7 +-
+|  include/Strategy/RiskTaking.h   |   6 +-
+|  include/Strategy/Strategy.h     |  10 +-
+|  21 files changed, 495 insertions(+), 97 deletions(-)
+| 
+* commit 1aed7943627e4a5942cc7373f93515219b075795
+| Merge: 8a5c1807e ba0b3459f
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Mon Aug 5 00:43:02 2024 +0300
+| 
+|     Merge remote-tracking branch 'matam/main' into hw4/jamal-develop
+| 
+|  Utilities.cpp       | 6 +++---
+|  tests/test1.events  | 8 ++++----
+|  tests/test1.players | 4 ++--
+|  tests/test2.events  | 6 +++---
+|  tests/test2.players | 4 ++--
+|  tests/test3.events  | 8 ++++----
+|  tests/test3.players | 2 +-
+|  7 files changed, 19 insertions(+), 19 deletions(-)
+| 
+* commit 8a5c1807e1ba9106f6980674ee56c17fad9663f2
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Sun Aug 4 02:10:18 2024 +0300
+| 
+|     organize files
+|     implement special event
+| 
+|  CMakeLists.txt                                    | 24 +++---
+|  MatamStory.cpp                                    |  4 -
+|  impl/Events/EncounterEvent.cpp                    | 39 +++++++---
+|  impl/Events/SpecialEvent.cpp                      | 28 +++++++
+|  impl/Players/Archer.cpp                           |  2 +-
+|  impl/Players/Magician.cpp                         |  7 +-
+|  impl/Players/Player.cpp                           | 82 +++++++++------------
+|  impl/Players/Warior.cpp                           |  4 +-
+|  .../Strategy/Responsible.cpp                      |  6 +-
+|  {include => impl}/Strategy/RiskTaking.cpp         |  0
+|  include/Events/EncounterEvent.h                   | 36 ++++++---
+|  include/Events/Event.h                            |  5 +-
+|  include/Events/SpecialEvent.h                     | 35 ++++++---
+|  include/Players/Archer.h                          |  2 -
+|  include/Players/Magician.h                        |  2 +
+|  include/Players/Player.h                          | 44 +++++++----
+|  include/Players/Warrior.h                         |  4 +-
+|  .../Strategy/{Responsibile.h => Responsible.h}    |  4 +-
+|  include/Strategy/Strategy.h                       |  7 +-
+|  19 files changed, 204 insertions(+), 131 deletions(-)
+| 
+* commit 9a989c4a4f10ad0b0caa82353f6de8fb6e2391a3
+| Author: jamal <jamalabomokh490@gmail.com>
+| Date:   Sat Aug 3 02:16:02 2024 +0300
+| 
+|     added base types
+| 
+|  .gitignore                              |   2 +
+|  Behaviours/Behaviour.h                  |  11 ---
+|  Behaviours/RiskTaking.h                 |   8 --
+|  CMakeLists.txt                          |  35 +++++---
+|  Events/EncounterEvent.h                 |  14 ---
+|  Events/SpecialEvent.h                   |  14 ---
+|  MatamStory.cpp                          |   3 +
+|  MatamStory.h                            |   4 +-
+|  Players/Player.h                        |  51 -----------
+|  Players/Warrior.h                       |  14 ---
+|  impl/Events/EncounterEvent.cpp          |  20 +++++
+|  impl/Players/Archer.cpp                 |   9 ++
+|  impl/Players/Magician.cpp               |   8 ++
+|  impl/Players/Player.cpp                 | 105 ++++++++++++++++++++++
+|  impl/Players/Warior.cpp                 |  20 +++++
+|  include/Events/EncounterEvent.h         |  32 +++++++
+|  {Events => include/Events}/Event.h      |  11 ++-
+|  include/Events/SpecialEvent.h           |  34 +++++++
+|  {Players => include/Players}/Archer.h   |   9 ++
+|  {Players => include/Players}/Magician.h |   6 +-
+|  include/Players/Player.h                | 145 ++++++++++++++++++++++++++++++
+|  include/Players/Warrior.h               |  23 +++++
+|  include/Strategy/Responsibile.cpp       |  15 ++++
+|  include/Strategy/Responsibile.h         |  17 ++++
+|  include/Strategy/RiskTaking.cpp         |  15 ++++
+|  include/Strategy/RiskTaking.h           |  18 ++++
+|  include/Strategy/Strategy.h             |  21 +++++
+|  27 files changed, 535 insertions(+), 129 deletions(-)
+| 
+* commit c227d333d514e847365a77ee76744cf4ee5c1e93
+| Author: Jamal Abo Mokh <jamalabomokh490@gmail.com>
+| Date:   Thu Aug 1 19:19:30 2024 +0300
+| 
+|     added interfaces
+| 
+|  Behaviours/Behaviour.h  | 11 +++++++++++
+|  Behaviours/RiskTaking.h |  8 ++++++++
+|  CMakeLists.txt          | 38 ++++++++++++++++++++++++++++++++++++++
+|  Events/EncounterEvent.h | 14 ++++++++++++++
+|  Events/SpecialEvent.h   | 14 ++++++++++++++
+|  Players/Archer.h        |  8 ++++++++
+|  Players/Magician.h      | 15 +++++++++++++++
+|  Players/Warrior.h       | 14 ++++++++++++++
+|  8 files changed, 122 insertions(+)
+| 
+* commit 6d0b58bcecef6fc2291c09f654a978cc382c3e31
+| Author: AdiHarif <adi.harif@campus.technion.ac.il>
+| Date:   Mon Jul 29 21:47:45 2024 +0300
+| 
+|     Adds supplied files
+| 
+|  Events/Event.h       |  14 +++++
+|  MatamStory.cpp       |  74 +++++++++++++++++++++++++
+|  MatamStory.h         |  55 +++++++++++++++++++
+|  Players/Player.h     |  51 +++++++++++++++++
+|  Utilities.cpp        | 117 +++++++++++++++++++++++++++++++++++++++
+|  Utilities.h          | 146 +++++++++++++++++++++++++++++++++++++++++++++++++
+|  main.cpp             |  40 ++++++++++++++
+|  tests/test1.events   |   5 ++
+|  tests/test1.expected |  96 ++++++++++++++++++++++++++++++++
+|  tests/test1.players  |   3 +
+|  tests/test2.events   |   4 ++
+|  tests/test2.expected |   1 +
+|  tests/test2.players  |   3 +
+|  tests/test3.events   |   5 ++
+|  tests/test3.expected |   1 +
+|  tests/test3.players  |   2 +
+|  16 files changed, 617 insertions(+)
+| 
+* commit beadb33ed4c7dd2da9d4078b9de6253232c67a46
+  Author: AdiHarif <adi.harif@campus.technion.ac.il>
+  Date:   Mon Jul 29 21:46:59 2024 +0300
+  
+      Initial Commit - Adds README.md file
+  
+   README.md | 7 +++++++
+   1 file changed, 7 insertions(+)

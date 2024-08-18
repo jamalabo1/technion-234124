@@ -1,7 +1,7 @@
 //
 // Created by jamal on 03/08/2024.
 //
-#include <Players/Warrior.h>
+#include "Warrior.h"
 
 
 Warrior::Warrior(string name, shared_ptr<Strategy> strategy) : Player(std::move(name), std::move(strategy),

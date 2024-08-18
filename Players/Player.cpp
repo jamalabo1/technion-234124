@@ -2,7 +2,7 @@
 // Created by jamal on 02/08/2024.
 //
 
-#include "Players/Player.h"
+#include "Player.h"
 
 using std::to_string;
 

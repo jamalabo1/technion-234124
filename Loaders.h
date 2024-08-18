@@ -7,19 +7,19 @@
 
 #include <vector>
 
-#include <Events/Event.h>
-#include <Strategy/Strategy.h>
-#include <Players/Player.h>
+#include "Events/Event.h"
+#include "Players/Strategy.h"
+#include "Players/Player.h"
 
-#include <Events/SpecialEvent.h>
-#include <Events/EncounterEvent.h>
+#include "Events/SpecialEvent.h"
+#include "Events/EncounterEvent.h"
 //
-#include <Strategy/Responsible.h>
-#include <Strategy/RiskTaking.h>
+#include "Players/Responsible.h"
+#include "Players/RiskTaking.h"
 //
-#include <Players/Warrior.h>
-#include <Players/Magician.h>
-#include <Players/Archer.h>
+#include "Players/Warrior.h"
+#include "Players/Magician.h"
+#include "Players/Archer.h"
 
 #include "Factory.h"
 

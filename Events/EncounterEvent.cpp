@@ -1,10 +1,10 @@
 //
 // Created by jamal on 03/08/2024.
 //
-#include <Events/EncounterEvent.h>
+#include "EncounterEvent.h"
 #include <memory>
 #include <stdexcept>
-#include "../../Utilities.h"
+#include "../Utilities.h"
 
 using std::to_string;
 using std::make_shared;

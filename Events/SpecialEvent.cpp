@@ -1,8 +1,8 @@
 //
 // Created by jamal on 04/08/2024.
 //
-#include "Events/SpecialEvent.h"
-#include "../../Utilities.h"
+#include "SpecialEvent.h"
+#include "../Utilities.h"
 
 using std::vector;
 using std::shared_ptr;

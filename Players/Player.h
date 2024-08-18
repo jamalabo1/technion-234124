@@ -3,8 +3,8 @@
 
 #include <memory>
 #include <string>
-#include <Strategy/Strategy.h>
-#include "Factory.h"
+#include "Strategy.h"
+#include "../Factory.h"
 
 
 using std::string;

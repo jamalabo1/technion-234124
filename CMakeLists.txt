@@ -13,33 +13,33 @@ set(CMAKE_CXX_STANDARD 17)
 
 add_library(matam4-lib
 
-        include/Factory.h
-        impl/Factory.cpp
+        Factory.h
+        Factory.cpp
 
         MatamStory.cpp
-        impl/Players/Player.cpp
+        Players/Player.cpp
 
-        include/Strategy/Strategy.h
-        include/Strategy/RiskTaking.h
+        Players/Strategy.h
+        Players/RiskTaking.h
 
-        include/Events/EncounterEvent.h
-        include/Events/SpecialEvent.h
+        Events/EncounterEvent.h
+        Events/SpecialEvent.h
 
-        include/Players/Player.h
-        include/Players/Archer.h
-        include/Players/Magician.h
-        include/Players/Warrior.h
-        include/Strategy/Responsible.h
+        Players/Player.h
+        Players/Archer.h
+        Players/Magician.h
+        Players/Warrior.h
+        Players/Responsible.h
 
-        impl/Players/Warior.cpp
-        impl/Strategy/Responsible.cpp
-        impl/Strategy/RiskTaking.cpp
-        impl/Players/Magician.cpp
-        impl/Players/Archer.cpp
-        impl/Events/EncounterEvent.cpp
-        impl/Events/SpecialEvent.cpp
+        Players/Warior.cpp
+        Players/Responsible.cpp
+        Players/RiskTaking.cpp
+        Players/Magician.cpp
+        Players/Archer.cpp
+        Events/EncounterEvent.cpp
+        Events/SpecialEvent.cpp
 
-        include/Loaders.h
+        Loaders.h
 
         Utilities.cpp
         Utilities.h

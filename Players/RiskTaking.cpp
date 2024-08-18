@@ -1,8 +1,8 @@
 //
 // Created by jamal on 03/08/2024.
 //
-#include <Players/Player.h>
-#include <Strategy/RiskTaking.h>
+#include "Player.h"
+#include "RiskTaking.h"
 
 RiskTaking::RiskTaking() = default;
 
