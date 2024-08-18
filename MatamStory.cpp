@@ -133,7 +133,7 @@ void MatamStory::play() {
         return;
     }
 
-    auto maxPlayer = *std::min_element(players.begin(), players.end());
+    auto maxPlayer = potentialWinner();
     if (maxPlayer->getHealthPoints() == 0 && maxPlayer->getLevel() != WIN_LEVEL) {
         printNoWinners();
     } else {
@@ -157,5 +157,13 @@ void MatamStory::printLeaderboard() {
     for (size_t i = 0; i < sorted.size(); i++) {
         printLeaderBoardEntry(i + 1, *sorted[i]);
     }
+}
+
+shared_ptr<Player> MatamStory::potentialWinner() {
+    vector<shared_ptr<Player>> sorted(players);
+
+    std::sort(sorted.begin(), sorted.end());
+
+    return sorted[0];
 }
 

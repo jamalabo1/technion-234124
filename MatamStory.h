@@ -55,6 +55,8 @@ private:
      * **/
     void printLeaderboard();
 
+    shared_ptr<Player> potentialWinner();
+
 public:
     /**
      * Constructor of MatamStory class

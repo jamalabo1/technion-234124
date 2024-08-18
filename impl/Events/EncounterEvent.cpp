@@ -146,8 +146,8 @@ IMPLEMENT_FACTORY_REGISTER(EncounterEvent) {
     for (const auto &key: Monster::getFactoryKeys()) {
         registerFactory(key, [key](const std::vector<string> &args) {
             // could've used the provided factory, but it's the Monster responsibility to call the factory.
-            auto [item, length] = Monster::createType(key, args);
-            return make_tuple(make_shared<EncounterEvent>(item), length);
+            auto monsterInfo = Monster::createType(key, args);
+            return make_tuple(make_shared<EncounterEvent>(std::get<0>(monsterInfo)), std::get<1>(monsterInfo));
         });
     }
 }
@@ -176,9 +176,9 @@ int parseInt(string str) {
     return val;
 }
 
-tuple<int, shared_ptr<Monster>> createTree(const std::vector<string> &arguments, int offsetStart) {
+tuple<shared_ptr<Monster>, int> createTree(const std::vector<string> &arguments, int offsetStart) {
     if (arguments[offsetStart] == "Pack") {
-        if ((offsetStart - 2) == (int)arguments.size()) {
+        if ((offsetStart - 2) == (int) arguments.size()) {
             throw std::invalid_argument("invalid arguments size");
         }
 
@@ -196,9 +196,9 @@ tuple<int, shared_ptr<Monster>> createTree(const std::vector<string> &arguments,
 
             string key = arguments[endOffset];
             if (key == "Pack") {
-                auto [offsetEnd, tree] = createTree(arguments, endOffset);
-                endOffset = offsetEnd;
-                nodes.emplace_back(tree);
+                auto treeInfo = createTree(arguments, endOffset);
+                endOffset = std::get<1>(treeInfo);
+                nodes.emplace_back(std::get<0>(treeInfo));
             } else {
                 endOffset++;
                 auto [item, _] = Monster::createType(key, arguments);
@@ -209,23 +209,17 @@ tuple<int, shared_ptr<Monster>> createTree(const std::vector<string> &arguments,
         }
 
         auto pack = make_shared<Pack>(nodes);
-        return std::pair(endOffset, pack);
+        return std::pair(pack, endOffset);
     }
 
-    auto [item, _] = Monster::createType(arguments[offsetStart], arguments);
-    return std::pair(
-            offsetStart,
-            item
-    );
-
+    return Monster::createType(arguments[offsetStart], arguments);
 }
 
 IMPLEMENT_FACTORY_REGISTER(Pack) {
     registerFactory("Pack",
                     [](const vector<string> &arguments) {
                         try {
-                            auto [end, tree] = createTree(arguments, 0);
-                            return make_tuple(tree, end);
+                            return createTree(arguments, 0);
                         } catch (std::exception &) {
                             throw std::invalid_argument("cannot create tree");
                         }

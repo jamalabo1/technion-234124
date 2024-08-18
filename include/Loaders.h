@@ -67,11 +67,11 @@ namespace Loaders {
         vector<string> arguments = split(line);
         for (size_t i = 0; i < arguments.size(); i++) {
             vector<string> subArguments{arguments.begin() + i, arguments.end()};
-            auto [event, length] = Event::createType(subArguments[0], subArguments);
+            auto typeInfo = Event::createType(subArguments[0], subArguments);
             events.emplace_back(
-                    event
+                    std::get<0>(typeInfo)
             );
-            i += (length - 1);
+            i += (std::get<1>(typeInfo) - 1);
         }
     }
 
@@ -97,12 +97,12 @@ namespace Loaders {
                     throw std::invalid_argument("invalid player info size");
                 }
 
-                auto [player, length] = Player::createType(playerInfo[1], playerInfo);
+                auto typeInfo = Player::createType(playerInfo[1], playerInfo);
 
                 players.emplace_back(
-                        player
+                        std::get<0>(typeInfo)
                 );
-                i += (length - 1);
+                i += (std::get<1>(typeInfo) - 1);
             }
         });
         return players;

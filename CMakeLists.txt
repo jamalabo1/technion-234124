@@ -57,8 +57,8 @@ file(COPY tests DESTINATION .)
 file(COPY run_tests.py DESTINATION .)
 
 
-#add_custom_command(
-#        TARGET matam4-exc POST_BUILD
-#        COMMAND python3 run_tests.py ./matam4-exc ./tests/custom_tests.json
-#        WORKING_DIRECTORY $<TARGET_FILE_DIR:matam4-exc>
-#)
+add_custom_command(
+        TARGET matam4-exc POST_BUILD
+        COMMAND python3 run_tests.py ./matam4-exc ./tests/custom_tests.json
+        WORKING_DIRECTORY $<TARGET_FILE_DIR:matam4-exc>
+)
