@@ -3,6 +3,12 @@ import json
 import sys
 
 
+class EnigmaParser(argparse.ArgumentParser):
+    def error(self, message):
+        print("Usage: python3 enigma.py -c <config_file> -i <input_file> -o <output_file>", file=sys.stdout)
+        sys.exit(1)
+
+
 class Enigma:
     # initializes a new instance of the class with the values provided for 'hash_map','wheels','reflector_map'
     def __init__(self, hash_map, wheels, reflector_map):
@@ -102,7 +108,7 @@ def load_enigma_from_path(path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Encrypt messages using an Enigma machine configuration.")
+    parser = EnigmaParser(description="Encrypt messages using an Enigma machine configuration.")
     parser.add_argument('-c', '--config', required=True, help="Path to the Enigma configuration file(JSON).")
     parser.add_argument('-i', '--input', required=True, help="Path to the input file containing messages to encrypt.")
     parser.add_argument('-o', '--output',
